@@ -6,5 +6,5 @@ export interface Award {
     year: number;
     media_id?: number;
     description: string;
-    image?: Media | null;
+    media?: Media | null;
 }

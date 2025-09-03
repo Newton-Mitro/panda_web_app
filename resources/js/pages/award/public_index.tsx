@@ -26,9 +26,9 @@ const PublicIndex: React.FC<PageProps> = ({ awards }) => {
                         className="group flex flex-col rounded-lg border p-4 shadow transition hover:shadow-lg"
                     >
                         {/* Image */}
-                        {award.image ? (
+                        {award.media ? (
                             <img
-                                src={award.image.url}
+                                src={award.media.url}
                                 alt={award.title}
                                 className="mb-3 h-40 w-full rounded object-cover transition group-hover:opacity-90"
                             />

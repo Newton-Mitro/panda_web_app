@@ -21,7 +21,7 @@ export default function Show({ award }: Props) {
             <div className="w-full space-y-6 p-6 md:w-4xl">
                 <HeadingSmall title={award.title} description={award.year?.toString()} />
 
-                {award.image && <img src={award.image.url} alt={award.title} className="mb-4 rounded object-cover md:h-64 md:w-64" />}
+                {award.media && <img src={award.media.url} alt={award.title} className="mb-4 rounded object-cover md:h-64 md:w-64" />}
 
                 <div>
                     <div className="mb-1 text-sm text-gray-500 dark:text-gray-400">Year</div>

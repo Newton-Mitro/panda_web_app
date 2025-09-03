@@ -29,7 +29,7 @@ export default function Edit({ award, media }: EditProps) {
         media_id: award.media_id ?? null,
     });
 
-    const [selectedMedia, setSelectedMedia] = useState<Media | null>(award.image ?? null);
+    const [selectedMedia, setSelectedMedia] = useState<Media | null>(award.media ?? null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [errors, setErrors] = useState<any>({});
     const [recentlySuccessful, setRecentlySuccessful] = useState(false);
