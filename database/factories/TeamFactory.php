@@ -39,7 +39,7 @@ class TeamFactory extends Factory
             'address' => $this->faker->address(),
 
             'category_id' => Category::where('category_of', 'Team')->inRandomOrder()->first()?->id
-                ?? Category::factory()->create(['category_of' => 'Team'])->id,
+                ?? null,
 
             'status' => $this->faker->randomElement(['Active', 'Inactive']),
         ];

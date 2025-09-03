@@ -61,11 +61,7 @@ const mainNavItems: NavItem[] = [
         href: '/admin/categories',
         icon: TagsIcon,
     },
-    {
-        title: 'Teams',
-        href: '/admin/teams',
-        icon: ContactRoundIcon,
-    },
+
     {
         title: 'Services',
         href: '/admin/services',
@@ -127,14 +123,34 @@ const mainNavItems: NavItem[] = [
         icon: ViewIcon,
     },
     {
-        title: 'Blogs/News',
-        href: '/admin/posts',
-        icon: RssIcon,
+        title: 'Teams',
+        href: '/admin/teams',
+        icon: ContactRoundIcon,
+    },
+    {
+        title: 'Leaders',
+        href: '/admin/students',
+        icon: GraduationCapIcon,
     },
     {
         title: 'Students',
         href: '/admin/students',
         icon: GraduationCapIcon,
+    },
+    {
+        title: 'Teachers',
+        href: '/admin/students',
+        icon: GraduationCapIcon,
+    },
+    {
+        title: 'Doctors',
+        href: '/admin/students',
+        icon: GraduationCapIcon,
+    },
+    {
+        title: 'Blogs/News',
+        href: '/admin/posts',
+        icon: RssIcon,
     },
     {
         title: 'Inventory Logs',
