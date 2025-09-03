@@ -1,0 +1,180 @@
+import { Transition } from '@headlessui/react';
+import { Head, router } from '@inertiajs/react';
+import React, { useEffect, useState } from 'react';
+import HeadingSmall from '../../components/heading-small';
+import InputError from '../../components/input-error';
+import { MediaSelector } from '../../components/media-selector';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
+import { Select } from '../../components/ui/select';
+import { Textarea } from '../../components/ui/text-area';
+import AppLayout from '../../layouts/app-layout';
+import { BreadcrumbItem } from '../../types';
+import { Category } from '../../types/category';
+import { Media } from '../../types/media';
+import { PaginatedData } from '../../types/paginated_meta';
+import MediaBrowserModal from '../media/media_browser_modal';
+
+interface EditProps {
+    category: Category;
+    categories: Category[];
+    media: PaginatedData<Media>;
+}
+
+export default function Edit({ category, categories, media }: EditProps) {
+    const [form, setForm] = useState({
+        name: category.name,
+        slug: category.slug,
+        category_of: category.category_of,
+        media_id: category.media_id ?? null,
+        parent_id: category.parent_id ?? null,
+        description: category.description ?? '',
+    });
+
+    const [filteredParents, setFilteredParents] = useState<Category[]>([]);
+    const [selectedMedia, setSelectedMedia] = useState<Media | null>(category.media ?? null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [errors, setErrors] = useState<any>({});
+    const [recentlySuccessful, setRecentlySuccessful] = useState(false);
+
+    // Dynamically filter parent categories based on category_of
+    useEffect(() => {
+        const filtered = categories.filter((cat) => cat.category_of === form.category_of && cat.id !== category.id);
+        setFilteredParents(filtered);
+
+        // Reset parent_id if it is no longer valid
+        if (!filtered.find((cat) => cat.id === form.parent_id)) {
+            setForm((prev) => ({ ...prev, parent_id: null }));
+        }
+    }, [form.category_of, categories, category.id, form.parent_id]);
+
+    const handleNameChange = (value: string) => {
+        setForm({
+            ...form,
+            name: value,
+            slug: value.toLowerCase().replace(/\s+/g, '-'),
+        });
+    };
+
+    const submit = (e: React.FormEvent) => {
+        e.preventDefault();
+        router.put(route('categories.update', category.id), form, {
+            onError: (err) => setErrors(err),
+            onSuccess: () => setRecentlySuccessful(true),
+        });
+    };
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: 'Dashboard', href: '/dashboard' },
+        { title: 'Categories', href: route('categories.index') },
+        { title: 'Edit Category', href: '' },
+    ];
+
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Edit Category" />
+            <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
+                <HeadingSmall title="Edit Category" description="Update the selected category" />
+
+                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 shadow-md md:w-4xl dark:bg-gray-900">
+                    {/* Name + Slug */}
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <div className="flex flex-col gap-2">
+                            <Label htmlFor="name">Name</Label>
+                            <Input id="name" value={form.name} onChange={(e) => handleNameChange(e.target.value)} />
+                            <InputError message={errors.name} />
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <Label htmlFor="slug">Slug</Label>
+                            <Input id="slug" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} />
+                            <InputError message={errors.slug} />
+                        </div>
+                    </div>
+
+                    {/* Category Of + Parent Category */}
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <div className="flex flex-col gap-2">
+                            <Label>Category Of</Label>
+                            <Select
+                                value={form.category_of}
+                                onChange={(e) => setForm({ ...form, category_of: e.target.value })}
+                                options={[
+                                    { value: 'Team', label: 'Team' },
+                                    { value: 'Service', label: 'Service' },
+                                    { value: 'Product', label: 'Product' },
+                                    { value: 'Project', label: 'Project' },
+                                    { value: 'Event', label: 'Event' },
+                                    { value: 'Notice', label: 'Notice' },
+                                    { value: 'Blog', label: 'Blog' },
+                                ]}
+                            />
+                            <InputError message={errors.category_of} />
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <Label>Parent Category</Label>
+                            <Select
+                                value={form.parent_id ?? ''}
+                                onChange={(e) => setForm({ ...form, parent_id: e.target.value ? Number(e.target.value) : null })}
+                                options={[
+                                    ...filteredParents.map((cat) => ({
+                                        value: cat.id.toString(),
+                                        label: `${cat.name} ${cat.parent_id ? ' 🌿' : ' 📂'}`,
+                                    })),
+                                ]}
+                            />
+                            <InputError message={errors.parent_id} />
+                        </div>
+                    </div>
+
+                    {/* Description */}
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="description">Description</Label>
+                        <Textarea id="description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+                        <InputError message={errors.description} />
+                    </div>
+
+                    {/* Media */}
+                    <div className="flex flex-col gap-2">
+                        <MediaSelector
+                            media={selectedMedia}
+                            onSelect={() => setIsModalOpen(true)}
+                            onRemove={() => {
+                                setSelectedMedia(null);
+                                setForm({ ...form, media_id: null });
+                            }}
+                            error={errors.media_id}
+                        />
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex items-center gap-4">
+                        <Button type="submit">Update</Button>
+                        <Transition
+                            show={recentlySuccessful}
+                            enter="transition ease-in-out"
+                            enterFrom="opacity-0"
+                            leave="transition ease-in-out"
+                            leaveTo="opacity-0"
+                        >
+                            <p className="text-sm text-neutral-600">Updated</p>
+                        </Transition>
+                    </div>
+                </form>
+
+                {/* Media Modal */}
+                <MediaBrowserModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    media={media}
+                    onSelect={(m) => {
+                        setSelectedMedia(m);
+                        setForm({ ...form, media_id: m.id });
+                    }}
+                />
+            </div>
+        </AppLayout>
+    );
+}
