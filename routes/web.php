@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PageController;
-use App\Http\Controllers\PostController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\AwardController;
 use App\Http\Controllers\EventController;
@@ -90,7 +90,7 @@ Route::prefix('admin')
         Route::resource('pages', PageController::class);
 
         // Posts
-        Route::resource('articles', PostController::class);
+        Route::resource('articles', ArticleController::class);
 
         // Post Tags
         Route::resource('post-tags', PostTagController::class);

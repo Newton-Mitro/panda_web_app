@@ -4,18 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
-use App\Infrastructure\Models\Post;
+use App\Infrastructure\Models\Article;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
-class PostController extends Controller
+class ArticleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(): View
     {
-        $articles = Post::with('categories', 'tags', 'author')->paginate(15);
+        $articles = Article::with('categories', 'tags', 'author')->paginate(15);
         return view('articles.index', compact('articles'));
     }
 
@@ -34,14 +34,14 @@ class PostController extends Controller
     {
         $data = $request->validated();
 
-        $post = Post::create($data);
+        $article = Article::create($data);
 
         // Attach categories or tags if applicable
         if (isset($data['categories'])) {
-            $post->categories()->sync($data['categories']);
+            $article->categories()->sync($data['categories']);
         }
         if (isset($data['tags'])) {
-            $post->tags()->sync($data['tags']);
+            $article->tags()->sync($data['tags']);
         }
 
         return redirect()->route('articles.index')
@@ -51,7 +51,7 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post): View
+    public function show(Article $article): View
     {
         return view('articles.show', compact('post'));
     }
@@ -59,7 +59,7 @@ class PostController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Post $post): View
+    public function edit(Article $article): View
     {
         return view('articles.edit', compact('post'));
     }
@@ -67,18 +67,18 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, Post $post): RedirectResponse
+    public function update(UpdatePostRequest $request, Article $article): RedirectResponse
     {
         $data = $request->validated();
 
-        $post->update($data);
+        $article->update($data);
 
         // Update categories or tags
         if (isset($data['categories'])) {
-            $post->categories()->sync($data['categories']);
+            $article->categories()->sync($data['categories']);
         }
         if (isset($data['tags'])) {
-            $post->tags()->sync($data['tags']);
+            $article->tags()->sync($data['tags']);
         }
 
         return redirect()->route('articles.index')
@@ -88,9 +88,9 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post): RedirectResponse
+    public function destroy(Article $article): RedirectResponse
     {
-        $post->delete();
+        $article->delete();
 
         return redirect()->route('articles.index')
             ->with('success', 'Post deleted successfully.');

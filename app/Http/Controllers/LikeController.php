@@ -36,7 +36,7 @@ class LikeController extends Controller
 
         // Avoid duplicate likes
         $like = Like::firstOrCreate([
-            'post_id' => $data['post_id'],
+            'article_id' => $data['article_id'],
             'user_id' => $data['user_id'],
         ]);
 

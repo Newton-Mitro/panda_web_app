@@ -3,14 +3,14 @@
 namespace Database\Factories;
 
 use App\Infrastructure\Models\Media;
-use App\Infrastructure\Models\Post;
+use App\Infrastructure\Models\Article;
 use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-class PostFactory extends Factory
+class ArticleFactory extends Factory
 {
-    protected $model = Post::class;
+    protected $model = Article::class;
 
     public function definition(): array
     {

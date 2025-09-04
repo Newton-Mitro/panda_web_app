@@ -68,11 +68,6 @@ const mainNavItems: NavItem[] = [
         icon: HandPlatterIcon,
     },
     {
-        title: 'Appointments',
-        href: '/admin/appointments',
-        icon: CalendarCheck2Icon,
-    },
-    {
         title: 'Projects',
         href: '/admin/projects',
         icon: MedalIcon,
@@ -88,7 +83,7 @@ const mainNavItems: NavItem[] = [
         icon: ImagePlusIcon,
     },
     {
-        title: 'Our Locations',
+        title: 'Office Locations',
         href: '/admin/contacts',
         icon: MapPinnedIcon,
     },
@@ -143,14 +138,19 @@ const mainNavItems: NavItem[] = [
         icon: GraduationCapIcon,
     },
     {
+        title: 'Articles',
+        href: '/admin/articles',
+        icon: RssIcon,
+    },
+    {
         title: 'Doctors',
         href: '/admin/students',
         icon: GraduationCapIcon,
     },
     {
-        title: 'Articles',
-        href: '/admin/articles',
-        icon: RssIcon,
+        title: 'Appointments',
+        href: '/admin/appointments',
+        icon: CalendarCheck2Icon,
     },
     {
         title: 'Inventory Logs',

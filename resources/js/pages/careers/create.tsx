@@ -7,8 +7,10 @@ import HeadingSmall from '../../components/heading-small';
 import InputError from '../../components/input-error';
 import AppDatePicker from '../../components/ui/app_date_picker';
 import { Button } from '../../components/ui/button';
+import { Checkbox } from '../../components/ui/checkbox';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
+import { Select } from '../../components/ui/select';
 import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
 
@@ -17,9 +19,22 @@ export default function Create() {
         title: '',
         location: '',
         salary_range: '',
-        deadline: '',
+        min_salary: '',
+        max_salary: '',
+        currency: 'USD',
         description: '',
         requirements: '',
+        responsibilities: '',
+        is_remote: false,
+        benefits: [] as string[],
+        employment_type: 'full-time',
+        experience_level: 'entry',
+        department: '',
+        job_function: '',
+        education_level: '',
+        deadline: '',
+        positions: 1,
+        status: 'open',
     });
 
     const [errors, setErrors] = useState<any>({});
@@ -35,10 +50,24 @@ export default function Create() {
                     title: '',
                     location: '',
                     salary_range: '',
-                    deadline: '',
+                    min_salary: '',
+                    max_salary: '',
+                    currency: 'USD',
                     description: '',
                     requirements: '',
+                    responsibilities: '',
+                    is_remote: false,
+                    benefits: [],
+                    employment_type: 'full-time',
+                    experience_level: 'entry',
+                    department: '',
+                    job_function: '',
+                    education_level: '',
+                    deadline: '',
+                    positions: 1,
+                    status: 'open',
                 });
+                setTimeout(() => setRecentlySuccessful(false), 3000);
             },
         });
     };
@@ -70,13 +99,40 @@ export default function Create() {
                         </div>
                     </div>
 
-                    {/* Salary & Deadline */}
-                    <div className="grid gap-4 md:grid-cols-2">
+                    {/* Salary & Min/Max */}
+                    <div className="grid gap-4 md:grid-cols-4">
                         <div className="grid gap-2">
                             <Label>Salary Range</Label>
                             <Input value={form.salary_range} onChange={(e) => setForm({ ...form, salary_range: e.target.value })} />
                             <InputError message={errors.salary_range} />
                         </div>
+                        <div className="grid gap-2">
+                            <Label>Min Salary</Label>
+                            <Input value={form.min_salary} onChange={(e) => setForm({ ...form, min_salary: e.target.value })} />
+                            <InputError message={errors.min_salary} />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label>Max Salary</Label>
+                            <Input value={form.max_salary} onChange={(e) => setForm({ ...form, max_salary: e.target.value })} />
+                            <InputError message={errors.max_salary} />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label>Currency</Label>
+                            <Select
+                                value={form.currency}
+                                onChange={(e) => setForm({ ...form, currency: e.target.value })}
+                                options={[
+                                    { value: 'USD', label: 'USD 💵' },
+                                    { value: 'EUR', label: 'EUR 💶' },
+                                    { value: 'GBP', label: 'GBP 💷' },
+                                ]}
+                            />
+                            <InputError message={errors.currency} />
+                        </div>
+                    </div>
+
+                    {/* Deadline & Positions */}
+                    <div className="grid gap-4 md:grid-cols-2">
                         <div className="grid gap-2">
                             <AppDatePicker
                                 label="Deadline"
@@ -86,9 +142,83 @@ export default function Create() {
                             />
                             <InputError message={errors.deadline} />
                         </div>
+                        <div className="grid gap-2">
+                            <Label>Positions</Label>
+                            <Input type="number" value={form.positions} onChange={(e) => setForm({ ...form, positions: Number(e.target.value) })} />
+                            <InputError message={errors.positions} />
+                        </div>
                     </div>
 
-                    {/* Description */}
+                    {/* Remote & Employment Type */}
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <div className="flex items-center gap-2">
+                            <Checkbox checked={form.is_remote} onCheckedChange={(val) => setForm({ ...form, is_remote: Boolean(val) })} />
+                            <Label>Remote</Label>
+                        </div>
+                        <div className="grid gap-2 md:w-1/3">
+                            <Label>Employment Type</Label>
+                            <Select
+                                value={form.employment_type}
+                                onChange={(e) => setForm({ ...form, employment_type: e.target.value })}
+                                options={[
+                                    { value: 'full-time', label: 'Full-Time' },
+                                    { value: 'part-time', label: 'Part-Time' },
+                                    { value: 'contract', label: 'Contract' },
+                                    { value: 'internship', label: 'Internship' },
+                                    { value: 'temporary', label: 'Temporary' },
+                                ]}
+                            />
+                            <InputError message={errors.employment_type} />
+                        </div>
+                    </div>
+
+                    {/* Experience Level & Status */}
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-2 md:w-1/3">
+                            <Label>Experience Level</Label>
+                            <Select
+                                value={form.experience_level}
+                                onChange={(e) => setForm({ ...form, experience_level: e.target.value })}
+                                options={[
+                                    { value: 'entry', label: 'Entry' },
+                                    { value: 'junior', label: 'Junior' },
+                                    { value: 'mid', label: 'Mid' },
+                                    { value: 'senior', label: 'Senior' },
+                                    { value: 'lead', label: 'Lead' },
+                                ]}
+                            />
+                            <InputError message={errors.experience_level} />
+                        </div>
+                        <div className="grid gap-2 md:w-1/3">
+                            <Label>Status</Label>
+                            <Select
+                                value={form.status}
+                                onChange={(e) => setForm({ ...form, status: e.target.value })}
+                                options={[
+                                    { value: 'open', label: 'Open ✅' },
+                                    { value: 'closed', label: 'Closed 🚫' },
+                                    { value: 'draft', label: 'Draft 📝' },
+                                ]}
+                            />
+                            <InputError message={errors.status} />
+                        </div>
+                    </div>
+
+                    {/* Department & Job Function */}
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-2">
+                            <Label>Department</Label>
+                            <Input value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} />
+                            <InputError message={errors.department} />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label>Job Function</Label>
+                            <Input value={form.job_function} onChange={(e) => setForm({ ...form, job_function: e.target.value })} />
+                            <InputError message={errors.job_function} />
+                        </div>
+                    </div>
+
+                    {/* Description, Requirements, Responsibilities */}
                     <div className="grid gap-2">
                         <Label>Description</Label>
                         <CKEditor
@@ -99,7 +229,6 @@ export default function Create() {
                         <InputError message={errors.description} />
                     </div>
 
-                    {/* Requirements */}
                     <div className="grid gap-2">
                         <Label>Requirements</Label>
                         <CKEditor
@@ -108,6 +237,16 @@ export default function Create() {
                             onChange={(_, editor) => setForm({ ...form, requirements: editor.getData() })}
                         />
                         <InputError message={errors.requirements} />
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label>Responsibilities</Label>
+                        <CKEditor
+                            editor={ClassicEditor as any}
+                            data={form.responsibilities}
+                            onChange={(_, editor) => setForm({ ...form, responsibilities: editor.getData() })}
+                        />
+                        <InputError message={errors.responsibilities} />
                     </div>
 
                     {/* Actions */}

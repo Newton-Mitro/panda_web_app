@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostTagRequest;
 use App\Http\Requests\UpdatePostTagRequest;
 use App\Infrastructure\Models\PostTag;
-use App\Infrastructure\Models\Post;
+use App\Infrastructure\Models\Article;
 use App\Infrastructure\Models\Tag;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -18,7 +18,7 @@ class PostTagController extends Controller
     public function index(): View
     {
         $postTags = PostTag::with(['post', 'tag'])->paginate(15);
-        return view('post_tags.index', compact('postTags'));
+        return view('article_tags.index', compact('postTags'));
     }
 
     /**
@@ -26,10 +26,10 @@ class PostTagController extends Controller
      */
     public function create(): View
     {
-        $articles = Post::pluck('title', 'id');
+        $articles = Article::pluck('title', 'id');
         $tags = Tag::pluck('name', 'id');
 
-        return view('post_tags.create', compact('articles', 'tags'));
+        return view('article_tags.create', compact('articles', 'tags'));
     }
 
     /**
@@ -40,7 +40,7 @@ class PostTagController extends Controller
         $data = $request->validated();
         PostTag::create($data);
 
-        return redirect()->route('post_tags.index')
+        return redirect()->route('article_tags.index')
             ->with('success', 'Post-Tag association created successfully.');
     }
 
@@ -49,7 +49,7 @@ class PostTagController extends Controller
      */
     public function show(PostTag $postTag): View
     {
-        return view('post_tags.show', compact('postTag'));
+        return view('article_tags.show', compact('postTag'));
     }
 
     /**
@@ -57,10 +57,10 @@ class PostTagController extends Controller
      */
     public function edit(PostTag $postTag): View
     {
-        $articles = Post::pluck('title', 'id');
+        $articles = Article::pluck('title', 'id');
         $tags = Tag::pluck('name', 'id');
 
-        return view('post_tags.edit', compact('postTag', 'articles', 'tags'));
+        return view('article_tags.edit', compact('postTag', 'articles', 'tags'));
     }
 
     /**
@@ -71,7 +71,7 @@ class PostTagController extends Controller
         $data = $request->validated();
         $postTag->update($data);
 
-        return redirect()->route('post_tags.index')
+        return redirect()->route('article_tags.index')
             ->with('success', 'Post-Tag association updated successfully.');
     }
 
@@ -82,7 +82,7 @@ class PostTagController extends Controller
     {
         $postTag->delete();
 
-        return redirect()->route('post_tags.index')
+        return redirect()->route('article_tags.index')
             ->with('success', 'Post-Tag association deleted successfully.');
     }
 }

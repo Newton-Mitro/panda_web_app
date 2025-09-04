@@ -4,17 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Infrastructure\Models\Career;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Inertia\Inertia;
 
 class CareerController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $perPage = $request->input('perPage', 20);
-
-        $careers = Career::latest()
-            ->paginate($perPage)
-            ->withQueryString();
+        $careers = Career::latest()->paginate(15);
 
         return Inertia::render('careers/index', [
             'careers' => $careers,
@@ -30,24 +27,19 @@ class CareerController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:careers,slug',
             'description' => 'nullable|string',
             'requirements' => 'nullable|string',
             'location' => 'nullable|string|max:255',
             'salary_range' => 'nullable|string|max:255',
             'deadline' => 'nullable|date',
+            'status' => 'required|in:open,closed,draft',
+            'media_id' => 'nullable|integer',
         ]);
 
         Career::create($data);
 
-        return redirect()->route('careers.index')->with('success', 'Career created successfully.');
-    }
-
-    public function show(Career $career)
-    {
-        return Inertia::render('careers/show', [
-            'career' => $career,
-        ]);
+        return redirect()->route('careers.index')
+            ->with('success', 'Career created successfully.');
     }
 
     public function edit(Career $career)
@@ -61,22 +53,33 @@ class CareerController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:careers,slug,' . $career->id,
             'description' => 'nullable|string',
             'requirements' => 'nullable|string',
             'location' => 'nullable|string|max:255',
             'salary_range' => 'nullable|string|max:255',
             'deadline' => 'nullable|date',
+            'status' => 'required|in:open,closed,draft',
+            'media_id' => 'nullable|integer',
         ]);
 
         $career->update($data);
 
-        return redirect()->route('careers.index')->with('success', 'Career updated successfully.');
+        return redirect()->route('careers.index')
+            ->with('success', 'Career updated successfully.');
+    }
+
+    public function show(Career $career)
+    {
+        return Inertia::render('careers/show', [
+            'career' => $career,
+        ]);
     }
 
     public function destroy(Career $career)
     {
         $career->delete();
-        return redirect()->route('careers.index')->with('success', 'Career deleted successfully.');
+
+        return redirect()->route('careers.index')
+            ->with('success', 'Career deleted successfully.');
     }
 }

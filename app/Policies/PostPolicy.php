@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Infrastructure\Models\Post;
+use App\Infrastructure\Models\Article;
 use App\Infrastructure\Models\User;
 
 class PostPolicy
@@ -18,7 +18,7 @@ class PostPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Post $post): bool
+    public function view(User $user, Article $article): bool
     {
         return false;
     }
@@ -34,7 +34,7 @@ class PostPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Post $post): bool
+    public function update(User $user, Article $article): bool
     {
         return false;
     }
@@ -42,7 +42,7 @@ class PostPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Post $post): bool
+    public function delete(User $user, Article $article): bool
     {
         return false;
     }
@@ -50,7 +50,7 @@ class PostPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Post $post): bool
+    public function restore(User $user, Article $article): bool
     {
         return false;
     }
@@ -58,7 +58,7 @@ class PostPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Post $post): bool
+    public function forceDelete(User $user, Article $article): bool
     {
         return false;
     }

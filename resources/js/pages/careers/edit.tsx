@@ -1,3 +1,5 @@
+import { Checkbox } from '@/components/ui/checkbox';
+import { Select } from '@/components/ui/select';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { Transition } from '@headlessui/react';
@@ -12,23 +14,32 @@ import { Label } from '../../components/ui/label';
 import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
 import { JobCircular } from '../../types/job_circular';
-import { Media } from '../../types/media';
-import { PaginatedData } from '../../types/paginated_meta';
 
 interface EditProps {
-    career: JobCircular;
-    media: PaginatedData<Media>;
+    career: JobCircular; // Career object from backend
 }
 
 export default function Edit({ career }: EditProps) {
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<any>({
         title: career.title,
-        slug: career.slug,
-        description: career.description,
-        requirements: career.requirements,
-        location: career.location,
-        salary_range: career.salary_range,
-        deadline: career.deadline,
+        location: career.location || '',
+        salary_range: career.salary_range || '',
+        min_salary: career.min_salary || '',
+        max_salary: career.max_salary || '',
+        currency: career.currency || 'USD',
+        description: career.description || '',
+        requirements: career.requirements || '',
+        responsibilities: career.responsibilities || '',
+        is_remote: career.is_remote || false,
+        employment_type: career.employment_type || 'full-time',
+        experience_level: career.experience_level || 'entry',
+        department: career.department || '',
+        job_function: career.job_function || '',
+        education_level: career.education_level || '',
+        deadline: career.deadline || '',
+        status: career.status || 'open',
+        positions: career.positions || 1,
+        benefits: career.benefits || [],
     });
 
     const [errors, setErrors] = useState<any>({});
@@ -54,7 +65,7 @@ export default function Edit({ career }: EditProps) {
             <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
                 <HeadingSmall title="Edit Career" description="Update the career details" />
 
-                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 shadow-md md:w-4xl dark:bg-gray-900">
+                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 shadow-md md:w-5xl dark:bg-gray-900">
                     {/* Title & Location */}
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="grid gap-2">
@@ -79,7 +90,7 @@ export default function Edit({ career }: EditProps) {
                         <div className="grid gap-2">
                             <AppDatePicker
                                 label="Deadline"
-                                value={form.deadline ? form.deadline?.split('T')[0] : ''}
+                                value={form.deadline}
                                 onChange={(val) => setForm({ ...form, deadline: val })}
                                 error={errors.deadline}
                             />
@@ -87,7 +98,61 @@ export default function Edit({ career }: EditProps) {
                         </div>
                     </div>
 
-                    {/* Description */}
+                    {/* Remote */}
+                    <div className="grid gap-2 md:w-1/3">
+                        <Checkbox checked={form.is_remote} onCheckedChange={(val) => setForm({ ...form, is_remote: Boolean(val) })} />
+                        <Label>Remote</Label>
+                    </div>
+
+                    {/* Employment Type & Experience Level */}
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-2 md:w-1/2">
+                            <Label>Employment Type</Label>
+                            <Select
+                                value={form.employment_type}
+                                onChange={(e) => setForm({ ...form, employment_type: e.target.value })}
+                                options={[
+                                    { value: 'full-time', label: 'Full-Time' },
+                                    { value: 'part-time', label: 'Part-Time' },
+                                    { value: 'contract', label: 'Contract' },
+                                    { value: 'internship', label: 'Internship' },
+                                    { value: 'temporary', label: 'Temporary' },
+                                ]}
+                            />
+                            <InputError message={errors.employment_type} />
+                        </div>
+                        <div className="grid gap-2 md:w-1/2">
+                            <Label>Experience Level</Label>
+                            <Select
+                                value={form.experience_level}
+                                onChange={(e) => setForm({ ...form, experience_level: e.target.value })}
+                                options={[
+                                    { value: 'entry', label: 'Entry' },
+                                    { value: 'junior', label: 'Junior' },
+                                    { value: 'mid', label: 'Mid' },
+                                    { value: 'senior', label: 'Senior' },
+                                    { value: 'lead', label: 'Lead' },
+                                ]}
+                            />
+                            <InputError message={errors.experience_level} />
+                        </div>
+                    </div>
+
+                    {/* Department & Job Function */}
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-2">
+                            <Label>Department</Label>
+                            <Input value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} />
+                            <InputError message={errors.department} />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label>Job Function</Label>
+                            <Input value={form.job_function} onChange={(e) => setForm({ ...form, job_function: e.target.value })} />
+                            <InputError message={errors.job_function} />
+                        </div>
+                    </div>
+
+                    {/* Description, Requirements, Responsibilities */}
                     <div className="grid gap-2">
                         <Label>Description</Label>
                         <CKEditor
@@ -97,8 +162,6 @@ export default function Edit({ career }: EditProps) {
                         />
                         <InputError message={errors.description} />
                     </div>
-
-                    {/* Requirements */}
                     <div className="grid gap-2">
                         <Label>Requirements</Label>
                         <CKEditor
@@ -107,6 +170,37 @@ export default function Edit({ career }: EditProps) {
                             onChange={(_, editor) => setForm({ ...form, requirements: editor.getData() })}
                         />
                         <InputError message={errors.requirements} />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label>Responsibilities</Label>
+                        <CKEditor
+                            editor={ClassicEditor as any}
+                            data={form.responsibilities}
+                            onChange={(_, editor) => setForm({ ...form, responsibilities: editor.getData() })}
+                        />
+                        <InputError message={errors.responsibilities} />
+                    </div>
+
+                    {/* Status & Positions */}
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-2 md:w-1/3">
+                            <Label>Status</Label>
+                            <Select
+                                value={form.status}
+                                onChange={(e) => setForm({ ...form, status: e.target.value })}
+                                options={[
+                                    { value: 'open', label: 'Open' },
+                                    { value: 'closed', label: 'Closed' },
+                                    { value: 'draft', label: 'Draft' },
+                                ]}
+                            />
+                            <InputError message={errors.status} />
+                        </div>
+                        <div className="grid gap-2 md:w-1/3">
+                            <Label>Positions</Label>
+                            <Input type="number" value={form.positions} onChange={(e) => setForm({ ...form, positions: Number(e.target.value) })} />
+                            <InputError message={errors.positions} />
+                        </div>
                     </div>
 
                     {/* Actions */}
@@ -119,7 +213,7 @@ export default function Edit({ career }: EditProps) {
                             leave="transition ease-in-out"
                             leaveTo="opacity-0"
                         >
-                            <p className="text-sm text-neutral-600">Updated successfully</p>
+                            <p className="text-sm text-green-600">Career updated successfully</p>
                         </Transition>
                     </div>
                 </form>
