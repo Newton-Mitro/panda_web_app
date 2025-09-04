@@ -2,79 +2,97 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreEventRequest;
-use App\Http\Requests\UpdateEventRequest;
 use App\Infrastructure\Models\Event;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use App\Infrastructure\Models\Media;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class EventController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(): View
+    public function index(Request $request)
     {
-        $events = Event::orderBy('start_date', 'desc')->paginate(10);
-        return view('events.index', compact('events'));
+        $perPage = $request->input('perPage', 20);
+
+        $events = Event::with('media')
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+
+        return Inertia::render('events/index', [
+            'events' => $events,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): View
+    public function create(Request $request)
     {
-        return view('events.create');
+        $perPage = $request->input('perPage', 10);
+
+        $media = Media::latest()->paginate($perPage)->withQueryString();
+
+        return Inertia::render('events/create', [
+            'media' => $media,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreEventRequest $request): RedirectResponse
+    public function store(Request $request)
     {
-        $data = $request->validated();
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:events,slug',
+            'description' => 'nullable|string',
+            'location' => 'nullable|string|max:255',
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'media_id' => 'nullable|exists:media,id',
+            'status' => 'required|in:Active,Inactive',
+        ]);
+
         Event::create($data);
 
-        return redirect()->route('events.index')
-            ->with('success', 'Event created successfully.');
+        return redirect()->route('events.index')->with('success', 'Event created.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Event $event): View
+    public function show(Event $event)
     {
-        return view('events.show', compact('event'));
+        return Inertia::render('events/show', [
+            'event' => $event->load('media'),
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Event $event): View
+    public function edit(Event $event, Request $request)
     {
-        return view('events.edit', compact('event'));
+        $perPage = $request->input('perPage', 10);
+
+        $media = Media::latest()->paginate($perPage)->withQueryString();
+
+        return Inertia::render('events/edit', [
+            'event' => $event->load('media'),
+            'media' => $media,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateEventRequest $request, Event $event): RedirectResponse
+    public function update(Request $request, Event $event)
     {
-        $data = $request->validated();
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:events,slug,' . $event->id,
+            'description' => 'nullable|string',
+            'location' => 'nullable|string|max:255',
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'media_id' => 'nullable|exists:media,id',
+            'status' => 'required|in:Active,Inactive',
+        ]);
+
         $event->update($data);
 
-        return redirect()->route('events.index')
-            ->with('success', 'Event updated successfully.');
+        return redirect()->route('events.index')->with('success', 'Event updated.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Event $event): RedirectResponse
+    public function destroy(Event $event)
     {
         $event->delete();
 
-        return redirect()->route('events.index')
-            ->with('success', 'Event deleted successfully.');
+        return redirect()->route('events.index')->with('success', 'Event deleted.');
     }
 }

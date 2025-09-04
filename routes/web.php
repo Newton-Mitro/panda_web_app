@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CuponController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InventoryLogController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentController;
 use Inertia\Inertia;
@@ -17,7 +19,7 @@ use App\Http\Controllers\TeamController;
 use App\Http\Controllers\AwardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\MediaController;
-use App\Http\Controllers\CareerController;
+use App\Http\Controllers\JobController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\GalleryController;
@@ -55,7 +57,7 @@ Route::prefix('admin')
         Route::resource('awards', AwardController::class);
 
         // Careers
-        Route::resource('careers', CareerController::class);
+        Route::resource('jobs', JobController::class);
 
         // Categories
         Route::resource('categories', CategoryController::class);
@@ -88,7 +90,7 @@ Route::prefix('admin')
         Route::resource('pages', PageController::class);
 
         // Posts
-        Route::resource('posts', PostController::class);
+        Route::resource('articles', PostController::class);
 
         // Post Tags
         Route::resource('post-tags', PostTagController::class);
@@ -114,6 +116,16 @@ Route::prefix('admin')
         // Teams
         Route::resource('teams', TeamController::class);
 
+        Route::prefix('partners')->name('partners.')->group(function () {
+            Route::get('/', [PartnerController::class, 'index'])->name('index');
+            Route::get('/create', [PartnerController::class, 'create'])->name('create');
+            Route::post('/', [PartnerController::class, 'store'])->name('store');
+            Route::get('/{partner}', [PartnerController::class, 'show'])->name('show');
+            Route::get('/{partner}/edit', [PartnerController::class, 'edit'])->name('edit');
+            Route::put('/{partner}', [PartnerController::class, 'update'])->name('update');
+            Route::delete('/{partner}', [PartnerController::class, 'destroy'])->name('destroy');
+        });
+
         // Testimonials
         Route::resource('testimonials', TestimonialController::class);
 
@@ -124,8 +136,8 @@ Route::prefix('admin')
         // Route::resource('appointments', AppointmentController::class);
     
         // Job Circulars
-        // Route::resource('job_circulars', JobCircularController::class);
-    
+        Route::resource('careers', CareerController::class);
+
         // Job Applications
         Route::resource('job_applications', JobApplicationController::class);
 

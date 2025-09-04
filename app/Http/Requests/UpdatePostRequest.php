@@ -22,7 +22,7 @@ class UpdatePostRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('posts', 'slug')->ignore($this->route('post'))
+                Rule::unique('articles', 'slug')->ignore($this->route('post'))
             ],
             'content' => ['sometimes', 'required', 'string'],
             'cover_image' => ['sometimes', 'nullable', 'string'],

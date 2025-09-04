@@ -2,59 +2,81 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCareerRequest;
-use App\Http\Requests\UpdateCareerRequest;
 use App\Infrastructure\Models\Career;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class CareerController extends Controller
 {
-    public function index(): View
+    public function index(Request $request)
     {
-        $careers = Career::orderByDesc('deadline')->paginate(10);
-        return view('careers.index', compact('careers'));
+        $perPage = $request->input('perPage', 20);
+
+        $careers = Career::latest()
+            ->paginate($perPage)
+            ->withQueryString();
+
+        return Inertia::render('careers/index', [
+            'careers' => $careers,
+        ]);
     }
 
-    public function create(): View
+    public function create()
     {
-        return view('careers.create');
+        return Inertia::render('careers/create');
     }
 
-    public function store(StoreCareerRequest $request): RedirectResponse
+    public function store(Request $request)
     {
-        $data = $request->validated();
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:careers,slug',
+            'description' => 'nullable|string',
+            'requirements' => 'nullable|string',
+            'location' => 'nullable|string|max:255',
+            'salary_range' => 'nullable|string|max:255',
+            'deadline' => 'nullable|date',
+        ]);
 
         Career::create($data);
 
-        return redirect()->route('careers.index')
-            ->with('success', 'Career created successfully.');
+        return redirect()->route('careers.index')->with('success', 'Career created successfully.');
     }
 
-    public function show(Career $career): View
+    public function show(Career $career)
     {
-        return view('careers.show', compact('career'));
+        return Inertia::render('careers/show', [
+            'career' => $career,
+        ]);
     }
 
-    public function edit(Career $career): View
+    public function edit(Career $career)
     {
-        return view('careers.edit', compact('career'));
+        return Inertia::render('careers/edit', [
+            'career' => $career,
+        ]);
     }
 
-    public function update(UpdateCareerRequest $request, Career $career): RedirectResponse
+    public function update(Request $request, Career $career)
     {
-        $data = $request->validated();
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:careers,slug,' . $career->id,
+            'description' => 'nullable|string',
+            'requirements' => 'nullable|string',
+            'location' => 'nullable|string|max:255',
+            'salary_range' => 'nullable|string|max:255',
+            'deadline' => 'nullable|date',
+        ]);
+
         $career->update($data);
 
-        return redirect()->route('careers.index')
-            ->with('success', 'Career updated successfully.');
+        return redirect()->route('careers.index')->with('success', 'Career updated successfully.');
     }
 
-    public function destroy(Career $career): RedirectResponse
+    public function destroy(Career $career)
     {
         $career->delete();
-
-        return redirect()->route('careers.index')
-            ->with('success', 'Career deleted successfully.');
+        return redirect()->route('careers.index')->with('success', 'Career deleted successfully.');
     }
 }

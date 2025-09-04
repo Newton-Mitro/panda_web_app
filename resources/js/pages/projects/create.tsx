@@ -127,7 +127,7 @@ export default function CreateProject({ categories, media }: CreateProjectProps)
                     <div className="grid gap-2">
                         <AppDatePicker
                             label="Start Date"
-                            value={form.start_date.split('T')[0]}
+                            value={form.start_date?.split('T')[0]}
                             onChange={(value) => setForm({ ...form, start_date: value })}
                             error={errors.start_date}
                         />
@@ -137,7 +137,7 @@ export default function CreateProject({ categories, media }: CreateProjectProps)
                     <div className="grid gap-2">
                         <AppDatePicker
                             label="End Date"
-                            value={form.end_date.split('T')[0]}
+                            value={form.end_date?.split('T')[0]}
                             onChange={(value) => setForm({ ...form, end_date: value })}
                             error={errors.end_date}
                         />

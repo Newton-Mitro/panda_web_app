@@ -6,46 +6,39 @@ import React, { useState } from 'react';
 import HeadingSmall from '../../components/heading-small';
 import InputError from '../../components/input-error';
 import { MediaSelector } from '../../components/media-selector';
-import AppDatePicker from '../../components/ui/app_date_picker';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Select } from '../../components/ui/select';
 import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
-import { Category } from '../../types/category';
 import { Media } from '../../types/media';
-import { Notice } from '../../types/notice';
 import { PaginatedData } from '../../types/paginated_meta';
 import MediaBrowserModal from '../media/media_browser_modal';
 
-interface EditProps {
-    notice: Notice;
-    categories: Category[];
+interface CreateProps {
     media: PaginatedData<Media>;
 }
 
-export default function Edit({ notice, categories, media }: EditProps) {
+export default function Create({ media }: CreateProps) {
     const [form, setForm] = useState({
-        title: notice.title,
-        slug: notice.slug,
-        content: notice.content || '',
-        publish_date: notice.publish_date, // read-only
-        expiry_date: notice.expiry_date || '',
-        category_id: notice.category_id || (categories[0]?.id ?? 0),
-        status: notice.status,
-        media_id: notice.media_id ?? null,
-        media: notice.media ?? null,
+        author_name: '',
+        author_designation: '',
+        company: '',
+        message: '',
+        media_id: null as number | null,
+        rating: null as number | null,
+        status: 'Active',
     });
 
-    const [selectedMedia, setSelectedMedia] = useState<Media | null>(notice.media ?? null);
+    const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [errors, setErrors] = useState<any>({});
     const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        router.put(route('notices.update', notice.id), form, {
+        router.post(route('testimonials.store'), form, {
             onError: (err) => setErrors(err),
             onSuccess: () => setRecentlySuccessful(true),
         });
@@ -53,65 +46,74 @@ export default function Edit({ notice, categories, media }: EditProps) {
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
-        { title: 'Notices', href: route('notices.index') },
-        { title: 'Edit Notice', href: '' },
+        { title: 'Testimonials', href: route('testimonials.index') },
+        { title: 'Create Testimonial', href: '' },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Edit Notice" />
+            <Head title="Create Testimonial" />
             <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
-                <HeadingSmall title="Edit Notice" description="Update the notice details" />
+                <HeadingSmall title="Create Testimonial" description="Add a new client testimonial" />
 
                 <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 shadow-md md:w-4xl dark:bg-gray-900">
-                    {/* Title & Category Side by Side */}
+                    {/* Author Info */}
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="grid gap-2">
-                            <Label>Title</Label>
-                            <Input
-                                value={form.title}
-                                onChange={(e) => setForm({ ...form, title: e.target.value, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
-                            />
-                            <InputError message={errors.title} />
+                            <Label>Author Name</Label>
+                            <Input value={form.author_name} onChange={(e) => setForm({ ...form, author_name: e.target.value })} />
+                            <InputError message={errors.author_name} />
                         </div>
-
                         <div className="grid gap-2">
-                            <Label>Category</Label>
-                            <Select
-                                value={form.category_id.toString()}
-                                onChange={(e) => setForm({ ...form, category_id: Number(e.target.value) })}
-                                options={categories
-                                    .filter((cat) => cat.parent_id)
-                                    .map((cat) => ({
-                                        value: cat.id.toString(),
-                                        label: `${cat.name} ${cat.parent_id ? ' 🌿' : ' 📂'}`,
-                                    }))}
-                            />
-                            <InputError message={errors.category_id} />
+                            <Label>Designation</Label>
+                            <Input value={form.author_designation} onChange={(e) => setForm({ ...form, author_designation: e.target.value })} />
+                            <InputError message={errors.author_designation} />
                         </div>
                     </div>
 
-                    {/* Publish & Expiry Dates Side by Side */}
-                    <div className="grid gap-4 md:grid-cols-2">
-                        <AppDatePicker label="Publish Date" value={form.publish_date} disabled small />
-                        <AppDatePicker
-                            label="Expiry Date"
-                            value={form.expiry_date?.split('T')[0]}
-                            onChange={(val) => setForm({ ...form, expiry_date: val })}
-                            error={errors.expiry_date}
-                            small
-                        />
+                    {/* Company */}
+                    <div className="grid gap-2 md:w-1/2">
+                        <Label>Company</Label>
+                        <Input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />
+                        <InputError message={errors.company} />
                     </div>
 
-                    {/* Content */}
+                    {/* Message */}
                     <div className="grid gap-2">
-                        <Label>Content</Label>
+                        <Label>Message</Label>
                         <CKEditor
                             editor={ClassicEditor as any}
-                            data={form.content}
-                            onChange={(_, editor) => setForm({ ...form, content: editor.getData() })}
+                            data={form.message}
+                            onChange={(_, editor) => setForm({ ...form, message: editor.getData() })}
                         />
-                        <InputError message={errors.content} />
+                        <InputError message={errors.message} />
+                    </div>
+
+                    {/* Rating & Status */}
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-2">
+                            <Label>Rating (1–5)</Label>
+                            <Input
+                                type="number"
+                                min={1}
+                                max={5}
+                                value={form.rating ?? ''}
+                                onChange={(e) => setForm({ ...form, rating: Number(e.target.value) })}
+                            />
+                            <InputError message={errors.rating} />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label>Status</Label>
+                            <Select
+                                value={form.status}
+                                onChange={(e) => setForm({ ...form, status: e.target.value })}
+                                options={[
+                                    { value: 'Active', label: 'Active ✅' },
+                                    { value: 'Inactive', label: 'Inactive 🚫' },
+                                ]}
+                            />
+                            <InputError message={errors.status} />
+                        </div>
                     </div>
 
                     {/* Media */}
@@ -123,14 +125,14 @@ export default function Edit({ notice, categories, media }: EditProps) {
                                 setSelectedMedia(null);
                                 setForm({ ...form, media_id: null });
                             }}
-                            label="Image or Pdf"
                             error={errors.media_id}
+                            label="Author Image"
                         />
                     </div>
 
                     {/* Actions */}
                     <div className="flex items-center gap-4">
-                        <Button type="submit">Update Notice</Button>
+                        <Button type="submit">Create Testimonial</Button>
                         <Transition
                             show={recentlySuccessful}
                             enter="transition ease-in-out"
@@ -138,7 +140,7 @@ export default function Edit({ notice, categories, media }: EditProps) {
                             leave="transition ease-in-out"
                             leaveTo="opacity-0"
                         >
-                            <p className="text-sm text-neutral-600">Updated successfully</p>
+                            <p className="text-sm text-neutral-600">Created successfully</p>
                         </Transition>
                     </div>
                 </form>

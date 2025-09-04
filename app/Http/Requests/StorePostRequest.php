@@ -8,7 +8,7 @@ class StorePostRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Change to false if only certain users can create posts
+        return true; // Change to false if only certain users can create articles
     }
 
     public function rules(): array
@@ -16,7 +16,7 @@ class StorePostRequest extends FormRequest
         return [
             'user_id' => ['required', 'exists:users,id'],
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'unique:posts,slug'],
+            'slug' => ['required', 'string', 'max:255', 'unique:articles,slug'],
             'content' => ['required', 'string'],
             'cover_image' => ['nullable', 'string'],
             'status' => ['required', 'in:draft,published,archived'],

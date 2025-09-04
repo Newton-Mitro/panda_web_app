@@ -114,7 +114,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Job Circulars',
-        href: '/admin/job_circulars',
+        href: '/admin/careers',
         icon: PickaxeIcon,
     },
     {
@@ -148,8 +148,8 @@ const mainNavItems: NavItem[] = [
         icon: GraduationCapIcon,
     },
     {
-        title: 'Blogs/News',
-        href: '/admin/posts',
+        title: 'Articles',
+        href: '/admin/articles',
         icon: RssIcon,
     },
     {

@@ -26,10 +26,10 @@ class PostTagController extends Controller
      */
     public function create(): View
     {
-        $posts = Post::pluck('title', 'id');
+        $articles = Post::pluck('title', 'id');
         $tags = Tag::pluck('name', 'id');
 
-        return view('post_tags.create', compact('posts', 'tags'));
+        return view('post_tags.create', compact('articles', 'tags'));
     }
 
     /**
@@ -57,10 +57,10 @@ class PostTagController extends Controller
      */
     public function edit(PostTag $postTag): View
     {
-        $posts = Post::pluck('title', 'id');
+        $articles = Post::pluck('title', 'id');
         $tags = Tag::pluck('name', 'id');
 
-        return view('post_tags.edit', compact('postTag', 'posts', 'tags'));
+        return view('post_tags.edit', compact('postTag', 'articles', 'tags'));
     }
 
     /**

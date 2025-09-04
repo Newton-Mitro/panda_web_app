@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             AwardSeeder::class,
             NoticeSeeder::class,
             EventSeeder::class,
+            PartnerSeeder::class,
             CareerSeeder::class,
             ContactSeeder::class,
             ContactMessageSeeder::class,

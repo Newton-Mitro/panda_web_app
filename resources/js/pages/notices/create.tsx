@@ -101,7 +101,7 @@ export default function Create({ categories, media }: CreateProps) {
                     <div className="grid gap-2 md:w-1/2">
                         <AppDatePicker
                             label="Expiry Date"
-                            value={form.expiry_date}
+                            value={form.expiry_date?.split('T')[0]}
                             onChange={(val) => setForm({ ...form, expiry_date: val })}
                             error={errors.expiry_date}
                             small

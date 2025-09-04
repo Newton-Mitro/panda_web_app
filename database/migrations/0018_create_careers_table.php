@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->string('location')->nullable();
             $table->string('salary_range')->nullable();
             $table->date('deadline')->nullable();
-            $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });
     }

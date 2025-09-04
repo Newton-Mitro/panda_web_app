@@ -15,8 +15,8 @@ class PostController extends Controller
      */
     public function index(): View
     {
-        $posts = Post::with('categories', 'tags', 'author')->paginate(15);
-        return view('posts.index', compact('posts'));
+        $articles = Post::with('categories', 'tags', 'author')->paginate(15);
+        return view('articles.index', compact('articles'));
     }
 
     /**
@@ -24,7 +24,7 @@ class PostController extends Controller
      */
     public function create(): View
     {
-        return view('posts.create');
+        return view('articles.create');
     }
 
     /**
@@ -44,7 +44,7 @@ class PostController extends Controller
             $post->tags()->sync($data['tags']);
         }
 
-        return redirect()->route('posts.index')
+        return redirect()->route('articles.index')
             ->with('success', 'Post created successfully.');
     }
 
@@ -53,7 +53,7 @@ class PostController extends Controller
      */
     public function show(Post $post): View
     {
-        return view('posts.show', compact('post'));
+        return view('articles.show', compact('post'));
     }
 
     /**
@@ -61,7 +61,7 @@ class PostController extends Controller
      */
     public function edit(Post $post): View
     {
-        return view('posts.edit', compact('post'));
+        return view('articles.edit', compact('post'));
     }
 
     /**
@@ -81,7 +81,7 @@ class PostController extends Controller
             $post->tags()->sync($data['tags']);
         }
 
-        return redirect()->route('posts.index')
+        return redirect()->route('articles.index')
             ->with('success', 'Post updated successfully.');
     }
 
@@ -92,7 +92,7 @@ class PostController extends Controller
     {
         $post->delete();
 
-        return redirect()->route('posts.index')
+        return redirect()->route('articles.index')
             ->with('success', 'Post deleted successfully.');
     }
 }

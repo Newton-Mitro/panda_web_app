@@ -19,7 +19,7 @@ class PageController extends Controller
 {
     public function index(): Response
     {
-        $pages = Page::latest()->paginate(20);
+        $pages = Page::latest()->paginate(perPage: 15);
 
         return Inertia::render('pages/index', [
             'pages' => $pages

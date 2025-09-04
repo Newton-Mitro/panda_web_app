@@ -12,9 +12,9 @@ class LikeSeeder extends Seeder
     public function run(): void
     {
         $users = User::all();
-        $posts = Post::all();
+        $articles = Post::all();
 
-        foreach ($posts as $post) {
+        foreach ($articles as $post) {
             // Each post gets 0 to 10 likes
             $likeCount = rand(0, min(10, $users->count()));
             $likers = $users->random($likeCount);

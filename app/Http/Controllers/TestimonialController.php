@@ -2,79 +2,95 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTestimonialRequest;
-use App\Http\Requests\UpdateTestimonialRequest;
 use App\Infrastructure\Models\Testimonial;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use App\Infrastructure\Models\Media;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TestimonialController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(): View
+    public function index(Request $request)
     {
-        $testimonials = Testimonial::latest()->paginate(20);
-        return view('testimonials.index', compact('testimonials'));
+        $perPage = $request->input('perPage', 20);
+
+        $testimonials = Testimonial::with('media')
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+
+        return Inertia::render('testimonials/index', [
+            'testimonials' => $testimonials,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): View
+    public function create(Request $request)
     {
-        return view('testimonials.create');
+        $perPage = $request->input('perPage', 10);
+
+        $media = Media::latest()->paginate($perPage)->withQueryString();
+
+        return Inertia::render('testimonials/create', [
+            'media' => $media,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreTestimonialRequest $request): RedirectResponse
+    public function store(Request $request)
     {
-        $data = $request->validated();
+        $data = $request->validate([
+            'author_name' => 'required|string|max:255',
+            'author_designation' => 'nullable|string|max:255',
+            'company' => 'nullable|string|max:255',
+            'message' => 'required|string',
+            'media_id' => 'nullable|exists:media,id',
+            'rating' => 'nullable|integer|min:1|max:5',
+            'status' => 'required|in:Active,Inactive',
+        ]);
+
         Testimonial::create($data);
 
-        return redirect()->route('testimonials.index')
-            ->with('success', 'Testimonial created successfully.');
+        return redirect()->route('testimonials.index')->with('success', 'Testimonial created.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Testimonial $testimonial): View
+    public function show(Testimonial $testimonial)
     {
-        return view('testimonials.show', compact('testimonial'));
+        return Inertia::render('testimonials/show', [
+            'testimonial' => $testimonial->load('media'),
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Testimonial $testimonial): View
+    public function edit(Testimonial $testimonial, Request $request)
     {
-        return view('testimonials.edit', compact('testimonial'));
+        $perPage = $request->input('perPage', 10);
+
+        $media = Media::latest()->paginate($perPage)->withQueryString();
+
+        return Inertia::render('testimonials/edit', [
+            'testimonial' => $testimonial->load('media'),
+            'media' => $media,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateTestimonialRequest $request, Testimonial $testimonial): RedirectResponse
+    public function update(Request $request, Testimonial $testimonial)
     {
-        $data = $request->validated();
+        $data = $request->validate([
+            'author_name' => 'required|string|max:255',
+            'author_designation' => 'nullable|string|max:255',
+            'company' => 'nullable|string|max:255',
+            'message' => 'required|string',
+            'media_id' => 'nullable|exists:media,id',
+            'rating' => 'nullable|integer|min:1|max:5',
+            'status' => 'required|in:Active,Inactive',
+        ]);
+
         $testimonial->update($data);
 
-        return redirect()->route('testimonials.index')
-            ->with('success', 'Testimonial updated successfully.');
+        return redirect()->route('testimonials.index')->with('success', 'Testimonial updated.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Testimonial $testimonial): RedirectResponse
+    public function destroy(Testimonial $testimonial)
     {
         $testimonial->delete();
 
-        return redirect()->route('testimonials.index')
-            ->with('success', 'Testimonial deleted successfully.');
+        return redirect()->route('testimonials.index')->with('success', 'Testimonial deleted.');
     }
 }
