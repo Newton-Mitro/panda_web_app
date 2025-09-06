@@ -67,17 +67,34 @@ CREATE TABLE users (
     FOREIGN KEY (branch_id) REFERENCES branches(id)
 );
 
+CREATE TABLE online_users (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  member_id CHAR(36) NOT NULL,  -- FK to members.id
+  username VARCHAR(100) UNIQUE NOT NULL,
+  email VARCHAR(150) UNIQUE,
+  phone VARCHAR(20) UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  last_login_at TIMESTAMP NULL,
+  status ENUM('ACTIVE','SUSPENDED','CLOSED') DEFAULT 'ACTIVE',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (member_id) REFERENCES members(id)
+);
+
 -- =========================================
 -- 2) Customers
 -- =========================================
 CREATE TABLE customers (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     customer_no VARCHAR(50) UNIQUE NOT NULL,
-    type ENUM('individual','organization') NOT NULL,
+    type ENUM('Individual','Organization') NOT NULL,
     full_name VARCHAR(150) NOT NULL,
+    registration_no VARCHAR(150),// For organizations
     dob DATE,
-    gender ENUM('M','F','O'),
-    nid VARCHAR(50),
+    gender ENUM('Male','Female','Other'),
+    religion ENUM('Christianity','Islam','Hinduism', 'Buddhism', 'Other'),
+    identification_type ENUM('NID','NBR','Passport', 'Driving License'),
+    identification_number VARCHAR(50) NOT NULL,
     phone VARCHAR(50),
     email VARCHAR(100),
     kyc_level ENUM('MIN','STD','ENH') DEFAULT 'MIN',
@@ -86,15 +103,66 @@ CREATE TABLE customers (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE customer_addresses (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    customer_id BIGINT UNSIGNED NOT NULL,
+    line1 VARCHAR(255) NOT NULL,
+    line2 VARCHAR(255),
+    city VARCHAR(100) NOT NULL,
+    state VARCHAR(100),
+    postal_code VARCHAR(20),
+    country_code CHAR(2) NOT NULL DEFAULT 'BD',  -- ISO 3166-1 alpha-2
+    type ENUM('CURRENT','PERMANENT','MAILING','WORK','REGISTERED','OTHER')
+        NOT NULL DEFAULT 'CURRENT',
+    FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+);
+
+-- protected $relationMap = [
+--     // Parents & Children
+--     'Father'        => ['reverse' => ['Son','Daughter']],
+--     'Mother'        => ['reverse' => ['Son','Daughter']],
+--     'Son'           => ['reverse' => ['Father','Mother']],
+--     'Daughter'      => ['reverse' => ['Father','Mother']],
+
+--     // Siblings
+--     'Brother'       => ['reverse' => ['Brother','Sister']],
+--     'Sister'        => ['reverse' => ['Brother','Sister']],
+
+--     // Spouse
+--     'Husband'       => ['reverse' => ['Wife']],
+--     'Wife'          => ['reverse' => ['Husband']],
+
+--     // Extended family
+--     'Grandfather'   => ['reverse' => ['Grandson','Granddaughter']],
+--     'Grandmother'   => ['reverse' => ['Grandson','Granddaughter']],
+--     'Grandson'      => ['reverse' => ['Grandfather','Grandmother']],
+--     'Granddaughter' => ['reverse' => ['Grandfather','Grandmother']],
+
+--     'Uncle'         => ['reverse' => ['Nephew','Niece']],
+--     'Aunt'          => ['reverse' => ['Nephew','Niece']],
+--     'Nephew'        => ['reverse' => ['Uncle','Aunt']],
+--     'Niece'         => ['reverse' => ['Uncle','Aunt']],
+
+--     // In-laws
+--     'Father-in-law'    => ['reverse' => ['Son-in-law','Daughter-in-law']],
+--     'Mother-in-law'    => ['reverse' => ['Son-in-law','Daughter-in-law']],
+--     'Son-in-law'       => ['reverse' => ['Father-in-law','Mother-in-law']],
+--     'Daughter-in-law'  => ['reverse' => ['Father-in-law','Mother-in-law']],
+--     'Brother-in-law'   => ['reverse' => ['Brother-in-law','Sister-in-law']],
+--     'Sister-in-law'    => ['reverse' => ['Brother-in-law','Sister-in-law']],
+-- ];
+
 CREATE TABLE customer_family_relations (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     customer_id BIGINT UNSIGNED NOT NULL,
     relative_id BIGINT UNSIGNED NOT NULL,
-    relation_type VARCHAR(50),
+    relation_type VARCHAR(50) NOT NULL,
+    reverse_relation_type VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
-    FOREIGN KEY (relative_id) REFERENCES customers(id) ON DELETE CASCADE
+    FOREIGN KEY (relative_id) REFERENCES customers(id) ON DELETE CASCADE,
+    UNIQUE (customer_id, relative_id)  -- prevent duplicates
 );
 
 CREATE TABLE customer_signatures (
@@ -246,7 +314,7 @@ CREATE TABLE loan_collaterals (
     FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
 );
 
-CREATE TABLE loan_applicant_work_details (
+CREATE TABLE loan_application_work_details (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     loan_application_id BIGINT UNSIGNED NOT NULL,
     employer_name VARCHAR(100),
@@ -257,7 +325,7 @@ CREATE TABLE loan_applicant_work_details (
     FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
 );
 
-CREATE TABLE loan_applicant_assets (
+CREATE TABLE loan_application_assets (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     loan_application_id BIGINT UNSIGNED NOT NULL,
     asset_type VARCHAR(50) NOT NULL,
@@ -266,7 +334,7 @@ CREATE TABLE loan_applicant_assets (
     FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
 );
 
-CREATE TABLE loan_applicant_incomes (
+CREATE TABLE loan_application_incomes (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     loan_application_id BIGINT UNSIGNED NOT NULL,
     source VARCHAR(100),
@@ -274,11 +342,21 @@ CREATE TABLE loan_applicant_incomes (
     FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
 );
 
-CREATE TABLE loan_applicant_expenses (
+CREATE TABLE loan_application_expenses (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     loan_application_id BIGINT UNSIGNED NOT NULL,
     category VARCHAR(50),
     monthly_amount DECIMAL(18,2),
+    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
+);
+
+CREATE TABLE loan_application_supporting_docs (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    loan_application_id BIGINT UNSIGNED NOT NULL,
+    file_name VARCHAR(50),
+    file_path VARCHAR(50),
+    mime VARCHAR(50),
+    document_type VARCHAR(50), // Gass, Electricity
     FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
 );
 
@@ -513,6 +591,7 @@ return new class extends Migration
             $table->string('customer_no', 50)->unique();
             $table->enum('type', ['individual','organization']);
             $table->string('full_name', 150);
+            $table->string('registration_no')->nullable(); // For organizations
             $table->date('dob')->nullable();
             $table->enum('gender', ['M','F','O'])->nullable();
             $table->string('nid', 50)->nullable();
