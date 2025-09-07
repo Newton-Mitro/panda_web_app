@@ -17,13 +17,8 @@ export interface Team {
     linkedin_links?: string | null;
     instagram_links?: string | null;
     youtube_links?: string | null;
-    pinterest_links?: string | null;
-    tiktok_links?: string | null;
-    snapchat_links?: string | null;
     whatsapp_links?: string | null;
-    telegram_links?: string | null;
     github_links?: string | null;
-    discord_links?: string | null;
     email?: string | null;
     phone?: string | null;
     address?: string | null;

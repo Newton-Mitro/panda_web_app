@@ -1,6 +1,6 @@
 import { Transition } from '@headlessui/react';
 import { Head, router } from '@inertiajs/react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import HeadingSmall from '../../components/heading-small';
 import InputError from '../../components/input-error';
 import { MediaSelector } from '../../components/media-selector';
@@ -18,36 +18,22 @@ import MediaBrowserModal from '../media/media_browser_modal';
 
 interface EditProps {
     category: Category;
-    categories: Category[];
     media: PaginatedData<Media>;
 }
 
-export default function Edit({ category, categories, media }: EditProps) {
+export default function Edit({ category, media }: EditProps) {
     const [form, setForm] = useState({
         name: category.name,
         slug: category.slug,
         category_of: category.category_of,
         media_id: category.media_id ?? null,
-        parent_id: category.parent_id ?? null,
         description: category.description ?? '',
     });
 
-    const [filteredParents, setFilteredParents] = useState<Category[]>([]);
     const [selectedMedia, setSelectedMedia] = useState<Media | null>(category.media ?? null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [errors, setErrors] = useState<any>({});
     const [recentlySuccessful, setRecentlySuccessful] = useState(false);
-
-    // Dynamically filter parent categories based on category_of
-    useEffect(() => {
-        const filtered = categories.filter((cat) => cat.category_of === form.category_of && cat.id !== category.id);
-        setFilteredParents(filtered);
-
-        // Reset parent_id if it is no longer valid
-        if (!filtered.find((cat) => cat.id === form.parent_id)) {
-            setForm((prev) => ({ ...prev, parent_id: null }));
-        }
-    }, [form.category_of, categories, category.id, form.parent_id]);
 
     const handleNameChange = (value: string) => {
         setForm({
@@ -77,7 +63,7 @@ export default function Edit({ category, categories, media }: EditProps) {
             <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
                 <HeadingSmall title="Edit Category" description="Update the selected category" />
 
-                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 shadow-md md:w-4xl dark:bg-gray-900">
+                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 md:w-4xl dark:bg-gray-900">
                     {/* Name + Slug */}
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="flex flex-col gap-2">
@@ -107,25 +93,10 @@ export default function Edit({ category, categories, media }: EditProps) {
                                     { value: 'Project', label: 'Project' },
                                     { value: 'Event', label: 'Event' },
                                     { value: 'Notice', label: 'Notice' },
-                                    { value: 'Blog', label: 'Blog' },
+                                    { value: 'Article', label: 'Article' },
                                 ]}
                             />
                             <InputError message={errors.category_of} />
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <Label>Parent Category</Label>
-                            <Select
-                                value={form.parent_id ?? ''}
-                                onChange={(e) => setForm({ ...form, parent_id: e.target.value ? Number(e.target.value) : null })}
-                                options={[
-                                    ...filteredParents.map((cat) => ({
-                                        value: cat.id.toString(),
-                                        label: `${cat.name} ${cat.parent_id ? ' 🌿' : ' 📂'}`,
-                                    })),
-                                ]}
-                            />
-                            <InputError message={errors.parent_id} />
                         </div>
                     </div>
 

@@ -59,7 +59,7 @@ export default function Create({ categories, media }: CreateProps) {
             <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
                 <HeadingSmall title="Create Service" description="Fill in the service details" />
 
-                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 shadow-md md:w-4xl dark:bg-gray-900">
+                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 md:w-4xl dark:bg-gray-900">
                     {/* Title & Slug */}
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="grid gap-2">
@@ -82,12 +82,10 @@ export default function Create({ categories, media }: CreateProps) {
                             <Select
                                 value={form.category_id.toString()}
                                 onChange={(e) => setForm({ ...form, category_id: Number(e.target.value) })}
-                                options={categories
-                                    .filter((cat) => cat.parent_id)
-                                    .map((cat) => ({
-                                        value: cat.id.toString(),
-                                        label: `${cat.name} ${cat.parent_id ? ' 🌿' : ' 📂'}`,
-                                    }))}
+                                options={categories.map((cat) => ({
+                                    value: cat.id.toString(),
+                                    label: `${cat.name} 🌿`,
+                                }))}
                             />
                             <InputError message={errors.category_id} />
                         </div>

@@ -11,69 +11,77 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
-        // Collect seeded media IDs
         $mediaIds = Media::pluck('id')->toArray();
 
         $categories = [
             'Product' => [
-                'Electronics' => ['Mobiles', 'Laptops', 'Cameras'],
-                'Clothing' => ['Men', 'Women', 'Kids'],
-                'Books' => ['Fiction', 'Non-fiction', 'Education'],
-                'Home Appliances' => ['Kitchen', 'Living Room', 'Bedroom'],
-                'Sports' => ['Football', 'Basketball', 'Tennis'],
-                'Furniture' => ['Bedroom', 'Living Room', 'Kitchen'],
-                'Jewelry' => ['Necklaces', 'Earrings', 'Rings'],
-                'Beauty' => ['Makeup', 'Skincare', 'Haircare'],
+                'Electronics',
+                'Clothing',
+                'Books',
+                'Home Appliances',
+                'Sports',
+                'Furniture',
+                'Jewelry',
+                'Beauty',
             ],
             'Service' => [
-                'Development' => ['Web Development', 'Mobile Development'],
-                'Design' => ['UI/UX Design', 'Graphic Design'],
-                // 'Marketing' => ['SEO', 'Content Marketing'],
-                'Solar Energy' => ['Installation', 'Maintenance', 'Repairs', 'Sales'],
-                'Real Estate' => ['Buying', 'Selling', 'Renting'],
-                // 'Legal Services' => ['Legal Advice', 'Court Proceedings'],
-                // 'Financial Services' => ['Banking', 'Insurance', 'Investment', 'Loan'],
-                // 'Transportation' => ['Air', 'Rail', 'Road', 'Maritime'],
-                'Healthcare' => ['Diagnostics', 'Therapy', 'Medicine'],
-                'Educational Services' => ['Tutoring', 'Academy', 'Training'],
-                'Tourism' => ['Hotels', 'Restaurants', 'Attractions'],
+                'Development',
+                'Design',
+                'Marketing',
+                'Solar Energy',
+                'Real Estate',
+                'Legal Services',
+                'Financial Services',
+                'Transportation',
+                'Healthcare',
+                'Educational Services',
+                'Tourism',
             ],
             'Team' => [
-                'Management' => ['Leadership'],
-                'Engineering' => ['Backend', 'Frontend', 'DevOps'],
-                'Design' => ['UI', 'UX'],
-                'Marketing' => ['Digital', 'Offline'],
-                'School' => ['Teachers', 'School Staff'],
-                'Hospital' => ['Doctors', 'Nurses'],
-                'Salons' => ['Hairdressers', 'Makeup Artists'],
-                'Restaurants' => ['Chefs', 'Waiters'],
+                'Management',
+                'Engineering',
+                'Design',
+                'Marketing',
+                'Sales',
+                'Customer Support',
             ],
-            'Blog' => [
-                'Tech Insights' => ['AI', 'Cloud', 'Programming'],
-                'Business Strategy' => ['Startups', 'Leadership'],
-                'Lifestyle' => ['Health', 'Travel', 'Food'],
+            'Student' => [
+                'Class I',
+                'Class II',
+                'Class III',
+                'Class IV',
+                'Class V',
+                'Class VI',
+                'Class VII',
+                'Class VIII',
+                'Class IX',
+                'Class X',
+            ],
+            'Article' => [
+                'Tech Insights',
+                'Business Strategy',
+                'Lifestyle',
             ],
             'Event' => [
-                'Conferences' => ['Tech Summit', 'Business Expo'],
-                'Workshops' => ['Coding Bootcamp', 'Design Thinking'],
-                'Meetups' => ['Developers', 'Designers'],
+                'Conferences',
+                'Workshops',
+                'Meetups',
             ],
             'Notice' => [
-                'Announcements' => ['Policy Updates', 'New Releases'],
-                'Exams' => ['Schedules', 'Results'],
-                'General Notices' => ['Holidays', 'Maintenance'],
+                'Announcements',
+                'Exams',
+                'General Notices',
             ],
             'Project' => [
-                'Open Source' => ['Libraries', 'Tools'],
-                'Client Work' => ['Websites', 'Apps'],
-                'Internal Tools' => ['Dashboards', 'APIs'],
+                'Open Source',
+                'Client Work',
+                'Internal Tools',
             ],
         ];
 
-        foreach ($categories as $categoryOf => $parents) {
-            foreach ($parents as $parentName => $children) {
-                // Ensure parent slug uniqueness
-                $parent = Category::firstOrCreate(
+        foreach ($categories as $categoryOf => $parentCategories) {
+            foreach ($parentCategories as $parentName) {
+                Category::firstOrCreate(
                     [
                         'name' => $parentName,
                         'category_of' => $categoryOf,
@@ -84,22 +92,6 @@ class CategorySeeder extends Seeder
                         'media_id' => $mediaIds[array_rand($mediaIds)] ?? null,
                     ]
                 );
-
-                foreach ($children as $childName) {
-                    // Ensure child slug uniqueness
-                    Category::firstOrCreate(
-                        [
-                            'name' => $childName,
-                            'category_of' => $categoryOf,
-                        ],
-                        [
-                            'slug' => Str::slug($childName . '-' . strtolower($categoryOf)),
-                            'description' => $childName . ' subcategory',
-                            'parent_id' => $parent->id,
-                            'media_id' => $mediaIds[array_rand($mediaIds)] ?? null,
-                        ]
-                    );
-                }
             }
         }
     }

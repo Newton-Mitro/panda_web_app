@@ -51,7 +51,7 @@ export default function Edit({ partner, media }: EditProps) {
             <div className="space-y-8 p-6">
                 <HeadingSmall title={`Edit ${partner.name}`} description="Update partner details" />
 
-                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 shadow-md md:w-4xl dark:bg-gray-900">
+                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 md:w-4xl dark:bg-gray-900">
                     {/* Name */}
                     <div className="grid gap-2">
                         <Label>Name</Label>

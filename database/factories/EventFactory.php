@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Infrastructure\Models\Category;
 use App\Infrastructure\Models\Event;
 use App\Infrastructure\Models\Media;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -26,6 +27,7 @@ class EventFactory extends Factory
             'start_date' => $startDate->format('Y-m-d'),
             'end_date' => $endDate?->format('Y-m-d'),
             'media_id' => Media::inRandomOrder()->first()?->id,
+            'category_id' => Category::where('category_of', 'Event')->inRandomOrder()->first()?->id,
             'status' => $this->faker->randomElement(['Active', 'Inactive']),
         ];
     }

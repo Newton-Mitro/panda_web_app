@@ -187,7 +187,7 @@ export default function Dashboard() {
                     <h2 className="mb-3 text-lg font-semibold">Quick Actions</h2>
                     <div className="flex flex-wrap gap-2">
                         {[
-                            { label: 'Add Blog', icon: 'fa-newspaper' },
+                            { label: 'Add Article', icon: 'fa-newspaper' },
                             { label: 'Add Product', icon: 'fa-box-open' },
                             { label: 'Add Service', icon: 'fa-cogs' },
                             { label: 'Add Notice', icon: 'fa-bullhorn' },

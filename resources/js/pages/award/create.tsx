@@ -53,7 +53,7 @@ export default function AwardsCreate({ media }: CreateProps) {
             <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
                 <HeadingSmall title="Create Award" description="Fill in the award details" />
 
-                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 shadow-md md:w-4xl dark:bg-gray-900">
+                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 md:w-4xl dark:bg-gray-900">
                     {/* Title */}
                     <div className="grid gap-2">
                         <Label>Title</Label>

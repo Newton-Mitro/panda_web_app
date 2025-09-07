@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Infrastructure\Models\Category;
 use App\Infrastructure\Models\Media;
 use App\Infrastructure\Models\Article;
 use App\Infrastructure\Models\User;
@@ -22,6 +23,7 @@ class ArticleFactory extends Factory
             'slug' => Str::slug($title) . '-' . $this->faker->unique()->numberBetween(100, 999),
             'content' => $this->faker->paragraphs(5, true),
             'media_id' => Media::inRandomOrder()->first()?->id,
+            'category_id' => Category::where('category_of', 'Article')->inRandomOrder()->first()?->id,
             'status' => $this->faker->randomElement(['draft', 'published', 'archived']),
             'published_at' => $this->faker->optional()->dateTimeBetween('-1 year', 'now'),
         ];

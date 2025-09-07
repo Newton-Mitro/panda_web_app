@@ -48,7 +48,7 @@ export default function Create({ media }: CreateProps) {
             <Head title="Create Hero Slide" />
             <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
                 <HeadingSmall title="Create Hero Slide" description="Add a new hero slide with text, button, and image" />
-                <div className="space-y-6 rounded-lg border bg-white p-6 shadow-md md:w-4xl dark:bg-gray-900">
+                <div className="space-y-6 rounded-lg border bg-white p-6 md:w-4xl dark:bg-gray-900">
                     <form onSubmit={submit} className="space-y-6">
                         {/* Title */}
                         <div className="grid gap-2">

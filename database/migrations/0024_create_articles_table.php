@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->longText('content');
             $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
+            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });

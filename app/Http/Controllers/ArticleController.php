@@ -2,97 +2,111 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
 use App\Infrastructure\Models\Article;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use App\Infrastructure\Models\Media;
+use App\Infrastructure\Models\Category;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(): View
+    public function index(Request $request)
     {
-        $articles = Article::with('categories', 'tags', 'author')->paginate(15);
-        return view('articles.index', compact('articles'));
+        $perPage = $request->input('perPage', 20);
+
+        $articles = Article::with(['media', 'category', 'user'])
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+
+        return Inertia::render('articles/index', [
+            'articles' => $articles,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): View
+    public function create(Request $request)
     {
-        return view('articles.create');
+        $perPage = $request->input('perPage', 10);
+
+        $media = Media::latest()->paginate($perPage)->withQueryString();
+        $categories = Category::where('category_of', 'Article')->get();
+
+        return Inertia::render('articles/create', [
+            'media' => $media,
+            'categories' => $categories,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePostRequest $request): RedirectResponse
+    public function store(Request $request)
     {
-        $data = $request->validated();
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|unique:articles,slug',
+            'content' => 'required|string',
+            'media_id' => 'nullable|exists:media,id',
+            'category_id' => 'required|exists:categories,id',
+            'status' => 'nullable|in:draft,published,archived',
+            'published_at' => 'nullable|date',
+        ]);
 
-        $article = Article::create($data);
+        // Generate slug if not provided
+        $title = $request->input('title');
+        $data['slug'] = $data['slug'] ?: Str::slug($title) . '-' . Str::random(6);
 
-        // Attach categories or tags if applicable
-        if (isset($data['categories'])) {
-            $article->categories()->sync($data['categories']);
-        }
-        if (isset($data['tags'])) {
-            $article->tags()->sync($data['tags']);
-        }
+        // Default to draft
+        $data['status'] = $data['status'] ?? 'draft';
 
-        return redirect()->route('articles.index')
-            ->with('success', 'Post created successfully.');
+        // Associate with logged-in user
+        $data['user_id'] = $request->user()->id;
+
+        Article::create($data);
+
+        return redirect()->route('articles.index')->with('success', 'Article created.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Article $article): View
+    public function show(Article $article)
     {
-        return view('articles.show', compact('post'));
+        return Inertia::render('articles/show', [
+            'article' => $article->load(['media', 'category', 'user']),
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Article $article): View
+    public function edit(Article $article, Request $request)
     {
-        return view('articles.edit', compact('post'));
+        $perPage = $request->input('perPage', 10);
+
+        $media = Media::latest()->paginate($perPage)->withQueryString();
+        $categories = Category::where('category_of', 'Article')->get();
+
+        return Inertia::render('articles/edit', [
+            'article' => $article->load(['media', 'category']),
+            'media' => $media,
+            'categories' => $categories,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePostRequest $request, Article $article): RedirectResponse
+    public function update(Request $request, Article $article)
     {
-        $data = $request->validated();
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|unique:articles,slug,' . $article->id,
+            'content' => 'required|string',
+            'media_id' => 'nullable|exists:media,id',
+            'category_id' => 'required|exists:categories,id',
+            'status' => 'required|in:draft,published,archived',
+            'published_at' => 'nullable|date',
+        ]);
 
         $article->update($data);
 
-        // Update categories or tags
-        if (isset($data['categories'])) {
-            $article->categories()->sync($data['categories']);
-        }
-        if (isset($data['tags'])) {
-            $article->tags()->sync($data['tags']);
-        }
-
-        return redirect()->route('articles.index')
-            ->with('success', 'Post updated successfully.');
+        return redirect()->route('articles.index')->with('success', 'Article updated.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Article $article): RedirectResponse
+    public function destroy(Article $article)
     {
         $article->delete();
 
-        return redirect()->route('articles.index')
-            ->with('success', 'Post deleted successfully.');
+        return redirect()->route('articles.index')->with('success', 'Article deleted.');
     }
 }

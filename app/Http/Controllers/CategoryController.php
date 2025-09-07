@@ -11,7 +11,7 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $categoryOf = $request->input('category_of'); // e.g., Product, Blog, etc.
+        $categoryOf = $request->input('category_of'); // e.g., Product, Article, etc.
 
         $categories = Category::with('media', 'parent')
             ->when($categoryOf, function ($query, $categoryOf) {
@@ -46,7 +46,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'category_of' => 'required|in:Team,Service,Product,Project,Event,Notice,Blog',
+            'category_of' => 'required|in:Team,Leader,Student,Teacher,Doctor,Service,Product,Project,Event,Notice,Article',
             'name' => 'required|string|max:255',
             'slug' => 'required|string|unique:categories,slug',
             'description' => 'nullable|string',
@@ -88,7 +88,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $data = $request->validate([
-            'category_of' => 'required|in:Team,Service,Product,Project,Event,Notice,Blog',
+            'category_of' => 'required|in:Team,Leader,Student,Teacher,Doctor,Service,Product,Project,Event,Notice,Article',
             'name' => 'required|string|max:255',
             'slug' => 'required|string|unique:categories,slug,' . $category->id,
             'description' => 'nullable|string',

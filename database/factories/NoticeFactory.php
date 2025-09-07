@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Infrastructure\Models\Category;
 use App\Infrastructure\Models\Media;
 use App\Infrastructure\Models\Notice;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -22,6 +23,7 @@ class NoticeFactory extends Factory
             'publish_date' => $this->faker->dateTimeBetween('-1 years', 'now')->format('Y-m-d'),
             'expiry_date' => optional($this->faker->optional()->dateTimeBetween('now', '+6 months'))->format('Y-m-d'),
             'media_id' => Media::inRandomOrder()->first()?->id,
+            'category_id' => Category::where('category_of', 'Notice')->inRandomOrder()->first()?->id,
             'status' => $this->faker->randomElement(['Active', 'Inactive']),
         ];
     }

@@ -1,11 +1,6 @@
+import AppLogoIcon from '@/components/app-logo-icon';
 import InputError from '@/components/input-error';
-import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AuthLayout from '@/layouts/auth-layout';
-import { Form, Head } from '@inertiajs/react';
+import { Form, Head, Link } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 
 interface LoginProps {
@@ -15,71 +10,91 @@ interface LoginProps {
 
 export default function Login({ status, canResetPassword }: LoginProps) {
     return (
-        <AuthLayout title="Log in to your account" description="Enter your email and password below to log in">
+        <div className="flex min-h-screen items-center justify-center bg-[#07111a] font-mono">
             <Head title="Log in" />
 
-            <Form method="post" action={route('login')} resetOnSuccess={['password']} className="flex flex-col gap-6">
-                {({ processing, errors }) => (
-                    <>
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input
+            <div className="w-full max-w-md rounded-lg border border-white/5 bg-gradient-to-b from-[#061018] to-[#07121a] p-6 shadow-2xl">
+                {/* Logo + Intro Centered */}
+                <div className="mb-6 flex flex-col items-center text-center">
+                    <AppLogoIcon className="mb-3 h-20 w-20 fill-current text-white" />
+                    <div className="text-sm font-medium text-green-300">
+                        Login to <span className="text-white">PandaWeb</span>
+                    </div>
+                    <div className="text-xs text-gray-400">Authenticate to continue</div>
+                </div>
+
+                {/* Form */}
+                <Form method="post" action={route('login')} resetOnSuccess={['password']} className="space-y-4">
+                    {({ processing, errors }) => (
+                        <>
+                            {/* Email */}
+                            <div>
+                                <label className="mb-1 block text-xs text-green-200/80">email</label>
+                                <input
                                     id="email"
                                     type="email"
                                     name="email"
                                     required
                                     autoFocus
-                                    tabIndex={1}
                                     autoComplete="email"
-                                    placeholder="email@example.com"
+                                    placeholder="you@example.com"
+                                    className="w-full rounded border border-green-900/30 bg-transparent px-3 py-2 text-sm text-white outline-none placeholder:text-green-200/30"
                                 />
-                                <InputError message={errors.email} />
+                                <InputError message={errors.email} className="mt-1" />
                             </div>
 
-                            <div className="grid gap-2">
-                                <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
-                                    {canResetPassword && (
-                                        <TextLink href={route('password.request')} className="ml-auto text-sm" tabIndex={5}>
-                                            Forgot password?
-                                        </TextLink>
-                                    )}
-                                </div>
-                                <Input
+                            {/* Password */}
+                            <div>
+                                <label className="mb-1 block text-xs text-green-200/80">password</label>
+                                <input
                                     id="password"
                                     type="password"
                                     name="password"
                                     required
-                                    tabIndex={2}
                                     autoComplete="current-password"
-                                    placeholder="Password"
+                                    placeholder="••••••••"
+                                    className="w-full rounded border border-green-900/30 bg-transparent px-3 py-2 text-sm text-white outline-none placeholder:text-green-200/30"
                                 />
-                                <InputError message={errors.password} />
+                                <InputError message={errors.password} className="mt-1" />
                             </div>
 
-                            <div className="flex items-center space-x-3">
-                                <Checkbox id="remember" name="remember" tabIndex={3} />
-                                <Label htmlFor="remember">Remember me</Label>
+                            {/* Remember + Forgot */}
+                            <div className="flex items-center justify-between text-xs">
+                                <label className="flex items-center gap-2 text-green-200/70">
+                                    <input type="checkbox" name="remember" className="h-4 w-4 accent-green-400" />
+                                    Remember me
+                                </label>
+                                {canResetPassword && (
+                                    <a href={route('password.request')} className="text-green-300 underline">
+                                        Forgot password?
+                                    </a>
+                                )}
                             </div>
 
-                            <Button type="submit" className="mt-4 w-full" tabIndex={4} disabled={processing}>
+                            {/* Submit */}
+                            <button
+                                type="submit"
+                                className="inline-flex w-full items-center justify-center gap-2 rounded bg-green-500/90 px-4 py-1.5 text-sm font-medium text-black hover:bg-green-500"
+                                disabled={processing}
+                            >
                                 {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                                 Log in
-                            </Button>
-                        </div>
+                            </button>
 
-                        <div className="text-center text-sm text-muted-foreground">
-                            Don't have an account?{' '}
-                            <TextLink href={route('register')} tabIndex={5}>
-                                Sign up
-                            </TextLink>
-                        </div>
-                    </>
-                )}
-            </Form>
+                            {/* Register link */}
+                            <div className="pt-4 text-center text-xs text-gray-400">
+                                Don’t have an account?{' '}
+                                <Link href={route('register')} className="text-green-300 underline">
+                                    Register
+                                </Link>
+                            </div>
+                        </>
+                    )}
+                </Form>
 
-            {status && <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>}
-        </AuthLayout>
+                {/* Status message */}
+                {status && <div className="mt-4 text-center text-sm font-medium text-green-500">{status}</div>}
+            </div>
+        </div>
     );
 }

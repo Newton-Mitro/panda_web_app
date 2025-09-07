@@ -185,7 +185,7 @@ const Edit: React.FC<EditProps> = ({ page, sections, media }) => {
                 <HeadingSmall title="Edit Page" description="Edit page title, meta title, and meta description" />
                 <form onSubmit={handlePageSubmit} className="w-full md:w-4xl">
                     {/* Page Metadata */}
-                    <div className="space-y-6 rounded-lg border bg-white p-6 shadow-md md:w-4xl dark:bg-gray-900">
+                    <div className="space-y-6 rounded-lg border bg-white p-6 md:w-4xl dark:bg-gray-900">
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                             <div className="flex flex-col gap-2">
                                 <Label htmlFor="title">Title</Label>
@@ -228,7 +228,7 @@ const Edit: React.FC<EditProps> = ({ page, sections, media }) => {
                     <div className="mt-6 space-y-6">
                         <HeadingSmall title="Page Sections" description="Add or remove page sections" />
                         {pageSections.map((section, index) => (
-                            <div key={index} className="space-y-6 rounded-lg border bg-white p-6 shadow-md dark:bg-gray-900">
+                            <div key={index} className="space-y-6 rounded-lg border bg-white p-6 dark:bg-gray-900">
                                 <div className="flex items-center justify-between">
                                     <HeadingSmall title={`Section ${index + 1}`} description="Edit section details" />
                                     <Tooltip>

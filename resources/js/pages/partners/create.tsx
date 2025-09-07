@@ -49,7 +49,7 @@ export default function Create({ media }: CreateProps) {
             <div className="space-y-8 p-6">
                 <HeadingSmall title="Create Partner" description="Fill in the partner details" />
 
-                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 shadow-md md:w-4xl dark:bg-gray-900">
+                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 md:w-4xl dark:bg-gray-900">
                     <div className="grid gap-2">
                         <Label>Name</Label>
                         <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />

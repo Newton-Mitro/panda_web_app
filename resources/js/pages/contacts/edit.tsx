@@ -48,7 +48,7 @@ export default function Edit({ contact }: EditProps) {
             <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
                 <HeadingSmall title="Edit Contact" description="Update the contact details" />
 
-                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 shadow-md md:w-4xl dark:bg-gray-900">
+                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 md:w-4xl dark:bg-gray-900">
                     {/* Title & Phone Side by Side */}
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="grid gap-2">

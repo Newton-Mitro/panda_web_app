@@ -65,7 +65,7 @@ export default function Edit({ career }: EditProps) {
             <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
                 <HeadingSmall title="Edit Career" description="Update the career details" />
 
-                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 shadow-md md:w-5xl dark:bg-gray-900">
+                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 md:w-5xl dark:bg-gray-900">
                     {/* Title & Location */}
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="grid gap-2">

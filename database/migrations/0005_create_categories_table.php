@@ -11,18 +11,22 @@ return new class extends Migration {
             $table->id();
             $table->enum('category_of', [
                 'Team',
+                'Course',
+                'Leaders',
+                'Student',
+                'Teacher',
+                'Doctor',
                 'Service',
                 'Product',
                 'Project',
                 'Event',
                 'Notice',
-                'Blog'
-            ])->default('Project');
+                'Article'
+            ])->default('Article');
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();
-            $table->foreignId('parent_id')->nullable()->constrained('categories')->cascadeOnDelete();
             $table->timestamps();
         });
     }

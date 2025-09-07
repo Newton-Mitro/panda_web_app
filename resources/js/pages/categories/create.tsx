@@ -27,7 +27,6 @@ export default function Create({ media, categories }: CreateProps) {
         slug: '',
         category_of: '',
         media_id: null as number | null,
-        parent_id: null as number | null,
         description: '',
     });
 
@@ -70,7 +69,7 @@ export default function Create({ media, categories }: CreateProps) {
             <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
                 <HeadingSmall title="Create Category" description="Add a new category" />
 
-                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 shadow-md md:w-4xl dark:bg-gray-900">
+                <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 md:w-4xl dark:bg-gray-900">
                     {/* Name + Slug */}
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="flex flex-col gap-2">
@@ -100,29 +99,10 @@ export default function Create({ media, categories }: CreateProps) {
                                     { value: 'Project', label: 'Project' },
                                     { value: 'Event', label: 'Event' },
                                     { value: 'Notice', label: 'Notice' },
-                                    { value: 'Blog', label: 'Blog' },
+                                    { value: 'Article', label: 'Article' },
                                 ]}
                             />
                             <InputError message={errors.category_of} />
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <Label htmlFor="parent_id">Parent Category</Label>
-                            <Select
-                                id="parent_id"
-                                value={form.parent_id ?? ''}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        parent_id: e.target.value ? Number(e.target.value) : null,
-                                    })
-                                }
-                                options={parentCategories.map((cat) => ({
-                                    value: cat.id.toString(),
-                                    label: `${cat.name} ${cat.parent_id ? ' 🌿' : ' 📂'}`,
-                                }))}
-                            />
-                            <InputError message={errors.parent_id} />
                         </div>
                     </div>
 

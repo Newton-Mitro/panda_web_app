@@ -24,8 +24,7 @@ class ServiceFactory extends Factory
             'media_id' => Media::inRandomOrder()->first()?->id,
 
             // ✅ Only pick categories that belong to "Service"
-            'category_id' => Category::where('category_of', 'Service')->inRandomOrder()->first()?->id
-                ?? Category::factory()->create(['category_of' => 'Service'])->id,
+            'category_id' => Category::where('category_of', 'Service')->inRandomOrder()->first()?->id,
 
             'status' => $this->faker->randomElement(['Active', 'Inactive']),
         ];

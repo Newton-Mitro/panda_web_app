@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->date('start_date');
             $table->date('end_date')->nullable();
             $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();
+            $table->foreignId('category_id')->nullable()->constrained('categories')->cascadeOnDelete();
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });

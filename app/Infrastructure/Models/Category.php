@@ -49,6 +49,6 @@ class Category extends Model
 
     public static function types(): array
     {
-        return ['Team', 'Service', 'Product', 'Project', 'Event', 'Notice', 'Blog'];
+        return ['Team', 'Leader', 'Student', 'Teacher', 'Doctor', 'Service', 'Product', 'Project', 'Event', 'Notice', 'Article'];
     }
 }

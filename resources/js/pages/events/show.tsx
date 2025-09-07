@@ -28,7 +28,7 @@ export default function Show({ event }: ShowProps) {
                     </Button>
                 </div>
 
-                <div className="space-y-6 rounded-lg border bg-white p-6 shadow-md dark:bg-gray-900">
+                <div className="space-y-6 rounded-lg border bg-white p-6 dark:bg-gray-900">
                     <div>
                         <h3 className="text-sm text-gray-500">Slug</h3>
                         <p className="text-lg font-medium">{event.slug}</p>

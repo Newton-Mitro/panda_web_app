@@ -9,6 +9,6 @@ class CareerSeeder extends Seeder
 {
     public function run(): void
     {
-        Career::factory(3)->create();
+        Career::factory(10)->create();
     }
 }

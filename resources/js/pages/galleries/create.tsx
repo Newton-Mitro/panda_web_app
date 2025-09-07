@@ -126,7 +126,7 @@ const Create: React.FC<CreateProps> = ({ media }) => {
                 <HeadingSmall title="Create Gallery" description="Add gallery title, main media, and additional gallery media" />
 
                 <form onSubmit={submit} className="w-full md:w-4xl">
-                    <div className="space-y-6 rounded-lg border bg-white p-6 shadow-md dark:bg-gray-900">
+                    <div className="space-y-6 rounded-lg border bg-white p-6 dark:bg-gray-900">
                         {/* Title & Description */}
                         <div className="grid gap-4">
                             <div className="flex flex-col gap-2">
@@ -168,7 +168,7 @@ const Create: React.FC<CreateProps> = ({ media }) => {
                     {/* Gallery Media */}
                     <div className="">
                         {form.media_items.map((item, index) => (
-                            <div key={index} className="relative my-6 gap-6 space-y-6 rounded-lg border bg-white p-6 shadow-md dark:bg-gray-900">
+                            <div key={index} className="relative my-6 gap-6 space-y-6 rounded-lg border bg-white p-6 dark:bg-gray-900">
                                 <div className="flex items-center justify-between">
                                     <span>Media {index + 1}</span>
                                     <Button type="button" variant="outline" onClick={() => removeGalleryMedia(index)}>

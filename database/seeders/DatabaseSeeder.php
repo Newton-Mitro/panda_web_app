@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
             GallerySeeder::class,
             HeroSliderSeeder::class,
             ArticleSeeder::class,
-            ArticleCategorySeeder::class,
+                // ArticleCategorySeeder::class,
             ArticleTagSeeder::class,
             CommentSeeder::class,
             LikeSeeder::class,

@@ -69,7 +69,7 @@ const Index: React.FC<ServiceProps> = ({ services }) => {
 
                 <div className="h-[calc(100vh-250px)] overflow-auto rounded border border-gray-200 dark:border-gray-700">
                     <table className="w-full border-collapse">
-                        <thead className="sticky top-0 hidden bg-gray-50 shadow-sm md:table-header-group dark:bg-gray-800">
+                        <thead className="sticky top-0 hidden bg-gray-50 md:table-header-group dark:bg-gray-800">
                             <tr>
                                 <th className="border-b border-gray-200 p-2 text-left dark:border-gray-700">Title</th>
                                 <th className="border-b border-gray-200 p-2 text-left dark:border-gray-700">Category</th>

@@ -14,7 +14,7 @@ export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => (
         <Toaster
             position="top-center"
             toastOptions={{
-                className: 'rounded-lg shadow-md',
+                className: 'rounded-lg ',
             }}
         />
     </AppLayoutTemplate>

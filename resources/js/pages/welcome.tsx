@@ -36,7 +36,64 @@ export default function Welcome() {
                     </nav>
                 </header>
                 <div className="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
-                    <div className="content">Home</div>
+                    <div className="content">
+                        <div className="terminal glass w-full max-w-md rounded-lg p-6 shadow-2xl">
+                            <div className="mb-4 text-sm text-green-300">
+                                <div className="font-medium">
+                                    Login to <span className="text-white">PandaWebApp</span>
+                                </div>
+                                <div className="mt-1 text-xs text-gray-400">Please authenticate to continue</div>
+                            </div>
+
+                            <form action="/login" method="POST" className="space-y-4" autoComplete="on">
+                                <div className="flex items-center gap-3 rounded border border-green-900/30 bg-transparent px-3 py-2">
+                                    <span className="text-sm text-green-400 select-none">username:</span>
+                                    <input
+                                        name="email"
+                                        type="email"
+                                        required
+                                        placeholder="you@example.com"
+                                        className="flex-1 bg-transparent text-sm text-white outline-none placeholder:text-green-200/30"
+                                    />
+                                </div>
+
+                                <div className="flex items-center gap-3 rounded border border-green-900/30 bg-transparent px-3 py-2">
+                                    <span className="text-sm text-green-400 select-none">password:</span>
+                                    <input
+                                        name="password"
+                                        type="password"
+                                        required
+                                        placeholder="••••••••"
+                                        className="flex-1 bg-transparent text-sm text-white outline-none placeholder:text-green-200/30"
+                                    />
+                                </div>
+
+                                <div className="flex items-center justify-between">
+                                    <label className="flex items-center gap-2 text-xs text-green-200/70">
+                                        <input type="checkbox" name="remember" className="h-4 w-4 accent-green-400" />
+                                        Remember me
+                                    </label>
+
+                                    <button
+                                        type="submit"
+                                        className="inline-flex items-center gap-2 rounded bg-green-500/90 px-4 py-1.5 text-sm font-medium text-black hover:bg-green-500"
+                                    >
+                                        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                            <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        Login
+                                    </button>
+                                </div>
+
+                                <div className="pt-2 text-xs text-gray-400">
+                                    Press <span className="font-semibold text-white">Enter</span> to submit — or{' '}
+                                    <a href="#" className="text-green-300 underline">
+                                        forgot password
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
                 <div className="hidden h-14.5 lg:block"></div>
             </div>
