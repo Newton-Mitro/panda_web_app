@@ -176,7 +176,7 @@ CREATE TABLE customer_signatures (
 );
 
 -- =========================================
--- 3) Products
+-- 3) Products (Policy)
 -- =========================================
 CREATE TABLE deposit_products (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -242,6 +242,18 @@ CREATE TABLE account_nominees (
     share_percentage DECIMAL(5,2) DEFAULT 0,
     FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE,
     FOREIGN KEY (nominee_id) REFERENCES customers(id)
+);
+
+CREATE TABLE account_signatories (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    account_id BIGINT UNSIGNED NOT NULL,
+    customer_id BIGINT UNSIGNED NOT NULL,
+    signature_path VARCHAR(255) NOT NULL,  -- file path or blob ref
+    mandate ENUM('SOLE','JOINT','EITHER','VIEW_ONLY') DEFAULT 'SOLE',
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (account_id) REFERENCES accounts(id),
+    FOREIGN KEY (customer_id) REFERENCES customers(id)
 );
 
 -- =========================================
@@ -681,6 +693,27 @@ return new class extends Migration
             $table->foreignId('account_id')->constrained('accounts')->cascadeOnDelete();
             $table->foreignId('nominee_id')->constrained('customers');
             $table->decimal('share_percentage', 5, 2)->default(0);
+            $table->timestamps();
+        });
+
+        Schema::create('account_signatories', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('account_id')
+                  ->constrained('accounts')
+                  ->onDelete('cascade');
+
+            $table->foreignId('customer_id')
+                  ->constrained('customers')
+                  ->onDelete('cascade');
+
+            // Path or filename of signature image (stored in storage/app or S3)
+            $table->string('signature_path', 255);
+
+            // Mandate rules (sole, joint, either, etc.)
+            $table->enum('mandate', ['SOLE', 'JOINT', 'EITHER', 'VIEW_ONLY'])
+                  ->default('SOLE');
+
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
 
