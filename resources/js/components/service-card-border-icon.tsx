@@ -8,9 +8,9 @@ interface ServiceCardBorderIconProps {
 
 const ServiceCardBorderIcon: React.FC<ServiceCardBorderIconProps> = ({ icon, title, text }) => {
     return (
-        <div className="relative col-span-4 flex flex-col items-center justify-start rounded-xl border-2 border-[var(--border)] px-5 pt-10 pb-2 text-[var(--foreground)] transition-transform duration-300 hover:-translate-y-1 hover:border-[var(--primary)] hover:shadow-lg sm:col-span-2 lg:col-span-1">
+        <div className="relative flex flex-col items-center justify-start rounded-xl border-2 border-[var(--border)] px-5 pt-10 pb-2 text-[var(--foreground)] transition-transform duration-300 hover:-translate-y-1 hover:border-[var(--primary)] hover:shadow-lg md:h-full">
             {/* Icon Circle */}
-            <span className="absolute -top-6 flex h-12 w-12 items-center justify-center rounded-full border-2 border-[var(--primary)] bg-[var(--primary)] p-3 transition-colors duration-300 hover:bg-[var(--primary)] hover:text-[var(--background)]">
+            <span className="absolute -top-6 flex size-12 items-center justify-center rounded-full border-2 border-[var(--primary)] bg-[var(--primary)] p-3 transition-colors duration-300 hover:bg-[var(--primary)] hover:text-[var(--background)] md:-top-9 md:size-16">
                 {icon && <i className={`fa-solid ${icon} text-xl text-[var(--background)]`} />}
             </span>
 
