@@ -1,17 +1,15 @@
-import { type SharedData } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
+import AppLogoIcon from '../components/app-logo-icon';
 import Navigation from './Navigation';
 import AttributeSection from './sections/AttributeSection';
-import BecomePartnerSection from './sections/BecomePartnerSection';
 import HeroSection from './sections/HeroSection';
-import MuseumSection from './sections/MuseumSection';
-import PartnersSection from './sections/PartnersSection';
+import ServicesSection from './sections/ServicesSection';
 import TeamSection from './sections/TeamSection';
-import UnderConstructionSection from './sections/UnderConstructionSection';
-import WorkWithUsSection from './sections/WorkWithUsSection';
 
 export default function Welcome() {
-    const { auth } = usePage<SharedData>().props;
+    const appName = import.meta.env.VITE_APP_NAME || 'MyApp'; // fallback
+
+    // Define the services array
 
     return (
         <>
@@ -21,12 +19,11 @@ export default function Welcome() {
 
                 <main>
                     <HeroSection />
-                    <PartnersSection />
+                    <ServicesSection />
                     <AttributeSection />
-                    <MuseumSection />
-                    <UnderConstructionSection />
+                    {/* <MuseumSection />
                     <WorkWithUsSection />
-                    <BecomePartnerSection />
+                    <BecomePartnerSection />  */}
                     <TeamSection />
                 </main>
 
@@ -34,8 +31,10 @@ export default function Welcome() {
                     <div className="mx-auto max-w-6xl px-6">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
-                                <div className="text-sm font-bold text-foreground">BULWARK</div>
-                                <div className="rounded bg-foreground px-1 py-0.5 text-xs text-background">TM</div>
+                                <div className="text-sm font-bold text-foreground">{appName}</div>
+                                <span className="flex items-start rounded p-1">
+                                    <AppLogoIcon className="h-4 w-4 text-background" />
+                                </span>
                             </div>
                             <p className="text-xs text-muted-foreground">Copyright © 2024 Bulwark Foundation by Prakash Foundation</p>
                         </div>

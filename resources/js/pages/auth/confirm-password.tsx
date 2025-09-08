@@ -8,15 +8,15 @@ import { Input } from '@/components/ui/input';
 
 export default function ConfirmPassword() {
     return (
-        <div className="flex min-h-screen items-center justify-center bg-[#07111a] font-mono">
+        <div className="flex min-h-screen items-center justify-center bg-background p-6 font-mono">
             <Head title="Confirm password" />
 
-            <div className="w-full max-w-md rounded-lg border border-white/5 bg-gradient-to-b from-[#061018] to-[#07121a] p-6 shadow-2xl">
+            <div className="w-full max-w-md rounded-lg border border-border bg-card p-6">
                 {/* Logo + Header */}
                 <div className="mb-6 flex flex-col items-center text-center">
-                    <AppLogoIcon className="mb-3 h-20 w-20 fill-current text-white" />
-                    <div className="text-sm font-medium text-green-300">Confirm your password</div>
-                    <div className="text-xs text-gray-400">
+                    <AppLogoIcon className="mb-3 h-20 w-20 fill-current text-primary" />
+                    <div className="text-sm font-medium text-primary">Confirm your password</div>
+                    <div className="text-xs text-muted-foreground">
                         This is a secure area of the application. Please confirm your password before continuing.
                     </div>
                 </div>
@@ -26,7 +26,7 @@ export default function ConfirmPassword() {
                     {({ processing, errors }) => (
                         <>
                             <div className="grid gap-2">
-                                <label className="mb-1 block text-xs text-green-200/80" htmlFor="password">
+                                <label className="mb-1 block text-xs text-muted-foreground" htmlFor="password">
                                     Password
                                 </label>
                                 <Input
@@ -36,14 +36,14 @@ export default function ConfirmPassword() {
                                     placeholder="••••••••"
                                     autoComplete="current-password"
                                     autoFocus
-                                    className="flex-1 bg-transparent text-sm text-white outline-none placeholder:text-green-200/30"
+                                    className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground"
                                 />
                                 <InputError message={errors.password} />
                             </div>
 
                             <Button
                                 type="submit"
-                                className="inline-flex w-full items-center justify-center gap-2 rounded bg-green-500/90 px-4 py-1.5 text-sm font-medium text-black hover:bg-green-500"
+                                className="inline-flex w-full items-center justify-center gap-2 rounded bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
                                 disabled={processing}
                             >
                                 {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}

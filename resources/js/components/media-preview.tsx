@@ -58,7 +58,7 @@ const MediaPreview: React.FC<MediaPreviewProps> = ({
         return (
             <div className={containerClass}>
                 <embed src={media.url} type="application/pdf" className={`${embedHeight} w-full rounded-lg border dark:border-gray-700`} />
-                <p className={`mt-1 ${textClass}`}>{media.file_name}</p>
+                <p className={`mt-1 ${textClass}`}>{media.alt_text || media.file_name}</p>
             </div>
         );
     }

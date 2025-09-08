@@ -9,23 +9,29 @@ const TeamSection = () => {
     }));
 
     return (
-        <section ref={ref} id="team" className="bg-bulwark-accent py-20">
-            <div className={`mx-auto max-w-6xl px-6 transition-all duration-700 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`}>
-                <h2 className="mb-4 text-4xl font-bold text-foreground">Our Team</h2>
-                <div className="mb-12 h-1 w-16 bg-foreground"></div>
+        <section ref={ref} id="team" className="bg-bulwark-accent py-16 md:py-20">
+            <div className={`mx-auto max-w-6xl px-4 transition-all duration-700 sm:px-6 md:px-6 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`}>
+                <h2 className="mb-4 text-center text-3xl font-bold text-foreground sm:text-4xl md:text-left">Our Team</h2>
+                <div className="mx-auto mb-12 h-1 w-16 bg-foreground md:mx-0"></div>
 
-                <div className="mb-12 grid grid-cols-2 gap-8 md:grid-cols-5">
-                    {teamMembers.map((member) => (
-                        <div key={member.id} className="text-center">
-                            <div className="border-bulwark-green-light mx-auto mb-4 h-20 w-20 overflow-hidden rounded-full border-2">
-                                <img src="/storage/uploads/6.jpg" alt={member.name} className="h-full w-full object-cover" />
+                {/* Team Members */}
+                <div className="mb-12">
+                    <div className="flex items-center space-x-4 overflow-x-auto pb-2 md:grid md:grid-cols-5 md:gap-4 md:overflow-x-visible lg:grid-cols-10">
+                        {teamMembers.map((partner, index) => (
+                            <div key={partner.id} className={`flex flex-shrink-0 flex-col items-center`}>
+                                <div
+                                    className={`${index === 0 ? 'size-32 ring-2 ring-foreground' : 'size-16'} group relative overflow-hidden rounded-full border border-border/20 transition-all hover:size-32 hover:ring-2 hover:ring-foreground`}
+                                >
+                                    <img src="/storage/uploads/5.jpg" alt={`${partner.name} logo`} className="h-full w-full object-cover" />
+                                </div>
+                                <p className="mt-2 text-center text-sm font-bold text-foreground">{partner.name}</p>
                             </div>
-                            <h3 className="text-sm font-medium text-foreground">{member.name}</h3>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
 
-                <div className="max-w-3xl">
+                {/* Description */}
+                <div className="mx-auto max-w-3xl text-center md:mx-0 md:text-left">
                     <p className="leading-relaxed text-muted-foreground">
                         The Bulwark Support Network (BSN) is the key to creating truly effective partnerships with our stakeholders. It provides the
                         perfect opportunity for parties to contribute to truly impactful development and advancement in partnership with Foundation.

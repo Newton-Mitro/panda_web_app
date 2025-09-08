@@ -14,15 +14,15 @@ interface ResetPasswordProps {
 
 export default function ResetPassword({ token, email }: ResetPasswordProps) {
     return (
-        <div className="flex min-h-screen items-center justify-center bg-[#07111a] font-mono">
+        <div className="flex min-h-screen items-center justify-center bg-background p-6 font-sans text-foreground">
             <Head title="Reset password" />
 
-            <div className="w-full max-w-md rounded-lg border border-white/5 bg-gradient-to-b from-[#061018] to-[#07121a] p-6 shadow-2xl">
+            <div className="w-full max-w-md rounded-lg border border-border bg-card p-6">
                 {/* Logo + Header */}
                 <div className="mb-6 flex flex-col items-center text-center">
-                    <AppLogoIcon className="mb-3 h-20 w-20 fill-current text-white" />
-                    <div className="text-sm font-medium text-green-300">Reset password</div>
-                    <div className="text-xs text-gray-400">Please enter your new password below.</div>
+                    <AppLogoIcon className="mb-3 h-20 w-20 text-primary" />
+                    <div className="text-sm font-medium text-primary">Reset password</div>
+                    <div className="text-xs text-muted-foreground">Please enter your new password below.</div>
                 </div>
 
                 <Form
@@ -36,7 +36,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                         <>
                             {/* Email */}
                             <div className="grid gap-2">
-                                <Label htmlFor="email" className="text-xs text-green-200/80">
+                                <Label htmlFor="email" className="text-xs text-muted-foreground">
                                     Email
                                 </Label>
                                 <Input
@@ -45,14 +45,14 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                                     name="email"
                                     value={email}
                                     readOnly
-                                    className="w-full rounded border border-green-900/30 bg-transparent px-3 py-2 text-sm text-white outline-none placeholder:text-green-200/30"
+                                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground"
                                 />
                                 <InputError message={errors.email} className="mt-1" />
                             </div>
 
                             {/* Password */}
                             <div className="grid gap-2">
-                                <Label htmlFor="password" className="text-xs text-green-200/80">
+                                <Label htmlFor="password" className="text-xs text-muted-foreground">
                                     Password
                                 </Label>
                                 <Input
@@ -62,14 +62,14 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                                     autoComplete="new-password"
                                     autoFocus
                                     placeholder="••••••••"
-                                    className="w-full rounded border border-green-900/30 bg-transparent px-3 py-2 text-sm text-white outline-none placeholder:text-green-200/30"
+                                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground"
                                 />
                                 <InputError message={errors.password} />
                             </div>
 
                             {/* Confirm Password */}
                             <div className="grid gap-2">
-                                <Label htmlFor="password_confirmation" className="text-xs text-green-200/80">
+                                <Label htmlFor="password_confirmation" className="text-xs text-muted-foreground">
                                     Confirm password
                                 </Label>
                                 <Input
@@ -78,7 +78,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                                     name="password_confirmation"
                                     autoComplete="new-password"
                                     placeholder="••••••••"
-                                    className="w-full rounded border border-green-900/30 bg-transparent px-3 py-2 text-sm text-white outline-none placeholder:text-green-200/30"
+                                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground"
                                 />
                                 <InputError message={errors.password_confirmation} className="mt-1" />
                             </div>
@@ -86,7 +86,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                             {/* Submit */}
                             <Button
                                 type="submit"
-                                className="inline-flex w-full items-center justify-center gap-2 rounded bg-green-500/90 px-4 py-1.5 text-sm font-medium text-black hover:bg-green-500"
+                                className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90"
                                 disabled={processing}
                             >
                                 {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}

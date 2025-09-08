@@ -1,46 +1,43 @@
-import { Upload, Image, Download } from "lucide-react";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const AttributeSection = () => {
-  const { ref, isVisible } = useScrollAnimation();
-  return (
-    <section ref={ref} id="attribute" className="py-20 bg-background">
-      <div className={`max-w-6xl mx-auto px-6 transition-all duration-700 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`}>
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 className="text-4xl font-bold text-foreground mb-4">Attribute</h2>
-            <div className="w-16 h-1 bg-foreground mb-8"></div>
-            
-            <p className="text-muted-foreground leading-relaxed mb-6">
-              Bulwark foundation introduces Attributes.
-            </p>
-            <p className="text-muted-foreground leading-relaxed mb-6">
-              Grow through Attributes to the foundation to find your account. Bulwark foundation welcomes you consider your image and news virtual community.
-            </p>
-            <p className="text-muted-foreground leading-relaxed mb-8">
-              Join attribute and express your support how.
-            </p>
+    const { ref, isVisible } = useScrollAnimation();
 
-            <div className="flex items-center space-x-2 text-sm">
-              <span className="text-muted-foreground">Visit attributes</span>
-              <span className="text-foreground font-bold">5,843</span>
-              <span className="text-muted-foreground">Published now</span>
-            </div>
-          </div>
+    return (
+        <section ref={ref} id="attribute" className="bg-background py-16 md:py-20">
+            <div className={`mx-auto max-w-6xl px-4 transition-all duration-700 sm:px-6 md:px-6 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`}>
+                <div className="grid items-start gap-8 sm:gap-10 md:grid-cols-[1fr_auto_1fr] md:gap-12">
+                    {/* Left Content */}
+                    <div className="text-center md:text-left">
+                        <h2 className="mb-4 text-center text-3xl font-bold text-foreground sm:text-4xl md:text-left">Attribute</h2>
+                        <div className="mx-auto mb-8 h-1 w-16 bg-foreground md:mx-0"></div>
+                        <p className="mb-4 leading-relaxed text-muted-foreground sm:mb-6">Bulwark foundation introduces Attributes.</p>
+                        <p className="mb-4 leading-relaxed text-muted-foreground sm:mb-6">
+                            Grow through Attributes to the foundation to find your account. Bulwark foundation welcomes you consider your image and
+                            news virtual community.
+                        </p>
+                        <p className="mb-6 leading-relaxed text-muted-foreground sm:mb-8">Join attribute and express your support how.</p>
 
-          <div className="flex justify-center">
-            <div className="w-80 h-64 bg-bulwark-accent rounded-lg border-2 border-dashed border-bulwark-green-light flex flex-col items-center justify-center">
-              <Upload className="w-12 h-12 text-muted-foreground mb-4" />
-              <p className="text-muted-foreground text-center mb-2">
-                Drag and drop your files here
-              </p>
-              <p className="text-sm text-muted-foreground">or click to browse</p>
+                        <div className="flex flex-col items-center justify-center space-y-2 text-sm sm:flex-row sm:items-start sm:justify-start sm:space-y-0 sm:space-x-2">
+                            <span className="text-muted-foreground">Visit attributes</span>
+                            <span className="font-bold text-foreground">5,843</span>
+                            <span className="text-muted-foreground">Published now</span>
+                        </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="mx-auto hidden h-full w-1 bg-border md:block"></div>
+
+                    {/* Right Content */}
+                    <div className="flex justify-center md:justify-end">
+                        <div className="bg-bulwark-accent border-bulwark-green-light flex h-full w-full flex-col items-center justify-center rounded-lg border-2 border-dashed md:h-80 md:w-80">
+                            <img src="/storage/uploads/1.jpg" alt="attribute" className="h-full w-full rounded-2xl object-cover p-2" />
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+        </section>
+    );
 };
 
 export default AttributeSection;

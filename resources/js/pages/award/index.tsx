@@ -106,6 +106,23 @@ export default function Index({ awards }: AwardProps) {
                         </tbody>
                     </table>
                 </div>
+                <div className="mt-4 flex flex-col items-center justify-between gap-2 md:flex-row">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Showing {awards.data.length} results</span>
+                    <div className="flex gap-1">
+                        {awards.links.map((link, i) => (
+                            <Link
+                                key={i}
+                                href={link.url || '#'}
+                                className={`rounded-full px-3 py-1 text-sm ${
+                                    link.active
+                                        ? 'bg-blue-600 text-white dark:bg-blue-500'
+                                        : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                                }`}
+                                dangerouslySetInnerHTML={{ __html: link.label }}
+                            />
+                        ))}
+                    </div>
+                </div>
             </div>
         </AppLayout>
     );

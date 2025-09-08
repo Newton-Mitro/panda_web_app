@@ -1,3 +1,9 @@
+import { Link } from '@inertiajs/react';
+
 export default function AppLogoIcon({ className = '' }: { className?: string }) {
-    return <img src="/logo.png" alt="" className={className} />;
+    return (
+        <Link href="/" className="inline-block">
+            <img src="/logo.png" alt="App Logo" className={className} />
+        </Link>
+    );
 }

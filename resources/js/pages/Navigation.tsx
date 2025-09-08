@@ -1,5 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import AppLogoIcon from '../components/app-logo-icon';
 import { SharedData } from '../types';
 
 const Navigation = () => {
@@ -12,6 +13,7 @@ const Navigation = () => {
 
     const { auth } = usePage<SharedData>().props;
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const appName = import.meta.env.VITE_APP_NAME || 'MyApp'; // fallback
 
     const scrollToSection = (href: string) => {
         const element = document.querySelector(href);
@@ -26,8 +28,10 @@ const Navigation = () => {
             <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
                 {/* Logo */}
                 <div className="flex items-center space-x-2">
-                    <div className="text-xl font-bold text-foreground">BULWARK</div>
-                    <div className="rounded bg-foreground px-1 py-0.5 text-xs text-background">TM</div>
+                    <div className="text-xl font-bold text-foreground">{appName}</div>
+                    <span className="flex items-start rounded bg-foreground p-1">
+                        <AppLogoIcon className="h-4 w-4 text-background" />
+                    </span>
                 </div>
 
                 {/* Desktop nav */}
@@ -87,8 +91,8 @@ const Navigation = () => {
 
             {/* Mobile nav */}
             {mobileMenuOpen && (
-                <div className="h-screen border-t border-border bg-background md:hidden">
-                    <div className="flex flex-col space-y-4 px-6 py-4">
+                <div className="flex h-screen items-center justify-center border-t border-border bg-background md:hidden">
+                    <div className="flex flex-col items-center space-y-4 px-6 py-4">
                         {navItems.map((item) => (
                             <button
                                 key={item.name}
