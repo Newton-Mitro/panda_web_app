@@ -31,7 +31,7 @@ const AttributeSection = () => {
                     {/* Right Content */}
                     <div className="flex justify-center md:justify-end">
                         <div className="bg-bulwark-accent border-bulwark-green-light flex h-full w-full flex-col items-center justify-center rounded-lg border-2 border-dashed md:h-80 md:w-80">
-                            <img src="/storage/uploads/1.jpg" alt="attribute" className="h-full w-full rounded-2xl object-cover p-2" />
+                            <img src="/storage/uploads/2.jpg" alt="attribute" className="h-full w-full rounded-2xl object-cover p-2" />
                         </div>
                     </div>
                 </div>

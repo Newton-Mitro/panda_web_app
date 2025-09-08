@@ -7,7 +7,7 @@ const HeroSection = () => {
         <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background">
             {/* Background Image */}
             <div className="absolute inset-0">
-                <img src="/storage/uploads/1.jpg" alt={`${appName} building`} className="h-full w-full object-cover opacity-80" />
+                <img src="/storage/uploads/3.jpg" alt={`${appName} building`} className="h-full w-full object-cover opacity-80" />
             </div>
 
             {/* Overlay Gradient */}
