@@ -25,9 +25,7 @@ const Show: React.FC<PageProps> = ({ page, sections }) => {
         try {
             const items = section.json_array ? JSON.parse(section.json_array) : [];
             return (
-                <div
-                    className={`mx-auto items-start gap-4 md:max-w-[64rem] ${items[0].question ? 'flex flex-col gap-4' : 'grid grid-cols-2 gap-4 md:grid-cols-3'}`}
-                >
+                <div className={`mx-auto items-start gap-4 ${items[0].question ? 'flex flex-col gap-4' : 'grid grid-cols-2 gap-4 md:grid-cols-3'}`}>
                     {items.map((item: any, idx: number) => (
                         //  // <ServiceCardLeftIcon key={idx} icon={item.icon} title={item.title} text={item.subtitle.substring(0, 80)} />
                         // // <ServiceCardIcon key={idx} icon={item.icon} title={item.title} text={item.subtitle.substring(0, 80)} />
@@ -68,7 +66,7 @@ const Show: React.FC<PageProps> = ({ page, sections }) => {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Show Page - ${page.title}`} />
-            <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
+            <div className="mx-auto h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
                 {/* <HeadingSmall title={page.title} description={page.meta_description || ''} /> */}
 
                 {sections.length > 0 ? (
