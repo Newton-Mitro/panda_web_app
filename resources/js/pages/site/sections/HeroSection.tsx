@@ -1,7 +1,7 @@
-import AppLogoIcon from '../../components/app-logo-icon';
+import AppLogoIcon from '../../../components/app-logo-icon';
 
 const HeroSection = () => {
-    const appName = import.meta.env.VITE_APP_NAME || 'MyApp'; // fallback
+    const appName = import.meta.env.VITE_APP_NAME || 'SmartPanda'; // fallback
 
     return (
         <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background">

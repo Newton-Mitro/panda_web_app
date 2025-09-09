@@ -1,7 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
-import AppLogoIcon from '../components/app-logo-icon';
-import { SharedData } from '../types';
+import AppLogoIcon from '../../components/app-logo-icon';
+import { SharedData } from '../../types';
 
 const Navigation = () => {
     const navItems = [
@@ -13,7 +13,7 @@ const Navigation = () => {
 
     const { auth } = usePage<SharedData>().props;
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const appName = import.meta.env.VITE_APP_NAME || 'MyApp'; // fallback
+    const appName = import.meta.env.VITE_APP_NAME || 'SmartPanda'; // fallback
 
     const scrollToSection = (href: string) => {
         const element = document.querySelector(href);

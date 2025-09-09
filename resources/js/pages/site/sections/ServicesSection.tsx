@@ -1,5 +1,5 @@
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import ServiceCardBorderIcon from '../../components/service-card-border-icon';
+import ServiceCardBorderIcon from '../../../components/service-card-border-icon';
 
 const ServicesSection = () => {
     const { ref, isVisible } = useScrollAnimation();

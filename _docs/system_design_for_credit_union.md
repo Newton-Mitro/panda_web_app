@@ -95,6 +95,7 @@ CREATE TABLE customers (
     religion ENUM('Christianity','Islam','Hinduism', 'Buddhism', 'Other'),
     identification_type ENUM('NID','NBR','Passport', 'Driving License'),
     identification_number VARCHAR(50) NOT NULL,
+    photo VARCHAR(255),
     phone VARCHAR(50),
     email VARCHAR(100),
     kyc_level ENUM('MIN','STD','ENH') DEFAULT 'MIN',
@@ -169,7 +170,7 @@ CREATE TABLE customer_signatures (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     customer_id BIGINT UNSIGNED NOT NULL,
     signature_path VARCHAR(255) NOT NULL,
-    active BOOLEAN DEFAULT TRUE,
+    role ENUM('DIRECTOR','PARTNER','AUTHORIZED_SIGNATORY') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
@@ -178,33 +179,49 @@ CREATE TABLE customer_signatures (
 -- =========================================
 -- 3) Products (Policy)
 -- =========================================
-CREATE TABLE deposit_products (
+CREATE TABLE products (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    code VARCHAR(50) UNIQUE NOT NULL,
-    name VARCHAR(100) NOT NULL,
-    type ENUM('SAVINGS','SHARE','RD','FD') NOT NULL,
-    interest_method ENUM('DAILY','MONTHLY','QUARTERLY','NONE') DEFAULT 'NONE',
-    rate_bp INT DEFAULT 0,
-    min_opening_amount DECIMAL(18,2) DEFAULT 0,
-    lock_in_days INT DEFAULT 0,
-    penalty_break_bp INT DEFAULT 0,
-    gl_control_id BIGINT UNSIGNED,
-    is_active BOOLEAN DEFAULT TRUE
+    type ENUM'SAVINGS','SHARE','RECCURING_DEPOSIT','FIXED_DEPOSIT', 'INSURANCE', 'LOAN') NOT NULL,
+    code VARCHAR(50) UNIQUE NOT NULL,           -- unique product code
+    name VARCHAR(100) NOT NULL,                 -- product name
+
+    -- General Fields (apply to both)
+    is_active BOOLEAN DEFAULT TRUE,
+    gl_interest_id BIGINT UNSIGNED NULL,        -- GL mapping for interest income
+    gl_fees_income_id BIGINT UNSIGNED NULL,     -- Account opening fees, Loan processing fees, Penalty charges, Service fees (SMS, card charges, etc.)
+
+    -- Deposit-specific fields (NULL if category = LOAN)
+    gl_control_id BIGINT UNSIGNED NULL,        -- liability control account for deposits
+    interest_method ENUM('DAILY','MONTHLY','QUARTERLY','NONE') NULL,
+    rate_bp INT NULL,                           -- interest rate (basis points, e.g. 500 = 5%)
+    min_opening_amount DECIMAL(18,2) NULL,
+    lock_in_days INT NULL,
+    penalty_break_bp INT NULL,                  -- penalty rate for premature withdrawal
+
+    -- Loan-specific fields (NULL if category = DEPOSIT)
+    gl_principal_id BIGINT UNSIGNED NULL,     -- loan principal ledger
+    penalty_bp INT NULL,                        -- penalty interest rate
+    schedule_method ENUM('FLAT_EQUAL','REDUCING','INTEREST_ONLY','CUSTOM') NULL,
+    max_tenor_months INT NULL,
+    collateral_required BOOLEAN NULL,
+    ltv_percent INT NULL,                       -- Loan-to-Value ratio
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE loan_products (
+CREATE TABLE insurance_policies (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    code VARCHAR(50) UNIQUE NOT NULL,
-    name VARCHAR(100) NOT NULL,
-    type ENUM('STANDARD','LAD') NOT NULL,
-    rate_bp INT NOT NULL,
-    penalty_bp INT DEFAULT 0,
-    schedule_method ENUM('FLAT','REDUCING','INTEREST_ONLY','CUSTOM') DEFAULT 'FLAT',
-    max_tenor_months INT DEFAULT 12,
-    collateral_required BOOLEAN DEFAULT FALSE,
-    ltv_percent INT DEFAULT 90,
-    gl_principal_id BIGINT UNSIGNED,
-    gl_interest_income_id BIGINT UNSIGNED
+    member_id BIGINT UNSIGNED NOT NULL,
+    product_id BIGINT UNSIGNED NOT NULL,
+    policy_no VARCHAR(50) UNIQUE NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    premium_amount DECIMAL(18,2) NOT NULL,
+    premium_cycle ENUM('MONTHLY','QUARTERLY','ANNUAL') DEFAULT 'MONTHLY',
+    status ENUM('ACTIVE','LAPSED','CANCELLED','CLAIMED') DEFAULT 'ACTIVE',
+    FOREIGN KEY (member_id) REFERENCES members(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
 -- =========================================
@@ -212,27 +229,51 @@ CREATE TABLE loan_products (
 -- =========================================
 CREATE TABLE accounts (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    account_no VARCHAR(50) UNIQUE NOT NULL,
-    customer_id BIGINT UNSIGNED NOT NULL,
-    product_kind ENUM('SAVINGS','SHARE','RD','FD','LOAN') NOT NULL,
-    product_id BIGINT UNSIGNED NOT NULL,
+    account_no VARCHAR(50) UNIQUE NOT NULL,         -- core account number
+    member_id BIGINT UNSIGNED NOT NULL,             -- who owns the account
+    product_id BIGINT UNSIGNED NOT NULL,            -- FK to product definition
+    branch_id BIGINT UNSIGNED NOT NULL,             -- branch opened
     opened_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('ACTIVE','ON_HOLD','CLOSED') DEFAULT 'ACTIVE',
-    branch_id BIGINT UNSIGNED,
-    balance DECIMAL(18,2) DEFAULT 0,
-    FOREIGN KEY (customer_id) REFERENCES customers(id),
+    closed_at TIMESTAMP NULL,                       -- if closed
+    status ENUM('PENDING','ACTIVE','ON_HOLD','CLOSED','DEFAULTED','MATURED') DEFAULT 'PENDING',
+
+    -- Account-specific fields
+    balance DECIMAL(18,2) DEFAULT 0,                -- current balance / outstanding
+    accrued_interest DECIMAL(18,2) DEFAULT 0,       -- interest earned or payable
+    maturity_date DATE NULL,                        -- FD, RD, loan, insurance maturity
+    tenor_months INT NULL,                          -- for term deposits/loans
+
+    -- Role / Ownership
+    product_type ENUM('SAVINGS','SHARE','RD','FD','LOAN','INSURANCE') NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (member_id) REFERENCES members(id),
+    FOREIGN KEY (product_id) REFERENCES products(id),
     FOREIGN KEY (branch_id) REFERENCES branches(id)
 );
 
-CREATE TABLE joint_account_customers (
+-- Account holders (ownership)
+CREATE TABLE account_customers (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     account_id BIGINT UNSIGNED NOT NULL,
     customer_id BIGINT UNSIGNED NOT NULL,
-    role ENUM('joint_holder','introducer') NOT NULL,
+    role ENUM('PRIMARY_HOLDER','JOINT_HOLDER','AUTHORIZED_SIGNATORY') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE,
     FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+);
+
+-- Introducers (separate relationship)
+CREATE TABLE account_introducers (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    account_id BIGINT UNSIGNED NOT NULL,
+    introducer_customer_id BIGINT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE,
+    FOREIGN KEY (introducer_customer_id) REFERENCES customers(id) ON DELETE CASCADE
 );
 
 CREATE TABLE account_nominees (
@@ -262,9 +303,10 @@ CREATE TABLE account_signatories (
 CREATE TABLE term_deposits (
     account_id BIGINT UNSIGNED PRIMARY KEY,
     principal DECIMAL(18,2) NOT NULL,
-    rate_bp INT NOT NULL,
+    rate_bp INT NOT NULL, -- interest rate base point
     start_date DATE NOT NULL,
     maturity_date DATE NOT NULL,
+    --how interest is calculated and added to the account.
     compounding ENUM('MONTHLY','QUARTERLY','SEMI_ANNUAL','ANNUAL','MATURITY') DEFAULT 'MATURITY',
     auto_renew BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
@@ -273,7 +315,7 @@ CREATE TABLE term_deposits (
 CREATE TABLE recurring_deposits (
     account_id BIGINT UNSIGNED PRIMARY KEY,
     installment_amount DECIMAL(18,2) NOT NULL,
-    rate_bp INT NOT NULL,
+    rate_bp INT NOT NULL, -- interest rate base point
     cycle ENUM('MONTHLY') DEFAULT 'MONTHLY',
     start_date DATE NOT NULL,
     tenor_months INT NOT NULL,
@@ -283,15 +325,43 @@ CREATE TABLE recurring_deposits (
 -- =========================================
 -- 6) Loans
 -- =========================================
+
+-- Application Submitted
+--         │
+--         ▼
+-- Verification & Assessment
+--         │
+--         ▼
+-- Approved? ──No──> Rejected (Status: REJECTED)
+--         │
+--         Yes
+--         ▼
+-- Loan Approval (loan_approvals)
+--         │
+--         ▼
+-- Disbursement (loan_disbursements)
+--         │
+--         ▼
+-- Repayment & Monitoring (loan_repayments/account_transactions)
+--         │
+--         ▼
+-- Fully Repaid? ──No──> Continue Repayment
+--         │
+--         Yes
+--         ▼
+-- Loan Closure (Status: CLOSED)
+
 CREATE TABLE loan_applications (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     customer_id BIGINT UNSIGNED NOT NULL,
-    account_id BIGINT UNSIGNED,
     loan_type ENUM('GENERAL','DEPOSIT','SECURED') DEFAULT 'GENERAL',
+    -- Product Id
     amount_requested DECIMAL(18,2) NOT NULL,
     purpose TEXT,
     application_date DATE NOT NULL,
-    status ENUM('PENDING','APPROVED','REJECTED','DISBURSED') DEFAULT 'PENDING',
+    status ENUM('PENDING','APPROVED','REJECTED','DISBURSED','CLOSED') DEFAULT 'PENDING',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES customers(id),
     FOREIGN KEY (account_id) REFERENCES accounts(id)
 );
@@ -301,29 +371,59 @@ CREATE TABLE loan_approvals (
     loan_application_id BIGINT UNSIGNED NOT NULL,
     approved_by BIGINT UNSIGNED NOT NULL,
     approved_amount DECIMAL(18,2) NOT NULL,
-    interest_rate DECIMAL(5,2),
-    repayment_terms VARCHAR(255),
+    interest_rate DECIMAL(5,2) NOT NULL,
+    repayment_schedule JSON NOT NULL, -- installments, dates, amounts
     approved_date DATE NOT NULL,
     FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE,
     FOREIGN KEY (approved_by) REFERENCES users(id)
 );
 
+CREATE TABLE loan_disbursements (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    loan_application_id BIGINT UNSIGNED NOT NULL,
+    disbursement_date DATE NOT NULL,
+    amount DECIMAL(18,2) NOT NULL,
+    account_id BIGINT UNSIGNED NOT NULL, -- account credited
+    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE,
+    FOREIGN KEY (account_id) REFERENCES accounts(id)
+);
+
+CREATE TABLE loan_application_status_history (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    loan_application_id BIGINT UNSIGNED NOT NULL,
+    status ENUM('PENDING','APPROVED','REJECTED','DISBURSED','CLOSED') NOT NULL,
+    changed_by BIGINT UNSIGNED NOT NULL,
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE,
+    FOREIGN KEY (changed_by) REFERENCES users(id)
+);
+
 CREATE TABLE loan_sureties (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     loan_application_id BIGINT UNSIGNED NOT NULL,
-    customer_id BIGINT UNSIGNED NOT NULL,
-    surety_type ENUM('SURETY','GUARANTOR') NOT NULL,
+    account_id BIGINT UNSIGNED NOT NULL,
+    surety_type ENUM('SURETY','LEAN') NOT NULL,
+    amount DECIMAL(18,2) NOT NULL,
     FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE,
-    FOREIGN KEY (customer_id) REFERENCES customers(id)
+    FOREIGN KEY (account_id) REFERENCES accounts(id)
 );
 
 CREATE TABLE loan_collaterals (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     loan_application_id BIGINT UNSIGNED NOT NULL,
-    collateral_type ENUM('DEPOSIT','ASSET','PROPERTY') NOT NULL,
-    reference_id BIGINT UNSIGNED,
+    collateral_type ENUM('ASSET','PROPERTY') NOT NULL,
+    reference VARCHAR(255),
     value DECIMAL(18,2) NOT NULL,
+    description VARCHAR(255),
     FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
+);
+
+CREATE TABLE loan_guarantors (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    loan_application_id BIGINT UNSIGNED NOT NULL,
+    customer_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE,
+    FOREIGN KEY (customer_id) REFERENCES customers(id)
 );
 
 CREATE TABLE loan_application_work_details (
@@ -331,7 +431,7 @@ CREATE TABLE loan_application_work_details (
     loan_application_id BIGINT UNSIGNED NOT NULL,
     employer_name VARCHAR(100),
     designation VARCHAR(50),
-    employment_type VARCHAR(50),
+    employment_type ENUM('PERMANENT','CONTRACT','SELF_EMPLOYED','OTHER') DEFAULT 'OTHER',
     monthly_income DECIMAL(18,2),
     years_of_service INT,
     FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
@@ -351,6 +451,7 @@ CREATE TABLE loan_application_incomes (
     loan_application_id BIGINT UNSIGNED NOT NULL,
     source VARCHAR(100),
     monthly_amount DECIMAL(18,2),
+    frequency ENUM('MONTHLY','ANNUAL','OTHER') DEFAULT 'MONTHLY',
     FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
 );
 
@@ -365,21 +466,42 @@ CREATE TABLE loan_application_expenses (
 CREATE TABLE loan_application_supporting_docs (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     loan_application_id BIGINT UNSIGNED NOT NULL,
-    file_name VARCHAR(50),
-    file_path VARCHAR(50),
+    file_name VARCHAR(255),
+    file_path VARCHAR(255),
     mime VARCHAR(50),
-    document_type VARCHAR(50), // Gass, Electricity
+    document_type VARCHAR(50), -- e.g., Gas Bill, Electricity, Passport
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
 );
 
+
 -- =========================================
--- 7) Cash / Vault / Teller
+-- 7) Bank / Cash / Vault / Teller
 -- =========================================
+
+CREATE TABLE bank_accounts (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    branch_id BIGINT UNSIGNED NOT NULL,
+    bank_name VARCHAR(100) NOT NULL,
+    account_no VARCHAR(50) NOT NULL,
+    currency CHAR(3) DEFAULT 'USD',
+    is_active BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (branch_id) REFERENCES branches(id)
+);
+
 CREATE TABLE vaults (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     branch_id BIGINT UNSIGNED NOT NULL,
     balance DECIMAL(18,2) DEFAULT 0,
     FOREIGN KEY (branch_id) REFERENCES branches(id)
+);
+
+CREATE TABLE vault_denominations (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    vault_id BIGINT UNSIGNED NOT NULL,
+    denomination INT NOT NULL,        -- bill/coin value
+    quantity INT NOT NULL DEFAULT 0,  -- number of bills/coins
+    FOREIGN KEY (vault_id) REFERENCES vaults(id)
 );
 
 CREATE TABLE cash_drawers (
@@ -407,15 +529,24 @@ CREATE TABLE teller_shifts (
 
 CREATE TABLE cash_transactions (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    account_id BIGINT UNSIGNED,
-    teller_id BIGINT UNSIGNED NOT NULL,
-    type ENUM('DEPOSIT','WITHDRAWAL','TRANSFER','LOAN_DISBURSEMENT','LOAN_REPAYMENT','CHEQUE_CLEARANCE'),
+    account_id BIGINT UNSIGNED,             -- optional for deposits/withdrawals
+    teller_id BIGINT UNSIGNED,             -- nullable for online/bank transactions
+    vault_id BIGINT UNSIGNED,              -- nullable for teller or online transactions
+    bank_account_id BIGINT UNSIGNED,       -- nullable unless cash-in/out with bank
+    type ENUM(
+        'DEPOSIT','WITHDRAWAL','TRANSFER',
+        'LOAN_DISBURSEMENT','LOAN_REPAYMENT',
+        'CHEQUE_CLEARANCE','CASH_IN','CASH_OUT'
+    ) NOT NULL,
+    mode ENUM('CASH','CHEQUE','TRANSFER') NOT NULL DEFAULT 'CASH',
+    source ENUM('TELLER','BANK','SYSTEM') NOT NULL DEFAULT 'TELLER',
     amount DECIMAL(18,2) NOT NULL,
     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    mode ENUM('CASH','CHEQUE','TRANSFER'),
     reference_no VARCHAR(50),
     FOREIGN KEY (account_id) REFERENCES accounts(id),
-    FOREIGN KEY (teller_id) REFERENCES users(id)
+    FOREIGN KEY (teller_id) REFERENCES users(id),
+    FOREIGN KEY (vault_id) REFERENCES vaults(id),
+    FOREIGN KEY (bank_account_id) REFERENCES bank_accounts(id)
 );
 
 -- =========================================
@@ -473,6 +604,18 @@ CREATE TABLE schedules (
     FOREIGN KEY (account_id) REFERENCES accounts(id)
 );
 
+CREATE TABLE insurance_premiums (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    policy_id BIGINT UNSIGNED NOT NULL,
+    due_date DATE NOT NULL,
+    amount DECIMAL(18,2) NOT NULL,
+    status ENUM('PENDING','PAID','OVERDUE','WAIVED') DEFAULT 'PENDING',
+    paid_at TIMESTAMP NULL,
+    journal_entry_id BIGINT UNSIGNED,
+    FOREIGN KEY (policy_id) REFERENCES insurance_policies(id),
+    FOREIGN KEY (journal_entry_id) REFERENCES journal_entries(id)
+);
+
 CREATE TABLE payments (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     account_id BIGINT UNSIGNED NOT NULL,
@@ -509,6 +652,20 @@ CREATE TABLE charges (
     FOREIGN KEY (journal_entry_id) REFERENCES journal_entries(id)
 );
 
+CREATE TABLE insurance_claims (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    policy_id BIGINT UNSIGNED NOT NULL,
+    claim_date DATE NOT NULL,
+    claim_amount DECIMAL(18,2) NOT NULL,
+    status ENUM('PENDING','APPROVED','REJECTED','PAID') DEFAULT 'PENDING',
+    processed_by BIGINT UNSIGNED,
+    paid_at TIMESTAMP NULL,
+    journal_entry_id BIGINT UNSIGNED,
+    FOREIGN KEY (policy_id) REFERENCES insurance_policies(id),
+    FOREIGN KEY (processed_by) REFERENCES users(id),
+    FOREIGN KEY (journal_entry_id) REFERENCES journal_entries(id)
+);
+
 -- =========================================
 -- 10) Cheques
 -- =========================================
@@ -529,11 +686,38 @@ CREATE TABLE cheques (
     cheque_no INT NOT NULL,
     payee VARCHAR(100),
     amount DECIMAL(18,2),
-    status ENUM('ISSUED','CLEARED','BOUNCED','CANCELLED') DEFAULT 'ISSUED',
-    issue_date DATE,
+    status ENUM('ISSUED','PENDING','CLEARED','BOUNCED','CANCELLED') DEFAULT 'ISSUED',
+    issue_date DATE NOT NULL,
     clearance_date DATE,
     FOREIGN KEY (cheque_book_id) REFERENCES cheque_books(id)
 );
+-- status meanings:
+-- ISSUED → customer has written the cheque, not yet presented.
+-- PENDING → cheque presented but not cleared.
+-- CLEARED → funds debited and cheque cleared.
+-- BOUNCED → cheque returned unpaid (insufficient funds or stop payment).
+-- CANCELLED → customer voided the cheque.
+
+CREATE TABLE pending_cheque_debits (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    cheque_id BIGINT UNSIGNED NOT NULL,
+    account_id BIGINT UNSIGNED NOT NULL,
+    amount DECIMAL(18,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cheque_id) REFERENCES cheques(id),
+    FOREIGN KEY (account_id) REFERENCES accounts(id)
+);
+-- Ensures account balance minus pending holds is available for withdrawals.
+-- Automatically cleared when cheque clears or bounces.
+
+
+-- System Entry
+-- Once presented, the bank system does:
+-- Check the account number on the cheque.
+-- Create a cheques record in the system (if not already linked to a cheque book).
+-- Set status = PENDING.
+-- Optionally create pending_cheque_debits to hold funds.
+-- This is the first time the system “knows” the cheque exists.
 
 -- =========================================
 -- 11) Audit Log
@@ -558,482 +742,4 @@ CREATE TABLE audits (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (branch_id) REFERENCES branches(id)
 );
-```
-
-### Laravel Migration
-
-```php
-<?php
-
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-
-return new class extends Migration
-{
-    public function up(): void
-    {
-        // =========================================
-        // 1) Branches & Users
-        // =========================================
-        Schema::create('branches', function (Blueprint $table) {
-            $table->id();
-            $table->string('code', 20)->unique();
-            $table->string('name', 100);
-            $table->string('address', 255)->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
-            $table->string('full_name', 100);
-            $table->string('email', 100)->unique();
-            $table->string('password');
-            $table->enum('role', ['TELLER','OPS','MANAGER','ADMIN']);
-            $table->boolean('is_active')->default(true);
-            $table->timestamps();
-        });
-
-        // =========================================
-        // 2) Customers
-        // =========================================
-        Schema::create('customers', function (Blueprint $table) {
-            $table->id();
-            $table->string('customer_no', 50)->unique();
-            $table->enum('type', ['individual','organization']);
-            $table->string('full_name', 150);
-            $table->string('registration_no')->nullable(); // For organizations
-            $table->date('dob')->nullable();
-            $table->enum('gender', ['M','F','O'])->nullable();
-            $table->string('nid', 50)->nullable();
-            $table->string('phone', 50)->nullable();
-            $table->string('email', 100)->nullable();
-            $table->enum('kyc_level', ['MIN','STD','ENH'])->default('MIN');
-            $table->enum('status', ['PENDING','ACTIVE','SUSPENDED','CLOSED'])->default('ACTIVE');
-            $table->timestamps();
-        });
-
-        Schema::create('customer_family_relations', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
-            $table->foreignId('relative_id')->constrained('customers')->cascadeOnDelete();
-            $table->string('relation_type', 50)->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('customer_signatures', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
-            $table->string('signature_path', 255);
-            $table->boolean('active')->default(true);
-            $table->timestamps();
-        });
-
-        // =========================================
-        // 3) Products
-        // =========================================
-        Schema::create('deposit_products', function (Blueprint $table) {
-            $table->id();
-            $table->string('code', 50)->unique();
-            $table->string('name', 100);
-            $table->enum('type', ['SAVINGS','SHARE','RD','FD']);
-            $table->enum('interest_method', ['DAILY','MONTHLY','QUARTERLY','NONE'])->default('NONE');
-            $table->integer('rate_bp')->default(0);
-            $table->decimal('min_opening_amount', 18, 2)->default(0);
-            $table->integer('lock_in_days')->default(0);
-            $table->integer('penalty_break_bp')->default(0);
-            $table->unsignedBigInteger('gl_control_id')->nullable();
-            $table->boolean('is_active')->default(true);
-            $table->timestamps();
-        });
-
-        Schema::create('loan_products', function (Blueprint $table) {
-            $table->id();
-            $table->string('code', 50)->unique();
-            $table->string('name', 100);
-            $table->enum('type', ['STANDARD','LAD']);
-            $table->integer('rate_bp');
-            $table->integer('penalty_bp')->default(0);
-            $table->enum('schedule_method', ['FLAT','REDUCING','INTEREST_ONLY','CUSTOM'])->default('FLAT');
-            $table->integer('max_tenor_months')->default(12);
-            $table->boolean('collateral_required')->default(false);
-            $table->integer('ltv_percent')->default(90);
-            $table->unsignedBigInteger('gl_principal_id')->nullable();
-            $table->unsignedBigInteger('gl_interest_income_id')->nullable();
-            $table->timestamps();
-        });
-
-        // =========================================
-        // 4) Accounts
-        // =========================================
-        Schema::create('accounts', function (Blueprint $table) {
-            $table->id();
-            $table->string('account_no', 50)->unique();
-            $table->foreignId('customer_id')->constrained('customers');
-            $table->enum('product_kind', ['SAVINGS','SHARE','RD','FD','LOAN']);
-            $table->unsignedBigInteger('product_id');
-            $table->foreignId('branch_id')->nullable()->constrained('branches');
-            $table->enum('status', ['ACTIVE','ON_HOLD','CLOSED'])->default('ACTIVE');
-            $table->decimal('balance', 18, 2)->default(0);
-            $table->timestamp('opened_at')->useCurrent();
-            $table->timestamps();
-        });
-
-        Schema::create('joint_account_customers', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('account_id')->constrained('accounts')->cascadeOnDelete();
-            $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
-            $table->enum('role', ['joint_holder','introducer']);
-            $table->timestamps();
-        });
-
-        Schema::create('account_nominees', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('account_id')->constrained('accounts')->cascadeOnDelete();
-            $table->foreignId('nominee_id')->constrained('customers');
-            $table->decimal('share_percentage', 5, 2)->default(0);
-            $table->timestamps();
-        });
-
-        Schema::create('account_signatories', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('account_id')
-                  ->constrained('accounts')
-                  ->onDelete('cascade');
-
-            $table->foreignId('customer_id')
-                  ->constrained('customers')
-                  ->onDelete('cascade');
-
-            // Path or filename of signature image (stored in storage/app or S3)
-            $table->string('signature_path', 255);
-
-            // Mandate rules (sole, joint, either, etc.)
-            $table->enum('mandate', ['SOLE', 'JOINT', 'EITHER', 'VIEW_ONLY'])
-                  ->default('SOLE');
-
-            $table->boolean('is_active')->default(true);
-            $table->timestamps();
-        });
-
-        // =========================================
-        // 5) Term & Recurring Deposits
-        // =========================================
-        Schema::create('term_deposits', function (Blueprint $table) {
-            $table->foreignId('account_id')->primary()->constrained('accounts')->cascadeOnDelete();
-            $table->decimal('principal', 18, 2);
-            $table->integer('rate_bp');
-            $table->date('start_date');
-            $table->date('maturity_date');
-            $table->enum('compounding', ['MONTHLY','QUARTERLY','SEMI_ANNUAL','ANNUAL','MATURITY'])->default('MATURITY');
-            $table->boolean('auto_renew')->default(false);
-            $table->timestamps();
-        });
-
-        Schema::create('recurring_deposits', function (Blueprint $table) {
-            $table->foreignId('account_id')->primary()->constrained('accounts')->cascadeOnDelete();
-            $table->decimal('installment_amount', 18, 2);
-            $table->integer('rate_bp');
-            $table->enum('cycle', ['MONTHLY'])->default('MONTHLY');
-            $table->date('start_date');
-            $table->integer('tenor_months');
-            $table->timestamps();
-        });
-
-        // =========================================
-        // 6) Loans
-        // =========================================
-        Schema::create('loan_applications', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('customer_id')->constrained('customers');
-            $table->foreignId('account_id')->nullable()->constrained('accounts');
-            $table->enum('loan_type', ['GENERAL','DEPOSIT','SECURED'])->default('GENERAL');
-            $table->decimal('amount_requested', 18, 2);
-            $table->text('purpose')->nullable();
-            $table->date('application_date');
-            $table->enum('status', ['PENDING','APPROVED','REJECTED','DISBURSED'])->default('PENDING');
-            $table->timestamps();
-        });
-
-        Schema::create('loan_approvals', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('loan_application_id')->constrained('loan_applications')->cascadeOnDelete();
-            $table->foreignId('approved_by')->constrained('users');
-            $table->decimal('approved_amount', 18, 2);
-            $table->decimal('interest_rate', 5, 2)->nullable();
-            $table->string('repayment_terms', 255)->nullable();
-            $table->date('approved_date');
-            $table->timestamps();
-        });
-
-        Schema::create('loan_sureties', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('loan_application_id')->constrained('loan_applications')->cascadeOnDelete();
-            $table->foreignId('customer_id')->constrained('customers');
-            $table->enum('surety_type', ['SURETY','GUARANTOR']);
-            $table->timestamps();
-        });
-
-        Schema::create('loan_collaterals', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('loan_application_id')->constrained('loan_applications')->cascadeOnDelete();
-            $table->enum('collateral_type', ['DEPOSIT','ASSET','PROPERTY']);
-            $table->unsignedBigInteger('reference_id')->nullable();
-            $table->decimal('value', 18, 2);
-            $table->timestamps();
-        });
-
-        Schema::create('loan_applicant_work_details', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('loan_application_id')->constrained('loan_applications')->cascadeOnDelete();
-            $table->string('employer_name', 100)->nullable();
-            $table->string('designation', 50)->nullable();
-            $table->string('employment_type', 50)->nullable();
-            $table->decimal('monthly_income', 18, 2)->nullable();
-            $table->integer('years_of_service')->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('loan_applicant_assets', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('loan_application_id')->constrained('loan_applications')->cascadeOnDelete();
-            $table->string('asset_type', 50);
-            $table->string('description', 255)->nullable();
-            $table->decimal('value', 18, 2);
-            $table->timestamps();
-        });
-
-        Schema::create('loan_applicant_incomes', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('loan_application_id')->constrained('loan_applications')->cascadeOnDelete();
-            $table->string('source', 100)->nullable();
-            $table->decimal('monthly_amount', 18, 2)->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('loan_applicant_expenses', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('loan_application_id')->constrained('loan_applications')->cascadeOnDelete();
-            $table->string('category', 50)->nullable();
-            $table->decimal('monthly_amount', 18, 2)->nullable();
-            $table->timestamps();
-        });
-
-        // =========================================
-        // 7) Cash / Vault / Teller
-        // =========================================
-        Schema::create('vaults', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('branch_id')->constrained('branches');
-            $table->decimal('balance', 18, 2)->default(0);
-            $table->timestamps();
-        });
-
-        Schema::create('cash_drawers', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('branch_id')->constrained('branches');
-            $table->foreignId('assigned_user_id')->nullable()->constrained('users');
-            $table->decimal('balance', 18, 2)->default(0);
-            $table->timestamps();
-        });
-
-        Schema::create('teller_shifts', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('drawer_id')->constrained('cash_drawers');
-            $table->foreignId('user_id')->constrained('users');
-            $table->timestamp('opened_at')->useCurrent();
-            $table->timestamp('closed_at')->nullable();
-            $table->decimal('opening_expected', 18, 2)->default(0);
-            $table->decimal('closing_expected', 18, 2)->nullable();
-            $table->decimal('closing_counted', 18, 2)->nullable();
-            $table->decimal('variance', 18, 2)->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('cash_transactions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('account_id')->nullable()->constrained('accounts');
-            $table->foreignId('teller_id')->constrained('users');
-            $table->enum('type', ['DEPOSIT','WITHDRAWAL','TRANSFER','LOAN_DISBURSEMENT','LOAN_REPAYMENT','CHEQUE_CLEARANCE']);
-            $table->decimal('amount', 18, 2);
-            $table->timestamp('transaction_date')->useCurrent();
-            $table->enum('mode', ['CASH','CHEQUE','TRANSFER'])->nullable();
-            $table->string('reference_no', 50)->nullable();
-            $table->timestamps();
-        });
-
-        // =========================================
-        // 8) Journals / GL
-        // =========================================
-        Schema::create('gl_accounts', function (Blueprint $table) {
-            $table->id();
-            $table->string('code', 50)->unique();
-            $table->string('name', 100);
-            $table->enum('type', ['ASSET','LIABILITY','EQUITY','INCOME','EXPENSE']);
-            $table->boolean('is_leaf')->default(true);
-            $table->foreignId('parent_id')->nullable()->constrained('gl_accounts');
-            $table->timestamps();
-        });
-
-        Schema::create('journal_entries', function (Blueprint $table) {
-            $table->id();
-            $table->string('tx_code', 50)->nullable();
-            $table->string('tx_ref', 50)->nullable();
-            $table->timestamp('posted_at')->useCurrent();
-            $table->foreignId('branch_id')->nullable()->constrained('branches');
-            $table->foreignId('user_id')->nullable()->constrained('users');
-            $table->text('memo')->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('journal_lines', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('entry_id')->constrained('journal_entries')->cascadeOnDelete();
-            $table->foreignId('gl_account_id')->constrained('gl_accounts');
-            $table->foreignId('account_id')->nullable()->constrained('accounts');
-            $table->decimal('debit', 18, 2)->default(0);
-            $table->decimal('credit', 18, 2)->default(0);
-            $table->timestamps();
-        });
-
-        // =========================================
-        // 9) Payments / Schedules / Interest / Charges
-        // =========================================
-        Schema::create('schedules', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('account_id')->constrained('accounts');
-            $table->date('due_date');
-            $table->decimal('principal_due', 18, 2)->default(0);
-            $table->decimal('interest_due', 18, 2)->default(0);
-            $table->decimal('fee_due', 18, 2)->default(0);
-            $table->enum('component', ['LOAN','RD','FD']);
-            $table->integer('sequence_no');
-            $table->enum('status', ['PENDING','PARTIAL','PAID','WAIVED','CLOSED'])->default('PENDING');
-            $table->unique(['account_id','sequence_no']);
-            $table->timestamps();
-        });
-
-        Schema::create('payments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('account_id')->constrained('accounts');
-            $table->foreignId('schedule_id')->nullable()->constrained('schedules');
-            $table->decimal('amount', 18, 2);
-            $table->enum('method', ['CASH','TRANSFER','ADJUSTMENT']);
-            $table->timestamp('received_at')->useCurrent();
-            $table->foreignId('journal_entry_id')->nullable()->constrained('journal_entries');
-            $table->timestamps();
-        });
-
-        Schema::create('interest_accruals', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('account_id')->constrained('accounts');
-            $table->date('period_start');
-            $table->date('period_end');
-            $table->decimal('interest_amount', 18, 2);
-            $table->foreignId('journal_entry_id')->nullable()->constrained('journal_entries');
-            $table->timestamps();
-        });
-
-        Schema::create('charges', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('account_id')->constrained('accounts');
-            $table->string('code', 50);
-            $table->decimal('amount', 18, 2);
-            $table->timestamp('applied_at')->useCurrent();
-            $table->foreignId('journal_entry_id')->nullable()->constrained('journal_entries');
-            $table->timestamps();
-        });
-
-        // =========================================
-        // 10) Cheques
-        // =========================================
-        Schema::create('cheque_books', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('account_id')->constrained('accounts');
-            $table->string('book_no', 50);
-            $table->integer('start_no');
-            $table->integer('end_no');
-            $table->date('issued_date');
-            $table->boolean('active')->default(true);
-            $table->timestamps();
-        });
-
-        Schema::create('cheques', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('cheque_book_id')->constrained('cheque_books');
-            $table->integer('cheque_no');
-            $table->string('payee', 100)->nullable();
-            $table->decimal('amount', 18, 2)->nullable();
-            $table->enum('status', ['ISSUED','CLEARED','BOUNCED','CANCELLED'])->default('ISSUED');
-            $table->date('issue_date')->nullable();
-            $table->date('clearance_date')->nullable();
-            $table->timestamps();
-        });
-
-        // =========================================
-        // 11) Audit Log
-        // =========================================
-        Schema::create('audits', function (Blueprint $table) {
-            $table->id();
-            $table->string('auditable_type', 150);
-            $table->unsignedBigInteger('auditable_id');
-            $table->foreignId('user_id')->nullable()->constrained('users');
-            $table->enum('event', ['CREATED','UPDATED','DELETED','RESTORED']);
-            $table->json('old_values')->nullable();
-            $table->json('new_values')->nullable();
-            $table->string('url', 255)->nullable();
-            $table->string('ip_address', 45)->nullable();
-            $table->string('user_agent', 255)->nullable();
-            $table->foreignId('branch_id')->nullable()->constrained('branches');
-            $table->timestamps();
-            $table->index(['auditable_type','auditable_id']);
-            $table->index('user_id');
-            $table->index('event');
-        });
-    }
-
-    public function down(): void
-    {
-        Schema::disableForeignKeyConstraints();
-
-        Schema::dropIfExists('audits');
-        Schema::dropIfExists('cheques');
-        Schema::dropIfExists('cheque_books');
-        Schema::dropIfExists('charges');
-        Schema::dropIfExists('interest_accruals');
-        Schema::dropIfExists('payments');
-        Schema::dropIfExists('schedules');
-        Schema::dropIfExists('journal_lines');
-        Schema::dropIfExists('journal_entries');
-        Schema::dropIfExists('gl_accounts');
-        Schema::dropIfExists('cash_transactions');
-        Schema::dropIfExists('teller_shifts');
-        Schema::dropIfExists('cash_drawers');
-        Schema::dropIfExists('vaults');
-        Schema::dropIfExists('loan_applicant_expenses');
-        Schema::dropIfExists('loan_applicant_incomes');
-        Schema::dropIfExists('loan_applicant_assets');
-        Schema::dropIfExists('loan_applicant_work_details');
-        Schema::dropIfExists('loan_collaterals');
-        Schema::dropIfExists('loan_sureties');
-        Schema::dropIfExists('loan_approvals');
-        Schema::dropIfExists('loan_applications');
-        Schema::dropIfExists('recurring_deposits');
-        Schema::dropIfExists('term_deposits');
-        Schema::dropIfExists('account_nominees');
-        Schema::dropIfExists('joint_account_customers');
-        Schema::dropIfExists('accounts');
-        Schema::dropIfExists('loan_products');
-        Schema::dropIfExists('deposit_products');
-        Schema::dropIfExists('customer_signatures');
-        Schema::dropIfExists('customer_family_relations');
-        Schema::dropIfExists('customers');
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('branches');
-
-        Schema::enableForeignKeyConstraints();
-    }
-};
-
 ```

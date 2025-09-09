@@ -18,7 +18,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                 <div className="mb-6 flex flex-col items-center text-center">
                     <AppLogoIcon className="mb-3 h-20 w-20 fill-current text-primary" />
                     <div className="text-sm font-medium text-primary">
-                        Welcome back to <span className="text-foreground">PandaWeb</span>
+                        Welcome back to <span className="text-foreground">SmartPanda</span>
                     </div>
                     <div className="text-xs text-muted-foreground">Authenticate to continue</div>
                 </div>

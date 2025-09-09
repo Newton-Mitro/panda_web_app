@@ -17,7 +17,7 @@ export default function Register() {
                 {/* Intro */}
                 <div className="mb-6 text-center text-sm text-primary">
                     <div className="font-medium">
-                        Create your <span className="text-foreground">PandaWeb</span> account
+                        Create your <span className="text-foreground">SmartPanda</span> account
                     </div>
                     <div className="text-xs text-muted-foreground">Enter your details below</div>
                 </div>

@@ -4,7 +4,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import ReactDOMServer from 'react-dom/server';
 import { type RouteName, route } from 'ziggy-js';
 
-const appName = import.meta.env.VITE_APP_NAME || 'PandaWebApp';
+const appName = import.meta.env.VITE_APP_NAME || 'SmartPanda';
 
 createServer((page) =>
     createInertiaApp({

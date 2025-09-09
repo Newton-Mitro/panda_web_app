@@ -9,6 +9,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\WebPageController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
@@ -35,9 +36,19 @@ use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\RouteVisitLogController;
 use App\Http\Controllers\ContactMessageController;
 
-Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
+
+Route::get('/', [WebPageController::class, 'home'])->name('site.home');
+Route::get('/about', [WebPageController::class, 'about'])->name('site.about');
+Route::get('/contact', [WebPageController::class, 'contact'])->name('site.contact');
+Route::get('/team', [WebPageController::class, 'team'])->name('site.team');
+Route::get('/services', [WebPageController::class, 'services'])->name('site.services');
+Route::get('/projects', [WebPageController::class, 'projects'])->name('site.projects');
+Route::get('/articles', [WebPageController::class, 'articles'])->name('site.articles');
+Route::get('/events', [WebPageController::class, 'events'])->name('site.events');
+Route::get('/awards', [WebPageController::class, 'awards'])->name('site.awards');
+Route::get('/careers', [WebPageController::class, 'careers'])->name('site.careers');
+Route::get('/notices', [WebPageController::class, 'notices'])->name('site.notices');
+
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
