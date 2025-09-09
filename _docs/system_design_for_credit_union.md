@@ -1,18 +1,18 @@
-Credit Union System Design
+# Credit Union System Design
 
-High-level domain model
+### High-level domain model
 
-Actors & org
+**Actors & org**
 
     • customers (KYC’d people or entities)
     • branches, users (tellers/ops), roles
 
-Products
+**Products**
 
     • deposit_products (Savings, Share, Recurring Deposit, Fixed Deposit)
     • loan_products (Standard loan, Loan-Against-Deposit)
 
-Accounts
+**Accounts**
 
     • accounts (one row per deposit or loan account; typed)
     • term_deposits (FD details: principal, tenor, rate, maturity)
@@ -20,7 +20,7 @@ Accounts
     • loan_accounts (approved amount, rate, schedule method)
     • loan_collateral_deposits (lien: loan ↔ deposit accounts)
 
-Transactions & interest
+**Transactions & interest**
 
     • journal_entries, journal_lines (system of record: double-entry)
     • postings_view (optional SQL view joining lines)
@@ -29,7 +29,7 @@ Transactions & interest
     • schedules (amortization & RD/FD schedules)
     • payments (cash/transfer/adjustment)
 
-Cash ops
+**Cash ops**
 
     • gl_accounts (chart of accounts)
     • vaults, cash_drawers (per branch + teller)
@@ -37,7 +37,7 @@ Cash ops
     • cash_counts (denomination counts for EOD proof)
     • teller_shifts (open/close, variance)
 
-Principle: All money movement = journal lines (debits = credits). Product “transactions” are derived from journals by filtering Gls/subledgers.
+**Principle:** All money movement = journal lines (debits = credits). Product “transactions” are derived from journals by filtering Gls/subledgers.
 
 ### MySql Schema
 
@@ -80,7 +80,9 @@ CREATE TABLE online_users (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (member_id) REFERENCES members(id)
 );
+```
 
+```sql
 -- =========================================
 -- 2) Customers
 -- =========================================
@@ -175,7 +177,9 @@ CREATE TABLE customer_signatures (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
 );
+```
 
+```sql
 -- =========================================
 -- 3) Products (Policy)
 -- =========================================
@@ -223,7 +227,9 @@ CREATE TABLE insurance_policies (
     FOREIGN KEY (member_id) REFERENCES members(id),
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
+```
 
+```sql
 -- =========================================
 -- 4) Accounts
 -- =========================================
@@ -296,7 +302,9 @@ CREATE TABLE account_signatories (
     FOREIGN KEY (account_id) REFERENCES accounts(id),
     FOREIGN KEY (customer_id) REFERENCES customers(id)
 );
+```
 
+```sql
 -- =========================================
 -- 5) Term & Recurring Deposits
 -- =========================================
@@ -321,7 +329,9 @@ CREATE TABLE recurring_deposits (
     tenor_months INT NOT NULL,
     FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
 );
+```
 
+```sql
 -- =========================================
 -- 6) Loans
 -- =========================================
@@ -473,7 +483,9 @@ CREATE TABLE loan_application_supporting_docs (
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
 );
+```
 
+```sql
 
 -- =========================================
 -- 7) Bank / Cash / Vault / Teller
@@ -548,7 +560,9 @@ CREATE TABLE cash_transactions (
     FOREIGN KEY (vault_id) REFERENCES vaults(id),
     FOREIGN KEY (bank_account_id) REFERENCES bank_accounts(id)
 );
+```
 
+```sql
 -- =========================================
 -- 8) Journals / GL
 -- =========================================
@@ -587,6 +601,9 @@ CREATE TABLE journal_lines (
     FOREIGN KEY (account_id) REFERENCES accounts(id)
 );
 
+```
+
+```sql
 -- =========================================
 -- 9) Payments / Schedules / Interest / Charges
 -- =========================================
@@ -665,7 +682,9 @@ CREATE TABLE insurance_claims (
     FOREIGN KEY (processed_by) REFERENCES users(id),
     FOREIGN KEY (journal_entry_id) REFERENCES journal_entries(id)
 );
+```
 
+```sql
 -- =========================================
 -- 10) Cheques
 -- =========================================
@@ -718,7 +737,9 @@ CREATE TABLE pending_cheque_debits (
 -- Set status = PENDING.
 -- Optionally create pending_cheque_debits to hold funds.
 -- This is the first time the system “knows” the cheque exists.
+```
 
+```sql
 -- =========================================
 -- 11) Audit Log
 -- =========================================
