@@ -18,9 +18,7 @@ const Navigation = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const appName = import.meta.env.VITE_APP_NAME || 'SmartPanda';
 
-    // Active link check based on current URL
     const isActive = (href: string) => {
-        console.log(url, href);
         return url === href;
     };
 

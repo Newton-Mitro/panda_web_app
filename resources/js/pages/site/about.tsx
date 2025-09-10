@@ -15,7 +15,7 @@ export default function About() {
                 <Navigation />
 
                 <main className="m-16">
-                    <div className="m-16 mx-auto max-w-6xl rounded border">
+                    <div className="m-16 mx-auto max-w-6xl">
                         <AttributeSection />
                     </div>
                 </main>
