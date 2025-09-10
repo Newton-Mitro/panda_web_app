@@ -26,7 +26,7 @@ const AttributeSection = () => {
                     </div>
 
                     {/* Divider */}
-                    <div className="mx-auto hidden h-full w-1 bg-border md:block"></div>
+                    <div className="mx-auto my-auto hidden h-32 w-[1px] bg-border md:block"></div>
 
                     {/* Right Content */}
                     <div className="flex justify-center md:justify-end">

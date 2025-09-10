@@ -11,23 +11,28 @@ export default function About() {
     return (
         <>
             <Head title="Home" />
-            <div className="min-h-screen bg-background">
+            <div className="flex min-h-screen flex-col bg-background">
                 <Navigation />
 
-                <main>
-                    <AttributeSection />
+                <main className="m-16">
+                    <div className="m-16 mx-auto max-w-6xl rounded border">
+                        <AttributeSection />
+                    </div>
                 </main>
 
-                <footer className="border-t border-border bg-background py-8">
+                {/* Footer always at bottom */}
+                <footer className="mt-auto border-t border-border bg-background py-8">
                     <div className="mx-auto max-w-6xl px-6">
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col items-center justify-between gap-2 md:flex-row">
                             <div className="flex items-center space-x-2">
                                 <div className="text-sm font-bold text-foreground">{appName}</div>
                                 <span className="flex items-start rounded bg-foreground p-1">
                                     <AppLogoIcon className="h-4 w-4 text-background" />
                                 </span>
                             </div>
-                            <p className="text-xs text-muted-foreground">Copyright © 2024 Bulwark Foundation by Prakash Foundation</p>
+                            <p className="text-center text-xs text-muted-foreground md:text-right">
+                                Copyright © 2024 Bulwark Foundation by Prakash Foundation
+                            </p>
                         </div>
                     </div>
                 </footer>

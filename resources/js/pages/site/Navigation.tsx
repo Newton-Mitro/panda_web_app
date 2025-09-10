@@ -5,22 +5,23 @@ import { SharedData } from '../../types';
 
 const Navigation = () => {
     const navItems = [
-        { name: 'Attribute', href: '#attribute' },
-        { name: 'Our Team', href: '#team' },
-        { name: 'Our Partners', href: '#partners' },
-        { name: 'Visit Museum', href: '#museum' },
+        { name: 'About', href: '/about' },
+        { name: 'Attribute', href: '/attribute' },
+        { name: 'Our Team', href: '/team' },
+        { name: 'Our Partners', href: '/partners' },
+        { name: 'Visit Museum', href: '/museum' },
     ];
 
-    const { auth } = usePage<SharedData>().props;
+    const page = usePage<SharedData>();
+    const { auth } = page.props;
+    const url = page.url;
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const appName = import.meta.env.VITE_APP_NAME || 'SmartPanda'; // fallback
+    const appName = import.meta.env.VITE_APP_NAME || 'SmartPanda';
 
-    const scrollToSection = (href: string) => {
-        const element = document.querySelector(href);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-        }
-        setMobileMenuOpen(false); // close mobile menu after click
+    // Active link check based on current URL
+    const isActive = (href: string) => {
+        console.log(url, href);
+        return url === href;
     };
 
     return (
@@ -37,13 +38,15 @@ const Navigation = () => {
                 {/* Desktop nav */}
                 <div className="hidden items-center space-x-8 md:flex">
                     {navItems.map((item) => (
-                        <button
+                        <Link
                             key={item.name}
-                            onClick={() => scrollToSection(item.href)}
-                            className="cursor-pointer text-sm text-foreground transition-colors hover:text-foreground/80"
+                            href={item.href}
+                            className={`cursor-pointer text-sm transition-colors hover:text-foreground/80 ${
+                                isActive(item.href) ? 'border-b-2 border-primary text-primary' : 'text-foreground'
+                            }`}
                         >
                             {item.name}
-                        </button>
+                        </Link>
                     ))}
                 </div>
 
@@ -91,40 +94,40 @@ const Navigation = () => {
 
             {/* Mobile nav */}
             {mobileMenuOpen && (
-                <div className="flex h-screen items-center justify-center border-t border-border bg-background md:hidden">
-                    <div className="flex flex-col items-center space-y-4 px-6 py-4">
-                        {navItems.map((item) => (
-                            <button
-                                key={item.name}
-                                onClick={() => scrollToSection(item.href)}
-                                className="text-left text-sm text-foreground hover:text-foreground/80"
-                            >
-                                {item.name}
-                            </button>
-                        ))}
-                        <div className="mt-2 flex flex-col space-y-2">
-                            {auth.user ? (
-                                <Link
-                                    href={route('dashboard')}
-                                    className="block rounded-sm border border-[#19140035] px-5 py-1.5 text-center text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
-                                >
-                                    Dashboard
-                                </Link>
-                            ) : (
-                                <Link
-                                    href={route('login')}
-                                    className="block rounded-sm border border-transparent px-5 py-1.5 text-center text-sm text-[#1b1b18] hover:border-[#19140035] dark:text-[#EDEDEC] dark:hover:border-[#3E3E3A]"
-                                >
-                                    Log in
-                                </Link>
-                            )}
+                <div className="flex h-screen flex-col items-center justify-center space-y-4 border-t border-border bg-background px-6 py-4 md:hidden">
+                    {navItems.map((item) => (
+                        <Link
+                            key={item.name}
+                            href={item.href}
+                            className={`text-left text-sm transition-colors hover:text-foreground/80 ${
+                                isActive(item.href) ? 'border-b-2 border-primary text-primary' : 'text-foreground'
+                            }`}
+                        >
+                            {item.name}
+                        </Link>
+                    ))}
+                    <div className="mt-2 flex flex-col space-y-2">
+                        {auth.user ? (
                             <Link
-                                href={route('register')}
+                                href={route('dashboard')}
                                 className="block rounded-sm border border-[#19140035] px-5 py-1.5 text-center text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
                             >
-                                Donate
+                                Dashboard
                             </Link>
-                        </div>
+                        ) : (
+                            <Link
+                                href={route('login')}
+                                className="block rounded-sm border border-transparent px-5 py-1.5 text-center text-sm text-[#1b1b18] hover:border-[#19140035] dark:text-[#EDEDEC] dark:hover:border-[#3E3E3A]"
+                            >
+                                Log in
+                            </Link>
+                        )}
+                        <Link
+                            href={route('register')}
+                            className="block rounded-sm border border-[#19140035] px-5 py-1.5 text-center text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
+                        >
+                            Donate
+                        </Link>
                     </div>
                 </div>
             )}

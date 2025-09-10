@@ -1,50 +1,245 @@
-# Credit Union System Design
+# Credit Union System Documentation
 
-### High-level domain model
+## 1. Overview
 
-**Actors & org**
+The Credit Union System is a modular banking solution designed to handle:
 
-    • customers (KYC’d people or entities)
-    • branches, users (tellers/ops), roles
+- Customer accounts
+- Loans
+- Deposits
+- Insurance
+- Cash management
+- Journals & GL
+- Cheques
+- Audit logs
 
-**Products**
+**Core Principles:**
 
-    • deposit_products (Savings, Share, Recurring Deposit, Fixed Deposit)
-    • loan_products (Standard loan, Loan-Against-Deposit)
+1. All money movement is represented via **journal entries** (double-entry bookkeeping).
+2. Product transactions are **derived from journals**, ensuring a clean audit trail.
+3. Multi-branch, multi-user, teller-level operations supported.
+4. Fully **KYC-compliant** customer management.
 
-**Accounts**
+---
 
-    • accounts (one row per deposit or loan account; typed)
-    • term_deposits (FD details: principal, tenor, rate, maturity)
-    • recurring_deposits (RD details: installment amount/cycle)
-    • loan_accounts (approved amount, rate, schedule method)
-    • loan_collateral_deposits (lien: loan ↔ deposit accounts)
+## 2. Actors & Organization
 
-**Transactions & interest**
+**Entities:**
 
-    • journal_entries, journal_lines (system of record: double-entry)
-    • postings_view (optional SQL view joining lines)
-    • interest_accruals, interest_capitalizations (auditable interest)
-    • fees / charges (one-off or recurring)
-    • schedules (amortization & RD/FD schedules)
-    • payments (cash/transfer/adjustment)
+- **Customers** – Individuals or organizations, KYC-verified.
+- **Branches** – Operational units of the credit union.
+- **Users** – Staff: tellers, ops, managers, admin.
+- **Roles** – TELLER, OPS, MANAGER, ADMIN.
 
-**Cash ops**
+**Relationships:**
 
-    • gl_accounts (chart of accounts)
-    • vaults, cash_drawers (per branch + teller)
-    • cash_transfers (vault↔drawer, drawer↔drawer, CIT)
-    • cash_counts (denomination counts for EOD proof)
-    • teller_shifts (open/close, variance)
+```bash
+branches ──< users
+customers ──< accounts (via account_customers)
+```
 
-**Principle:** All money movement = journal lines (debits = credits). Product “transactions” are derived from journals by filtering Gls/subledgers.
+---
 
-### MySql Schema
+## 3. Products
+
+**Supported Product Types:**
+
+| Type      | Description                             |
+| --------- | --------------------------------------- |
+| SAVINGS   | Standard savings accounts               |
+| SHARE     | Share accounts with member equity       |
+| RD        | Recurring deposits                      |
+| FD        | Term deposits                           |
+| LOAN      | Standard loans / loans against deposits |
+| INSURANCE | Insurance policies linked to members    |
+
+**Tables:**
+
+- `products`
+- `insurance_policies`
+
+**Fields Highlights:**
+
+- **Deposit-specific:** `rate_bp`, `interest_method`, `gl_control_id`, `lock_in_days`
+- **Loan-specific:** `schedule_method`, `penalty_bp`, `collateral_required`, `ltv_percent`
+
+---
+
+## 4. Accounts
+
+**Tables:**
+
+- `accounts` – Core account record per product
+- `account_customers` – Customer ownership (primary/joint)
+- `account_introducers` – Introducer linkage
+- `account_nominees` – Nominee & share info
+- `account_signatories` – Authorized signatories & mandate
+
+**Account Types:**
+
+- SAVINGS, SHARE, RD, FD, LOAN, INSURANCE
+
+**Notes:**
+
+- `balance` tracks current balance / loan outstanding
+- `accrued_interest` tracks interest earned or payable
+- `maturity_date` applies to FD, RD, or loans
+
+---
+
+## 5. Term & Recurring Deposits
+
+**Tables:**
+
+- `term_deposits` – Principal, rate, start/maturity, compounding, auto-renew
+- `recurring_deposits` – Installment amount, rate, cycle, tenor
+
+**Business Rules:**
+
+- Interest can be compounded: monthly, quarterly, semi-annual, annual, or at maturity
+
+---
+
+## 6. Loans
+
+**Tables:**
+
+- `loan_applications`
+- `loan_sureties`
+- `loan_collaterals`
+- `loan_guarantors`
+- `loan_applicant_work_details`
+- `loan_applicant_assets`
+- `loan_applicant_incomes`
+- `loan_applicant_expenses`
+- `loan_application_supporting_docs`
+- `loan_approvals`
+- `loan_disbursements`
+- `loan_application_status_history`
+
+**Loan Flow:**
+
+1. **Application Stage** – Customer submits loan; all supporting data is recorded.
+2. **Approval Stage** – Credit officer approves and sets schedule.
+3. **Account Creation** – Approved loan gets a new `accounts` entry.
+4. **Disbursement Stage** – Loan credited to borrower account.
+5. **Repayment Schedule** – Generated and linked to loan account.
+6. **Repayment Stage** – Payments update balances & schedules.
+7. **Closure / Write-off** – Loan is closed when fully repaid or waived.
+
+---
+
+## 7. Bank / Cash / Vault / Teller
+
+**Tables:**
+
+- `bank_accounts` – Bank accounts per branch
+- `vaults` – Cash vault per branch
+- `vault_denominations` – Denomination count in vaults
+- `cash_drawers` – Teller drawers
+- `teller_shifts` – Shift management, variance calculation
+- `cash_transactions` – Cash inflow/outflow
+- `transactions` – Customer-level ledger transactions
+
+**Notes:**
+
+- All teller and vault cash movements must **link to journal entries**.
+- `transactions` table represents **customer perspective**.
+
+---
+
+## 8. Journals / GL
+
+**Tables:**
+
+- `gl_accounts` – Chart of accounts
+- `journal_entries` – Master journal record
+- `journal_lines` – Debits and credits per GL
+
+**Business Rules:**
+
+- Double-entry system: total debits = total credits
+- Each `transaction` links to a `journal_entry`
+
+---
+
+## 9. Payments / Schedules / Interest / Charges
+
+**Tables:**
+
+- `schedules` – Loan/RD/FD schedule rows
+- `insurance_premiums` – Premium payments
+- `payments` – Payment receipts for accounts/schedules
+- `interest_accruals` – Interest posting
+- `charges` – Fees and penalties
+- `insurance_claims` – Insurance claim records
+
+---
+
+## 10. Cheques
+
+**Tables:**
+
+- `cheque_books` – Customer cheque books
+- `cheques` – Individual cheques
+- `pending_cheque_debits` – Hold amounts for pending cheques
+
+**Notes:**
+
+- Cheque statuses: ISSUED, PENDING, CLEARED, BOUNCED, CANCELLED
+- System handles posting, clearing, and pending holds automatically
+
+---
+
+## 11. Audit Log
+
+**Tables:**
+
+- `audits` – Tracks CRUD changes across the system
+
+**Fields:**
+
+- `auditable_type`, `auditable_id` – Entity changed
+- `user_id` – Who made the change
+- `event` – CREATED, UPDATED, DELETED, RESTORED
+- `old_values`, `new_values` – JSON snapshots
+- `branch_id`, `ip_address`, `user_agent` – Context
+
+---
+
+## 12. Principles & Notes
+
+- All money movements are **backed by journal lines**.
+- Customer account balance is **derived from transactions**.
+- Teller shifts and cash drawer balances are **auditable**.
+- KYC & family relations are fully tracked.
+- Loan schedules, repayments, and interest accruals maintain **full auditability**.
+
+# Credit Union Database Schema
+
+This document describes the full database schema for a Credit Union system including branches, customers, accounts, products, loans, deposits, cash management, journals, payments, cheques, and audit logs.
+
+---
+
+## Table of Contents
+
+1. [Branches & Users](#branches--users)
+2. [Customers](#customers)
+3. [Products](#products)
+4. [Accounts](#accounts)
+5. [Term & Recurring Deposits](#term--recurring-deposits)
+6. [Loans](#loans)
+7. [Bank / Cash / Vault / Teller](#bank--cash--vault--teller)
+8. [Journals / GL](#journals--gl)
+9. [Payments / Schedules / Interest / Charges](#payments--schedules--interest--charges)
+10. [Cheques](#cheques)
+11. [Audit Log](#audit-log)
+
+---
+
+## Branches & Users
 
 ```sql
--- =========================================
--- 1) Branches & Users
--- =========================================
 CREATE TABLE branches (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     code VARCHAR(20) UNIQUE NOT NULL,
@@ -68,24 +263,23 @@ CREATE TABLE users (
 );
 
 CREATE TABLE online_users (
-  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  member_id CHAR(36) NOT NULL,  -- FK to members.id
-  username VARCHAR(100) UNIQUE NOT NULL,
-  email VARCHAR(150) UNIQUE,
-  phone VARCHAR(20) UNIQUE,
-  password VARCHAR(255) NOT NULL,
-  last_login_at TIMESTAMP NULL,
-  status ENUM('ACTIVE','SUSPENDED','CLOSED') DEFAULT 'ACTIVE',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (member_id) REFERENCES members(id)
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    member_id CHAR(36) NOT NULL,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    email VARCHAR(150) UNIQUE,
+    phone VARCHAR(20) UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    last_login_at TIMESTAMP NULL,
+    status ENUM('ACTIVE','SUSPENDED','CLOSED') DEFAULT 'ACTIVE',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (member_id) REFERENCES members(id)
 );
 ```
 
+## Customers
+
 ```sql
--- =========================================
--- 2) Customers
--- =========================================
 CREATE TABLE customers (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     customer_no VARCHAR(50) UNIQUE NOT NULL,
@@ -179,10 +373,9 @@ CREATE TABLE customer_signatures (
 );
 ```
 
+## Products
+
 ```sql
--- =========================================
--- 3) Products (Policy)
--- =========================================
 CREATE TABLE products (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     type ENUM'SAVINGS','SHARE','RECCURING_DEPOSIT','FIXED_DEPOSIT', 'INSURANCE', 'LOAN') NOT NULL,
@@ -229,10 +422,9 @@ CREATE TABLE insurance_policies (
 );
 ```
 
+## Accounts
+
 ```sql
--- =========================================
--- 4) Accounts
--- =========================================
 CREATE TABLE accounts (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     account_no VARCHAR(50) UNIQUE NOT NULL,         -- core account number
@@ -304,10 +496,9 @@ CREATE TABLE account_signatories (
 );
 ```
 
+## Term & Recurring Deposits
+
 ```sql
--- =========================================
--- 5) Term & Recurring Deposits
--- =========================================
 CREATE TABLE term_deposits (
     account_id BIGINT UNSIGNED PRIMARY KEY,
     principal DECIMAL(18,2) NOT NULL,
@@ -331,41 +522,15 @@ CREATE TABLE recurring_deposits (
 );
 ```
 
+## Loans
+
 ```sql
--- =========================================
--- 6) Loans
--- =========================================
-
--- Application Submitted
---         │
---         ▼
--- Verification & Assessment
---         │
---         ▼
--- Approved? ──No──> Rejected (Status: REJECTED)
---         │
---         Yes
---         ▼
--- Loan Approval (loan_approvals)
---         │
---         ▼
--- Disbursement (loan_disbursements)
---         │
---         ▼
--- Repayment & Monitoring (loan_repayments/account_transactions)
---         │
---         ▼
--- Fully Repaid? ──No──> Continue Repayment
---         │
---         Yes
---         ▼
--- Loan Closure (Status: CLOSED)
-
 CREATE TABLE loan_applications (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     customer_id BIGINT UNSIGNED NOT NULL,
+    product_id BIGINT UNSIGNED NOT NULL,
+    account_id BIGINT UNSIGNED NULL, -- created later after approval
     loan_type ENUM('GENERAL','DEPOSIT','SECURED') DEFAULT 'GENERAL',
-    -- Product Id
     amount_requested DECIMAL(18,2) NOT NULL,
     purpose TEXT,
     application_date DATE NOT NULL,
@@ -373,7 +538,85 @@ CREATE TABLE loan_applications (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES customers(id),
+    FOREIGN KEY (product_id) REFERENCES products(id),
     FOREIGN KEY (account_id) REFERENCES accounts(id)
+);
+
+
+CREATE TABLE loan_sureties (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    loan_application_id BIGINT UNSIGNED NOT NULL,
+    account_id BIGINT UNSIGNED NOT NULL,
+    surety_type ENUM('SURETY','LEAN') NOT NULL,
+    amount DECIMAL(18,2) NOT NULL,
+    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE,
+    FOREIGN KEY (account_id) REFERENCES accounts(id)
+);
+
+CREATE TABLE loan_collaterals (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    loan_application_id BIGINT UNSIGNED NOT NULL,
+    collateral_type ENUM('ASSET','PROPERTY') NOT NULL,
+    reference VARCHAR(255),
+    value DECIMAL(18,2) NOT NULL,
+    description VARCHAR(255),
+    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
+);
+
+CREATE TABLE loan_guarantors (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    loan_application_id BIGINT UNSIGNED NOT NULL,
+    customer_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE,
+    FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+
+CREATE TABLE loan_applicant_work_details (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    loan_application_id BIGINT UNSIGNED NOT NULL,
+    employer_name VARCHAR(100),
+    designation VARCHAR(50),
+    employment_type ENUM('PERMANENT','CONTRACT','SELF_EMPLOYED','OTHER') DEFAULT 'OTHER',
+    monthly_income DECIMAL(18,2),
+    years_of_service INT,
+    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
+);
+
+CREATE TABLE loan_applicant_assets (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    loan_application_id BIGINT UNSIGNED NOT NULL,
+    asset_type VARCHAR(50) NOT NULL,
+    description VARCHAR(255),
+    value DECIMAL(18,2) NOT NULL,
+    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
+);
+
+CREATE TABLE loan_applicant_incomes (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    loan_application_id BIGINT UNSIGNED NOT NULL,
+    source VARCHAR(100),
+    monthly_amount DECIMAL(18,2),
+    frequency ENUM('MONTHLY','ANNUAL','OTHER') DEFAULT 'MONTHLY',
+    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
+);
+
+CREATE TABLE loan_applicant_expenses (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    loan_application_id BIGINT UNSIGNED NOT NULL,
+    category VARCHAR(50),
+    monthly_amount DECIMAL(18,2),
+    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
+);
+
+CREATE TABLE loan_application_supporting_docs (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    loan_application_id BIGINT UNSIGNED NOT NULL,
+    file_name VARCHAR(255),
+    file_path VARCHAR(255),
+    mime VARCHAR(50),
+    document_type VARCHAR(50), -- e.g., Gas Bill, Electricity, Passport
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
 );
 
 CREATE TABLE loan_approvals (
@@ -407,90 +650,102 @@ CREATE TABLE loan_application_status_history (
     FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE,
     FOREIGN KEY (changed_by) REFERENCES users(id)
 );
-
-CREATE TABLE loan_sureties (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    loan_application_id BIGINT UNSIGNED NOT NULL,
-    account_id BIGINT UNSIGNED NOT NULL,
-    surety_type ENUM('SURETY','LEAN') NOT NULL,
-    amount DECIMAL(18,2) NOT NULL,
-    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE,
-    FOREIGN KEY (account_id) REFERENCES accounts(id)
-);
-
-CREATE TABLE loan_collaterals (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    loan_application_id BIGINT UNSIGNED NOT NULL,
-    collateral_type ENUM('ASSET','PROPERTY') NOT NULL,
-    reference VARCHAR(255),
-    value DECIMAL(18,2) NOT NULL,
-    description VARCHAR(255),
-    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
-);
-
-CREATE TABLE loan_guarantors (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    loan_application_id BIGINT UNSIGNED NOT NULL,
-    customer_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE,
-    FOREIGN KEY (customer_id) REFERENCES customers(id)
-);
-
-CREATE TABLE loan_application_work_details (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    loan_application_id BIGINT UNSIGNED NOT NULL,
-    employer_name VARCHAR(100),
-    designation VARCHAR(50),
-    employment_type ENUM('PERMANENT','CONTRACT','SELF_EMPLOYED','OTHER') DEFAULT 'OTHER',
-    monthly_income DECIMAL(18,2),
-    years_of_service INT,
-    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
-);
-
-CREATE TABLE loan_application_assets (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    loan_application_id BIGINT UNSIGNED NOT NULL,
-    asset_type VARCHAR(50) NOT NULL,
-    description VARCHAR(255),
-    value DECIMAL(18,2) NOT NULL,
-    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
-);
-
-CREATE TABLE loan_application_incomes (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    loan_application_id BIGINT UNSIGNED NOT NULL,
-    source VARCHAR(100),
-    monthly_amount DECIMAL(18,2),
-    frequency ENUM('MONTHLY','ANNUAL','OTHER') DEFAULT 'MONTHLY',
-    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
-);
-
-CREATE TABLE loan_application_expenses (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    loan_application_id BIGINT UNSIGNED NOT NULL,
-    category VARCHAR(50),
-    monthly_amount DECIMAL(18,2),
-    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
-);
-
-CREATE TABLE loan_application_supporting_docs (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    loan_application_id BIGINT UNSIGNED NOT NULL,
-    file_name VARCHAR(255),
-    file_path VARCHAR(255),
-    mime VARCHAR(50),
-    document_type VARCHAR(50), -- e.g., Gas Bill, Electricity, Passport
-    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (loan_application_id) REFERENCES loan_applications(id) ON DELETE CASCADE
-);
 ```
 
+### Loan Flow
+
+**1. Application Stage**
+
+- Customer submits loan request.
+- Data goes into loan_applications.
+- Attach guarantors, sureties, collaterals, applicant income/expenses, work details, supporting docs.
+- status = PENDING.
+
+**👉 Tables involved:**
+
+- loan_applications
+- loan_guarantors, loan_sureties, loan_collaterals
+- loan_applicant_work_details, loan_applicant_assets, - loan_applicant_incomes, loan_applicant_expenses
+- loan_application_supporting_docs
+
+**2. Approval Stage**
+
+- Credit officer / committee reviews the loan.
+- Approval decision recorded in loan_approvals.
+- Includes: approved amount, interest rate, repayment schedule (can be JSON or linked to schedules).
+- loan_application_status_history logs the status change to APPROVED.
+
+**👉 Tables involved:**
+
+- loan_approvals
+- loan_application_status_history
+
+**_3. Account Creation (important!)_**
+
+- Once approved, a loan account is created in accounts with:
+    - product_id → loan product type
+    - balance = 0 initially
+- loan_applications.account_id is updated with this newly created account.
+- This allows all schedules and repayments to reference the same account like deposits.
+
+**👉 Tables involved:**
+
+- accounts
+- loan_applications (update to store account_id)
+
+**4. Disbursement Stage**
+
+- Loan is disbursed in one or multiple tranches.
+- Recorded in loan_disbursements.
+- Credited to the borrower’s deposit account (or external bank).
+- Loan account balance increases by disbursed amount.
+- loan_application_status_history logs DISBURSED.
+
+**👉 Tables involved:**
+
+- loan_disbursements
+- accounts (loan account balance update)
+- loan_application_status_history
+
+**5. Repayment Schedule Generation**
+
+- System generates schedule rows in schedules linked to the loan account.
+- Each row = installment with due_date, principal_due, interest_due, fee_due, sequence_no.
+- Status = PENDING.
+
+**👉 Tables involved:**
+
+- schedules
+
+**6. Repayment Stage**
+
+- Borrower makes payments against the loan.
+- You can track these in a transactions table (not shown yet but usually required).
+- Each repayment updates:
+- Loan account balance ↓
+- Matching schedule rows (status → PARTIAL or PAID).
+- Interest accruals (if applied daily/monthly) can also be posted to schedules or a separate accruals table.
+
+**👉 Tables involved:**
+
+- transactions (recommended addition)
+- schedules
+- accounts
+
+**7. Closure / Write-off**
+
+- When the loan balance = 0 and all schedules are paid → loan account status → CLOSED.
+- If waived/write-off → schedules.status = WAIVED and balance adjusted.
+- loan_application_status_history logs CLOSED.
+
+**👉 Tables involved:**
+
+- accounts (status update)
+- loan_application_status_history
+
+## Bank / Cash / Vault / Teller
+
 ```sql
-
--- =========================================
--- 7) Bank / Cash / Vault / Teller
--- =========================================
-
 CREATE TABLE bank_accounts (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     branch_id BIGINT UNSIGNED NOT NULL,
@@ -560,12 +815,41 @@ CREATE TABLE cash_transactions (
     FOREIGN KEY (vault_id) REFERENCES vaults(id),
     FOREIGN KEY (bank_account_id) REFERENCES bank_accounts(id)
 );
+
+CREATE TABLE transactions (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    account_id BIGINT UNSIGNED NOT NULL,           -- customer account
+    journal_entry_id BIGINT UNSIGNED NOT NULL,     -- link to GL
+    type ENUM(
+        'DEPOSIT','WITHDRAWAL','TRANSFER',
+        'LOAN_DISBURSEMENT','LOAN_REPAYMENT',
+        'INTEREST_ACCRUAL','CHARGE','FEE',
+        'INSURANCE_PREMIUM','INSURANCE_CLAIM',
+        'ADJUSTMENT','REVERSAL'
+    ) NOT NULL,
+    amount DECIMAL(18,2) NOT NULL,                 -- transaction amount
+    dr_cr ENUM('DEBIT','CREDIT') NOT NULL,         -- customer perspective
+    balance_after DECIMAL(18,2) NOT NULL,          -- running balance snapshot
+
+    -- Context / metadata
+    channel ENUM('TELLER','ATM','ONLINE','MOBILE','BANK','SYSTEM') DEFAULT 'SYSTEM',
+    mode ENUM('CASH','CHEQUE','TRANSFER','INTERNAL') DEFAULT 'CASH',
+    reference_no VARCHAR(100),                     -- cheque no, txn ref, etc.
+    narration VARCHAR(255),                        -- free-text for statements
+
+    branch_id BIGINT UNSIGNED,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (account_id) REFERENCES accounts(id),
+    FOREIGN KEY (journal_entry_id) REFERENCES journal_entries(id),
+    FOREIGN KEY (branch_id) REFERENCES branches(id)
+);
+
 ```
 
+## Journals / General Ledger (GL)
+
 ```sql
--- =========================================
--- 8) Journals / GL
--- =========================================
 CREATE TABLE gl_accounts (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     code VARCHAR(50) UNIQUE NOT NULL,
@@ -601,12 +885,12 @@ CREATE TABLE journal_lines (
     FOREIGN KEY (account_id) REFERENCES accounts(id)
 );
 
+
 ```
 
+## Payments / Schedules / Interest / Charges
+
 ```sql
--- =========================================
--- 9) Payments / Schedules / Interest / Charges
--- =========================================
 CREATE TABLE schedules (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     account_id BIGINT UNSIGNED NOT NULL,
@@ -684,10 +968,9 @@ CREATE TABLE insurance_claims (
 );
 ```
 
+## Cheques
+
 ```sql
--- =========================================
--- 10) Cheques
--- =========================================
 CREATE TABLE cheque_books (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     account_id BIGINT UNSIGNED NOT NULL,
@@ -710,12 +993,7 @@ CREATE TABLE cheques (
     clearance_date DATE,
     FOREIGN KEY (cheque_book_id) REFERENCES cheque_books(id)
 );
--- status meanings:
--- ISSUED → customer has written the cheque, not yet presented.
--- PENDING → cheque presented but not cleared.
--- CLEARED → funds debited and cheque cleared.
--- BOUNCED → cheque returned unpaid (insufficient funds or stop payment).
--- CANCELLED → customer voided the cheque.
+
 
 CREATE TABLE pending_cheque_debits (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -726,23 +1004,111 @@ CREATE TABLE pending_cheque_debits (
     FOREIGN KEY (cheque_id) REFERENCES cheques(id),
     FOREIGN KEY (account_id) REFERENCES accounts(id)
 );
--- Ensures account balance minus pending holds is available for withdrawals.
--- Automatically cleared when cheque clears or bounces.
 
-
--- System Entry
--- Once presented, the bank system does:
--- Check the account number on the cheque.
--- Create a cheques record in the system (if not already linked to a cheque book).
--- Set status = PENDING.
--- Optionally create pending_cheque_debits to hold funds.
--- This is the first time the system “knows” the cheque exists.
 ```
 
+### status meanings:
+
+- ISSUED → customer has written the cheque, not yet presented.
+- PENDING → cheque presented but not cleared.
+- CLEARED → funds debited and cheque cleared.
+- BOUNCED → cheque returned unpaid (insufficient funds or stop payment).
+- CANCELLED → customer voided the cheque.
+
+Ensures account balance minus pending holds is available for withdrawals.
+Automatically cleared when cheque clears or bounces.
+
+### System Entry
+
+- Once presented, the bank system does:
+- Check the account number on the cheque.
+- Create a cheques record in the system (if not already linked to a cheque book).
+- Set status = PENDING.
+- Optionally create pending_cheque_debits to hold funds.
+- This is the first time the system “knows” the cheque exists.
+
+# Petty Cash Management
+
+## Actors / Entities:
+
+- Petty Cash Fund: Linked to a branch or department.
+- Custodian: A user responsible for the petty cash.
+- Transactions: Cash disbursed for small expenses, cash replenishments.
+- Expense Categories: For reporting and audit.
+
+**Principle:** All petty cash movements → journal_lines for double-entry auditing.
+
+## Database Schema
+
 ```sql
--- =========================================
--- 11) Audit Log
--- =========================================
+-- Petty Cash Fund
+CREATE TABLE petty_cash_funds (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    branch_id BIGINT UNSIGNED NOT NULL,
+    fund_name VARCHAR(100) NOT NULL,
+    balance DECIMAL(18,2) DEFAULT 0,
+    custodian_id BIGINT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (branch_id) REFERENCES branches(id),
+    FOREIGN KEY (custodian_id) REFERENCES users(id)
+);
+
+-- Petty Cash Transactions
+CREATE TABLE petty_cash_transactions (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    fund_id BIGINT UNSIGNED NOT NULL,
+    type ENUM('DISBURSE','REPLENISH') NOT NULL,
+    amount DECIMAL(18,2) NOT NULL,
+    category VARCHAR(100),       -- e.g., Stationery, Travel, Refreshments
+    description VARCHAR(255),
+    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    journal_entry_id BIGINT UNSIGNED,  -- Optional, link to GL
+    created_by BIGINT UNSIGNED,
+    FOREIGN KEY (fund_id) REFERENCES petty_cash_funds(id),
+    FOREIGN KEY (journal_entry_id) REFERENCES journal_entries(id),
+    FOREIGN KEY (created_by) REFERENCES users(id)
+);
+
+-- Petty Cash Expense Categories (Optional Master Table)
+CREATE TABLE petty_cash_categories (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    description VARCHAR(255)
+);
+```
+
+## Workflow
+
+**1. Fund Setup**
+
+- Branch manager creates a petty cash fund and assigns a custodian.
+- Initial balance is funded (REPLENISH transaction).
+
+**2. Disbursement**
+
+- Custodian records small payments (DISBURSE) for operational needs.
+- Each transaction optionally posts a journal entry to track GL impact.
+
+**3. Replenishment**
+
+- Fund gets topped up from main vault or bank when low.
+- REPLENISH transaction posted, balance updated.
+
+**4. Reporting / Audit**
+
+- Daily/weekly/monthly petty cash report per fund.
+- All transactions are auditable via journal_lines and audits table.
+
+## ✅ Integration with Existing Schema:
+
+- vaults / cash_drawers → source of replenishment.
+- journal_entries / journal_lines → all transactions are double-entry compliant.
+- audits → track all petty cash adjustments.
+
+## Audit Log
+
+```sql
 CREATE TABLE audits (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     auditable_type VARCHAR(150) NOT NULL,
@@ -764,3 +1130,12 @@ CREATE TABLE audits (
     FOREIGN KEY (branch_id) REFERENCES branches(id)
 );
 ```
+
+## ✅ Notes
+
+- All money movement is recorded via journal_entries + journal_lines.
+- cash_transactions are optional for teller/cash reconciliation but derived from GL.
+- accounts serve as the central entity connecting deposits, loans, RD/FDs, and insurance.
+- schedules + payments + interest_accruals allow full auditability of repayments and charges.
+- cheques and pending_cheque_debits handle real-world payment holds and clearance.
+- audits provide full history of user actions for compliance.
