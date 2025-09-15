@@ -49,7 +49,7 @@ const ResponsiveImageSection: React.FC<ResponsiveImageSectionProps> = ({ mediaUr
                 <img
                     src={mediaUrl}
                     alt="Custom Shape"
-                    className={`h-72 w-full object-cover shadow-lg transition-transform duration-300 md:h-96 md:w-96 ${floatClass} ${marginClass} mt-6 mb-6 [clip-path:${clipPath}] [shape-outside:${shapeOutside}] hover:scale-105`}
+                    className={`h-72 w-72 object-cover shadow-lg transition-transform duration-300 md:h-[500px] md:w-[500px] ${floatClass} ${marginClass} mt-6 mb-6 [clip-path:${clipPath}] [shape-outside:${shapeOutside}] hover:scale-105`}
                 />
             );
         }
