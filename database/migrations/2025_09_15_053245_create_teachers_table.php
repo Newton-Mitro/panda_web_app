@@ -5,38 +5,36 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('students', function (Blueprint $table) {
+        Schema::create('teachers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();
-            $table->string('student_id', 20)->unique();
+            $table->string('teacher_id', 20)->unique();
             $table->string('first_name', 100);
             $table->string('last_name', 100)->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('phone', 15)->unique()->nullable();
-
             $table->date('date_of_birth')->nullable();
             $table->enum('gender', ['MALE', 'FEMALE', 'OTHER'])->nullable();
-
-            $table->enum('religion', ['ISLAM', 'HINDUISM', 'CHRISTIANITY', 'BUDDHISM', 'OTHER'])->nullable();
-            $table->string('guardian_name', 150)->nullable();
-            $table->string('guardian_phone', 15)->nullable();
-
-            $table->string('roll_number', 50);
-            $table->foreignId('category_id')->constrained('categories')->nullOnDelete(); // Class
-
-            $table->string('birth_registration_no', 20)->nullable();
+            $table->string('designation', 100)->nullable(); // e.g., "Assistant Professor"
+            $table->string('department', 100)->nullable();  // e.g., "Mathematics"
             $table->string('national_id_no', 20)->nullable();
-
+            $table->enum('religion', ['ISLAM', 'HINDUISM', 'CHRISTIANITY', 'BUDDHISM', 'OTHER'])->nullable();
             $table->text('address')->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('students');
+        Schema::dropIfExists('teachers');
     }
 };

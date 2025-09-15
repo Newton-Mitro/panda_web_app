@@ -13,6 +13,7 @@ import {
     CalendarClockIcon,
     ContactRoundIcon,
     CreditCardIcon,
+    Glasses,
     GraduationCapIcon,
     HandPlatterIcon,
     HandshakeIcon,
@@ -23,11 +24,11 @@ import {
     MapPinnedIcon,
     MedalIcon,
     NotebookIcon,
-    PersonStanding,
     PickaxeIcon,
     RssIcon,
+    ShipIcon,
+    ShipWheel,
     ShoppingBasketIcon,
-    Speech,
     Stethoscope,
     TagsIcon,
     Tally5Icon,
@@ -73,26 +74,6 @@ const mainNavItems: NavItem[] = [
         icon: HandPlatterIcon,
     },
     {
-        title: 'Departments',
-        href: '/admin/departments',
-        icon: HospitalIcon,
-    },
-    {
-        title: 'Specialties',
-        href: '/admin/specialties',
-        icon: BriefcaseMedical,
-    },
-    {
-        title: 'Doctors',
-        href: '/admin/students',
-        icon: Stethoscope,
-    },
-    {
-        title: 'Appointments',
-        href: '/admin/appointments',
-        icon: CalendarCheck2Icon,
-    },
-    {
         title: 'Projects',
         href: '/admin/projects',
         icon: MedalIcon,
@@ -103,19 +84,34 @@ const mainNavItems: NavItem[] = [
         icon: BellDotIcon,
     },
     {
-        title: 'Galleries',
-        href: '/admin/galleries',
-        icon: ImagePlusIcon,
-    },
-    {
-        title: 'Office Locations',
-        href: '/admin/contacts',
-        icon: MapPinnedIcon,
-    },
-    {
         title: 'Events',
         href: '/admin/events',
         icon: CalendarClockIcon,
+    },
+    {
+        title: 'Teams',
+        href: '/admin/teams',
+        icon: ContactRoundIcon,
+    },
+    {
+        title: 'Leaders',
+        href: '/admin/leaders',
+        icon: ShipWheel,
+    },
+    {
+        title: 'Teachers',
+        href: '/admin/teachers',
+        icon: Glasses,
+    },
+    {
+        title: 'Students',
+        href: '/admin/students',
+        icon: GraduationCapIcon,
+    },
+    {
+        title: 'Galleries',
+        href: '/admin/galleries',
+        icon: ImagePlusIcon,
     },
     {
         title: 'Partners',
@@ -138,6 +134,11 @@ const mainNavItems: NavItem[] = [
         icon: RssIcon,
     },
     {
+        title: 'Office Locations',
+        href: '/admin/contacts',
+        icon: MapPinnedIcon,
+    },
+    {
         title: 'Job Circulars',
         href: '/admin/careers',
         icon: PickaxeIcon,
@@ -155,22 +156,7 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Instructors',
         href: '/admin/instructors',
-        icon: PersonStanding,
-    },
-    {
-        title: 'Students',
-        href: '/admin/students',
-        icon: GraduationCapIcon,
-    },
-    {
-        title: 'Leaders',
-        href: '/admin/leaders',
-        icon: Speech,
-    },
-    {
-        title: 'Teams',
-        href: '/admin/teams',
-        icon: ContactRoundIcon,
+        icon: ShipIcon,
     },
     {
         title: 'Products',
@@ -196,6 +182,26 @@ const mainNavItems: NavItem[] = [
         title: 'Payments',
         href: '/admin/payments',
         icon: CreditCardIcon,
+    },
+    {
+        title: 'Departments',
+        href: '/admin/departments',
+        icon: HospitalIcon,
+    },
+    {
+        title: 'Specialties',
+        href: '/admin/specialties',
+        icon: BriefcaseMedical,
+    },
+    {
+        title: 'Doctors',
+        href: '/admin/students',
+        icon: Stethoscope,
+    },
+    {
+        title: 'Appointments',
+        href: '/admin/appointments',
+        icon: CalendarCheck2Icon,
     },
     {
         title: 'Users',

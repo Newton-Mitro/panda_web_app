@@ -87,13 +87,16 @@ export default function Edit({ category, media }: EditProps) {
                                 value={form.category_of}
                                 onChange={(e) => setForm({ ...form, category_of: e.target.value })}
                                 options={[
+                                    { value: 'Leader', label: 'Leader' },
                                     { value: 'Team', label: 'Team' },
+                                    { value: 'Student', label: 'Student' },
                                     { value: 'Service', label: 'Service' },
                                     { value: 'Product', label: 'Product' },
                                     { value: 'Project', label: 'Project' },
                                     { value: 'Event', label: 'Event' },
                                     { value: 'Notice', label: 'Notice' },
                                     { value: 'Article', label: 'Article' },
+                                    { value: 'Course', label: 'Course' },
                                 ]}
                             />
                             <InputError message={errors.category_of} />

@@ -8,6 +8,7 @@ import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
 import { Page } from '../../types/page';
 import { PageSection } from '../../types/page_section';
+import ResponsiveImageSection from './responsive-image-section';
 
 interface PageProps {
     page: Page;
@@ -66,9 +67,7 @@ const Show: React.FC<PageProps> = ({ page, sections }) => {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Show Page - ${page.title}`} />
-            <div className="mx-auto h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
-                {/* <HeadingSmall title={page.title} description={page.meta_description || ''} /> */}
-
+            <div className="mx-auto h-[calc(100vh-100px)] space-y-14 overflow-auto p-6">
                 {sections.length > 0 ? (
                     <div className="">
                         {sections
@@ -76,14 +75,30 @@ const Show: React.FC<PageProps> = ({ page, sections }) => {
                             .map((section, index) => (
                                 <div key={section.id} className="mb-30 w-full space-y-10 lg:w-6xl">
                                     {/* Section Heading */}
-                                    <div className="mb-6 flex flex-col items-center justify-center text-center">
-                                        {section.heading && <h2 className="mb-1 text-2xl font-semibold">{section.heading}</h2>}
+                                    <div className="mb-6 flex flex-col items-start justify-center text-center">
+                                        {section.heading && <h2 className="mb-1 text-3xl font-semibold">{section.heading}</h2>}
                                         {section.sub_heading && <h3 className="mb-2 text-sm text-gray-500">{section.sub_heading}</h3>}
                                         <div className="mx-auto mb-8 h-1 w-16 bg-foreground md:mx-0"></div>
                                     </div>
 
+                                    <ResponsiveImageSection
+                                        mediaUrl={section.media?.url}
+                                        mimeType={section.media?.file_type}
+                                        contentHtml={section.content || ''}
+                                        shape="tall-left"
+                                    />
+
+                                    <ResponsiveImageSection
+                                        mediaUrl={section.media?.url}
+                                        mimeType={section.media?.file_type}
+                                        contentHtml={section.content || ''}
+                                        shape="octagon-right"
+                                    />
+
                                     {/* Media + Content */}
-                                    <div className={`flex flex-col items-center gap-4 md:flex-row ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
+                                    <div
+                                        className={`clear-both flex flex-col items-center gap-8 md:flex-row ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}
+                                    >
                                         {section.media && (
                                             <div className="w-full flex-shrink-0 md:w-1/3">
                                                 <MediaPreview media={section.media} />

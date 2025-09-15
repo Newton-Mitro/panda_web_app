@@ -68,7 +68,7 @@ export default function Index({ categories, categoryOf, categoryList }: Props) {
                             <Select
                                 value={categoryOf || ''}
                                 onChange={(e) => router.get(route('categories.index'), { category_of: e.target.value })}
-                                options={[{ value: '', label: 'All Types' }, ...categoryList.map((type) => ({ value: type, label: type }))]}
+                                options={[{ value: '', label: 'All' }, ...categoryList.map((type) => ({ value: type, label: type }))]}
                             />
                         </div>
 
