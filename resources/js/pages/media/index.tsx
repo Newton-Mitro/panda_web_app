@@ -202,7 +202,7 @@ const Index: React.FC<PageProps> = ({ mediaItems, filters }) => {
                         {mediaItems.data.map((item) => (
                             <div
                                 key={item.id}
-                                className="relative rounded border border-gray-200 p-2 hover:border-blue-500 dark:border-gray-700 dark:hover:border-blue-400"
+                                className="relative rounded border border-gray-200 bg-white p-2 hover:border-blue-500 dark:border-gray-700 dark:bg-neutral-900 dark:hover:border-blue-400"
                             >
                                 <div
                                     className="cursor-pointer"
