@@ -2,19 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Infrastructure\Models\Article;
+use App\Infrastructure\Models\Award;
 use App\Infrastructure\Models\Career;
 use App\Infrastructure\Models\Contact;
 use App\Infrastructure\Models\ContactMessage;
 use App\Infrastructure\Models\JobApplication;
 use App\Infrastructure\Models\Media;
 use App\Infrastructure\Models\Notice;
+use App\Infrastructure\Models\Order;
 use App\Infrastructure\Models\Page;
+use App\Infrastructure\Models\Partner;
 use App\Infrastructure\Models\Project;
 use App\Infrastructure\Models\RouteVisitLog;
 use App\Infrastructure\Models\Student;
 use App\Infrastructure\Models\Product;
 use App\Infrastructure\Models\Service;
 use App\Infrastructure\Models\Event;
+use App\Infrastructure\Models\Teacher;
+use App\Infrastructure\Models\Team;
+use App\Infrastructure\Models\Testimonial;
 use App\Infrastructure\Models\User;
 use App\Infrastructure\Models\Visitor;
 use Inertia\Inertia;
@@ -27,16 +34,25 @@ class DashboardController extends Controller
         $stats = [
             'users' => User::count(),
             'pages' => Page::count(),
-            'products' => Product::count(),
-            'orders' => Product::count(),
-            'payments' => Product::count(),
             'services' => Service::count(),
-            'appointments' => Service::count(),
-            'officeLocations' => Contact::count(),
-            'teams' => Event::count(),
-            'jobCirculars' => Career::count(),
-            'students' => Student::count(),
+            'contactMessages' => ContactMessage::count(),
+            'products' => Product::count(),
             'projects' => Project::count(),
+            'notices' => Notice::count(),
+            'events' => Event::count(),
+            'awards' => Award::count(),
+            'media' => Media::count(),
+            'testimonials' => Testimonial::count(),
+            'partners' => Partner::count(),
+            'teams' => Team::count(),
+            'students' => Student::count(),
+            'instructors' => Team::count(),
+            'teachers' => Teacher::count(),
+            'articles' => Article::count(),
+            'officeLocations' => Contact::count(),
+            'jobCirculars' => Career::count(),
+            'jobApplications' => JobApplication::count(),
+            'totalVisitors' => Visitor::count(),
         ];
 
         // ------------------------
@@ -76,20 +92,32 @@ class DashboardController extends Controller
         // ------------------------
         // Job Applications
         // ------------------------
-        $applications = JobApplication::latest()->take(3)->get(['id', 'name', 'position']);
+        $visitors = Visitor::latest()->take(6)->get();
+
+        // ------------------------
+        // Job Applications
+        // ------------------------
+        $jobApplications = JobApplication::latest()->take(6)->get();
 
         // ------------------------
         // Recent Media
         // ------------------------
         $media = Media::latest()->take(6)->get();
 
+        // ------------------------
+        // Recent Articles
+        // ------------------------
+        $articles = Article::latest()->take(6)->get();
+
         return Inertia::render('dashboard', [
             'stats' => $stats,
             'monthlyVisitors' => $monthlyVisitors,
             'routeVisits' => $routeVisits,
             'latestNotices' => $latestNotices,
-            'applications' => $applications,
+            'jobApplications' => $jobApplications,
+            'visitors' => $visitors,
             'media' => $media,
+            'articles' => $articles,
         ]);
     }
 }

@@ -12,7 +12,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineEleme
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Dashboard', href: '/dashboard' }];
 
 export default function Dashboard() {
-    const { stats, monthlyVisitors, routeVisits, latestNotices, applications, media }: any = usePage().props;
+    const { stats, monthlyVisitors, routeVisits, latestNotices, jobApplications, visitors, articles, media }: any = usePage().props;
 
     // Prepare chart data
     const monthlyVisitorsData = {
@@ -54,19 +54,27 @@ export default function Dashboard() {
                 {/* 🔹 Top KPI Cards */}
                 <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-6">
                     {[
-                        { label: 'Users', value: stats.users, icon: 'fa-user-graduate', color: 'text-green-500' },
+                        { label: 'Users', value: stats.users, icon: 'fa-users', color: 'text-green-500' },
                         { label: 'Pages', value: stats.pages, icon: 'fa-solid fa-file-lines', color: 'text-blue-500' },
-                        { label: 'Teams', value: stats.teams, icon: 'fa-calendar-days', color: 'text-red-500' },
-                        { label: 'Our Locations', value: stats.officeLocations, icon: 'fa-solid fa-map-location-dot', color: 'text-pink-500' },
-                        { label: 'Projects', value: stats.projects, icon: 'fa-user-graduate', color: 'text-green-500' },
                         { label: 'Services', value: stats.services, icon: 'fa-solid fa-truck-fast', color: 'text-orange-500' },
-                        { label: 'Appointments', value: stats.appointments, icon: 'fa-solid fa-truck-fast', color: 'text-orange-500' },
-
-                        { label: 'Job Circulars', value: stats.jobCirculars, icon: 'fa-calendar-days', color: 'text-red-500' },
+                        { label: 'Contact Messages', value: stats.contactMessages, icon: 'fa-box-open', color: 'text-purple-500' },
                         { label: 'Products', value: stats.products, icon: 'fa-box-open', color: 'text-purple-500' },
-                        { label: 'Orders', value: stats.orders, icon: 'fa-box-open', color: 'text-purple-500' },
-                        { label: 'Payments', value: stats.payments, icon: 'fa-box-open', color: 'text-purple-500' },
+                        { label: 'Projects', value: stats.projects, icon: 'fa-user-graduate', color: 'text-green-500' },
+                        { label: 'Notices', value: stats.notices, icon: 'fa-user-graduate', color: 'text-green-500' },
+                        { label: 'Events', value: stats.events, icon: 'fa-user-graduate', color: 'text-green-500' },
+                        { label: 'Awards', value: stats.awards, icon: 'fa-user-graduate', color: 'text-green-500' },
+                        { label: 'Medias', value: stats.media, icon: 'fa-calendar-days', color: 'text-red-500' },
+                        { label: 'Testimonials', value: stats.testimonials, icon: 'fa-calendar-days', color: 'text-red-500' },
+                        { label: 'Partners', value: stats.partners, icon: 'fa-user-graduate', color: 'text-green-500' },
+                        { label: 'Teams', value: stats.teams, icon: 'fa-calendar-days', color: 'text-red-500' },
+                        { label: 'Teachers', value: stats.teachers, icon: 'fa-box-open', color: 'text-purple-500' },
+                        { label: 'Instructors', value: stats.instructors, icon: 'fa-box-open', color: 'text-purple-500' },
                         { label: 'Students', value: stats.students, icon: 'fa-user-graduate', color: 'text-green-500' },
+                        { label: 'articles', value: stats.articles, icon: 'fa-user-graduate', color: 'text-green-500' },
+                        { label: 'Office Locations', value: stats.officeLocations, icon: 'fa-solid fa-map-location-dot', color: 'text-pink-500' },
+                        { label: 'Job Applications', value: stats.jobApplications, icon: 'fa-solid fa-truck-fast', color: 'text-orange-500' },
+                        { label: 'Job Circulars', value: stats.jobCirculars, icon: 'fa-calendar-days', color: 'text-red-500' },
+                        { label: 'Total Visitors', value: stats.totalVisitors, icon: 'fa-calendar-days', color: 'text-red-500' },
                     ].map((stat, idx) => (
                         <div
                             key={idx}
@@ -87,68 +95,22 @@ export default function Dashboard() {
                 {/* 🔹 Graphs */}
                 <div className="grid gap-4 md:grid-cols-12">
                     {/* Left chart: 40% → span 4 of 10 */}
-                    <div className="col-span-10 rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm md:col-span-4 dark:border-sidebar-border dark:bg-neutral-900">
+                    <div className="col-span-10 rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm md:col-span-6 dark:border-sidebar-border dark:bg-neutral-900">
                         <h2 className="mb-3 text-lg font-semibold">Monthly Visitors</h2>
                         <Line data={monthlyVisitorsData} />
                     </div>
 
                     {/* Right chart: 60% → span 6 of 10 */}
-                    <div className="col-span-10 rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm md:col-span-4 dark:border-sidebar-border dark:bg-neutral-900">
+                    <div className="col-span-10 rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm md:col-span-6 dark:border-sidebar-border dark:bg-neutral-900">
                         <h2 className="mb-3 text-lg font-semibold">Top Visited Pages</h2>
                         <Bar data={routeVisitedData} />
-                    </div>
-
-                    {/* Right chart: 60% → span 6 of 10 */}
-                    <div className="col-span-10 rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm md:col-span-4 dark:border-sidebar-border dark:bg-neutral-900">
-                        <h2 className="mb-3 text-lg font-semibold">Today's Top Visited Pages</h2>
-                        <Bar data={routeVisitedData} />
-                    </div>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-12">
-                    {/* Left chart: 40% → span 4 of 10 */}
-                    <div className="col-span-10 rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm md:col-span-4 dark:border-sidebar-border dark:bg-neutral-900">
-                        <h2 className="mb-3 text-lg font-semibold">Monthly Orders</h2>
-                        <Line data={monthlyVisitorsData} />
-                    </div>
-
-                    {/* Left chart: 40% → span 4 of 10 */}
-                    <div className="col-span-10 rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm md:col-span-4 dark:border-sidebar-border dark:bg-neutral-900">
-                        <h2 className="mb-3 text-lg font-semibold">Monthly Appointments</h2>
-                        <Line data={monthlyVisitorsData} />
-                    </div>
-
-                    {/* Left chart: 40% → span 4 of 10 */}
-                    <div className="col-span-10 rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm md:col-span-4 dark:border-sidebar-border dark:bg-neutral-900">
-                        <h2 className="mb-3 text-lg font-semibold">Monthly Inventory Logs</h2>
-                        <Line data={monthlyVisitorsData} />
-                    </div>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-12">
-                    {/* Left chart: 40% → span 4 of 10 */}
-                    <div className="col-span-10 rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm md:col-span-4 dark:border-sidebar-border dark:bg-neutral-900">
-                        <h2 className="mb-3 text-lg font-semibold">Sales</h2>
-                        <Line data={monthlyVisitorsData} />
-                    </div>
-
-                    {/* Left chart: 40% → span 4 of 10 */}
-                    <div className="col-span-10 rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm md:col-span-4 dark:border-sidebar-border dark:bg-neutral-900">
-                        <h2 className="mb-3 text-lg font-semibold">Cupon Log</h2>
-                        <Line data={monthlyVisitorsData} />
-                    </div>
-
-                    {/* Left chart: 40% → span 4 of 10 */}
-                    <div className="col-span-10 rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm md:col-span-4 dark:border-sidebar-border dark:bg-neutral-900">
-                        <h2 className="mb-3 text-lg font-semibold">Monthly Inventory Logs</h2>
-                        <Line data={monthlyVisitorsData} />
                     </div>
                 </div>
 
                 {/* 🔹 Recent Content */}
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                     <div className="rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border dark:bg-neutral-900">
-                        <h2 className="mb-3 text-lg font-semibold">Latest Notices</h2>
+                        <h2 className="mb-3 text-lg font-semibold">Recent Notices</h2>
                         <ul className="space-y-2 text-sm">
                             {latestNotices.map((notice: any) => (
                                 <li key={notice.id} className="flex justify-between">
@@ -160,12 +122,12 @@ export default function Dashboard() {
                     </div>
 
                     <div className="rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border dark:bg-neutral-900">
-                        <h2 className="mb-3 text-lg font-semibold">Recent Job Applications</h2>
+                        <h2 className="mb-3 text-lg font-semibold">Recent Articles</h2>
                         <ul className="space-y-2 text-sm">
-                            {applications.map((a: any) => (
+                            {articles.map((a: any) => (
                                 <li key={a.id} className="flex justify-between">
-                                    <span>{a.name}</span>
-                                    <span className="text-gray-500">{a.position}</span>
+                                    <span>{a.title}</span>
+                                    <span className="text-gray-500">{new Date(a.created_at).toLocaleDateString()}</span>
                                 </li>
                             ))}
                         </ul>
@@ -182,25 +144,29 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                {/* 🔹 Quick Actions */}
-                <div className="rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border dark:bg-neutral-900">
-                    <h2 className="mb-3 text-lg font-semibold">Quick Actions</h2>
-                    <div className="flex flex-wrap gap-2">
-                        {[
-                            { label: 'Add Article', icon: 'fa-newspaper' },
-                            { label: 'Add Product', icon: 'fa-box-open' },
-                            { label: 'Add Service', icon: 'fa-cogs' },
-                            { label: 'Add Notice', icon: 'fa-bullhorn' },
-                            { label: 'Add Event', icon: 'fa-calendar-plus' },
-                        ].map((action, idx) => (
-                            <button
-                                key={idx}
-                                className="flex items-center gap-2 rounded-lg bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-600"
-                            >
-                                <i className={`fa-solid ${action.icon}`} />
-                                {action.label}
-                            </button>
-                        ))}
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <div className="rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border dark:bg-neutral-900">
+                        <h2 className="mb-3 text-lg font-semibold">Recent Visitors</h2>
+                        <ul className="space-y-2 text-sm">
+                            {visitors.map((visitor: any) => (
+                                <li key={visitor.id} className="flex justify-between">
+                                    <span>{visitor.ip_address}</span>
+                                    <span className="text-gray-500">{new Date(visitor.created_at).toLocaleDateString()}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div className="rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border dark:bg-neutral-900">
+                        <h2 className="mb-3 text-lg font-semibold">Recent Job Applications</h2>
+                        <ul className="space-y-2 text-sm">
+                            {jobApplications.map((a: any) => (
+                                <li key={a.id} className="flex justify-between">
+                                    <span>{a.full_name}</span>
+                                    <span className="text-gray-500">{new Date(a.created_at).toLocaleDateString()}</span>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
             </div>

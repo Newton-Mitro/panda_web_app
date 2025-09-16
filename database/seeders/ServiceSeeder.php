@@ -9,6 +9,6 @@ class ServiceSeeder extends Seeder
 {
     public function run(): void
     {
-        Service::factory(10)->create();
+        Service::factory(count: 9)->create();
     }
 }

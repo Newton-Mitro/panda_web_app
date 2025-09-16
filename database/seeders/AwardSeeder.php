@@ -9,6 +9,6 @@ class AwardSeeder extends Seeder
 {
     public function run(): void
     {
-        Award::factory(10)->create();
+        Award::factory(5)->create();
     }
 }
