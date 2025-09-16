@@ -6,10 +6,11 @@ import { SharedData } from '../../types';
 const Navigation = () => {
     const navItems = [
         { name: 'About', href: '/about' },
-        { name: 'Attribute', href: '/attribute' },
-        { name: 'Our Team', href: '/team' },
+        { name: 'Services', href: '/services' },
+        { name: 'Products', href: '/products' },
+        { name: 'Projects', href: '/projects' },
         { name: 'Our Partners', href: '/partners' },
-        { name: 'Visit Museum', href: '/museum' },
+        { name: 'Contact', href: '/contact' },
     ];
 
     const page = usePage<SharedData>();
@@ -26,12 +27,12 @@ const Navigation = () => {
         <nav className="fixed top-0 right-0 left-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
                 {/* Logo */}
-                <div className="flex items-center space-x-2">
+                <Link href="/" className="group flex items-center space-x-2 group-hover:cursor-pointer">
                     <div className="text-xl font-bold text-foreground">{appName}</div>
                     <span className="flex items-start rounded bg-foreground p-1">
                         <AppLogoIcon className="h-4 w-4 text-background" />
                     </span>
-                </div>
+                </Link>
 
                 {/* Desktop nav */}
                 <div className="hidden items-center space-x-8 md:flex">

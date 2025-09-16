@@ -6,26 +6,26 @@ import HeadingSmall from '../../components/heading-small';
 import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
 import { PaginationLink } from '../../types/pagination_link';
-import { Team } from '../../types/team';
+import { Teacher } from '../../types/teacher';
 
 interface Props {
-    teams: {
-        data: Team[];
+    teachers: {
+        data: Teacher[];
         links: PaginationLink[];
     };
 }
 
-export default function Index({ teams }: Props) {
+export default function Index({ teachers }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
-        { title: 'Teams', href: route('teams.index') },
+        { title: 'Teachers', href: route('teachers.index') },
     ];
 
     const deleteTeam = (id: number) => {
         const isDark = document.documentElement.classList.contains('dark');
         Swal.fire({
             title: 'Are you sure?',
-            text: 'This team member will be permanently deleted!',
+            text: 'This teacher will be permanently deleted!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: isDark ? '#ef4444' : '#d33',
@@ -35,13 +35,13 @@ export default function Index({ teams }: Props) {
             confirmButtonText: 'Yes, delete it!',
         }).then((result) => {
             if (result.isConfirmed) {
-                router.delete(route('teams.destroy', id), {
+                router.delete(route('teachers.destroy', id), {
                     preserveScroll: true,
                     preserveState: true,
                     onSuccess: () => {
                         Swal.fire({
                             title: 'Deleted!',
-                            text: 'Team member has been deleted.',
+                            text: 'Teacher has been deleted.',
                             icon: 'success',
                             background: isDark ? '#1f2937' : '#fff',
                             color: isDark ? '#f9fafb' : '#111827',
@@ -54,15 +54,15 @@ export default function Index({ teams }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Teams" />
+            <Head title="Teachers" />
             <div className="p-6">
                 <div className="mb-4 flex items-center justify-between">
-                    <HeadingSmall title="Teams" description="Manage your team members" />
+                    <HeadingSmall title="Teachers" description="Manage your team members" />
                     <Link
-                        href={route('teams.create')}
+                        href={route('teachers.create')}
                         className="inline-block rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-blue-700 focus:ring-1 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none"
                     >
-                        Add Team Member
+                        Add a new Teacher
                     </Link>
                 </div>
 
@@ -72,13 +72,12 @@ export default function Index({ teams }: Props) {
                             <tr>
                                 <th className="border-b border-gray-200 px-2 py-1 text-left dark:border-gray-700">Name</th>
                                 <th className="border-b border-gray-200 px-2 py-1 text-left dark:border-gray-700">Designation</th>
-                                <th className="border-b border-gray-200 px-2 py-1 text-left dark:border-gray-700">Category</th>
                                 <th className="border-b border-gray-200 px-2 py-1 text-left dark:border-gray-700">Status</th>
                                 <th className="border-b border-gray-200 px-2 py-1 text-left dark:border-gray-700">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="flex flex-col md:table-row-group">
-                            {teams.data.map((team) => (
+                            {teachers.data.map((team) => (
                                 <tr
                                     key={team.id}
                                     className="flex flex-col border-b border-gray-200 even:bg-gray-50 md:table-row md:flex-row dark:border-gray-700 dark:even:bg-gray-900"
@@ -91,10 +90,7 @@ export default function Index({ teams }: Props) {
                                         <label className="font-semibold text-gray-700 md:hidden dark:text-gray-300">Designation</label>
                                         <p className="text-gray-900 dark:text-gray-100">{team.designation}</p>
                                     </td>
-                                    <td className="px-2 py-1">
-                                        <label className="font-semibold text-gray-700 md:hidden dark:text-gray-300">Category</label>
-                                        <p className="text-gray-900 dark:text-gray-100">{team.category?.name}</p>
-                                    </td>
+
                                     <td className="px-2 py-1">
                                         <label className="font-semibold text-gray-700 md:hidden dark:text-gray-300">Status</label>
                                         <p className="text-gray-900 dark:text-gray-100">{team.status}</p>
@@ -106,7 +102,7 @@ export default function Index({ teams }: Props) {
                                                 <Tooltip>
                                                     <TooltipTrigger asChild>
                                                         <Link
-                                                            href={route('teams.show', team.id)}
+                                                            href={route('teachers.show', team.id)}
                                                             className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                                                         >
                                                             <Eye className="h-5 w-5" />
@@ -118,7 +114,7 @@ export default function Index({ teams }: Props) {
                                                 <Tooltip>
                                                     <TooltipTrigger asChild>
                                                         <Link
-                                                            href={route('teams.edit', team.id)}
+                                                            href={route('teachers.edit', team.id)}
                                                             className="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300"
                                                         >
                                                             <Pencil className="h-5 w-5" />
@@ -149,9 +145,9 @@ export default function Index({ teams }: Props) {
 
                 {/* Pagination */}
                 <div className="mt-4 flex flex-col items-center justify-between gap-2 md:flex-row">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Showing {teams.data.length} results</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Showing {teachers.data.length} results</span>
                     <div className="flex gap-1">
-                        {teams.links.map((link, i) => (
+                        {teachers.links.map((link, i) => (
                             <Link
                                 key={i}
                                 href={link.url || '#'}

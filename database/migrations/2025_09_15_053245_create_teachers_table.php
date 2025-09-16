@@ -14,9 +14,9 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();
             $table->string('teacher_id', 20)->unique();
-            $table->string('first_name', 100);
-            $table->string('last_name', 100)->nullable();
-            $table->string('email')->unique()->nullable();
+            $table->string('name', 100);
+            $table->string('bio', 100)->nullable();
+            $table->string('email')->unique();
             $table->string('phone', 15)->unique()->nullable();
             $table->date('date_of_birth')->nullable();
             $table->enum('gender', ['MALE', 'FEMALE', 'OTHER'])->nullable();

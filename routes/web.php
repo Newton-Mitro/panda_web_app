@@ -9,6 +9,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\WebPageController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
@@ -67,9 +68,6 @@ Route::prefix('admin')
         // Awards
         Route::resource('awards', AwardController::class);
 
-        // Careers
-        Route::resource('jobs', JobController::class);
-
         // Categories
         Route::resource('categories', CategoryController::class);
 
@@ -126,6 +124,8 @@ Route::prefix('admin')
 
         // Teams
         Route::resource('teams', TeamController::class);
+
+        Route::resource('teachers', TeacherController::class);
 
         Route::prefix('partners')->name('partners.')->group(function () {
             Route::get('/', [PartnerController::class, 'index'])->name('index');

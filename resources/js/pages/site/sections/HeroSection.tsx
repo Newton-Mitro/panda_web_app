@@ -16,7 +16,7 @@ const HeroSection = () => {
             {/* Content */}
             <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
                 <div className="mb-8">
-                    <h1 className="relative mb-2 inline-flex items-start text-6xl font-bold text-foreground md:text-8xl">
+                    <h1 className="relative mb-2 inline-flex items-start text-4xl font-bold text-foreground md:text-8xl">
                         {appName}
                         <span className="ml-2 flex items-start rounded bg-foreground p-1">
                             <AppLogoIcon className="size-6 text-background md:size-8" />

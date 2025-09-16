@@ -4,11 +4,11 @@ export interface Teacher {
     id: number;
     teacher_id: string; // Unique teacher identifier
 
-    first_name: string;
-    last_name?: string | null;
+    name: string;
 
     email?: string | null;
     phone?: string | null;
+    bio?: string | null;
 
     date_of_birth?: string | null; // ISO date string (e.g., "2025-09-15")
     gender?: 'MALE' | 'FEMALE' | 'OTHER' | null;

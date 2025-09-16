@@ -15,45 +15,48 @@ import { BreadcrumbItem } from '../../types';
 import { Category } from '../../types/category';
 import { Media } from '../../types/media';
 import { PaginatedData } from '../../types/paginated_meta';
-import { Team } from '../../types/team';
 import MediaBrowserModal from '../media/media_browser_modal';
 
-interface EditProps {
-    team: Team;
+interface CreateProps {
     categories: Category[];
     media: PaginatedData<Media>;
 }
 
-export default function Edit({ team, categories, media }: EditProps) {
+export default function Create({ categories, media }: CreateProps) {
     const [form, setForm] = useState({
-        name: team.name,
-        designation: team.designation,
-        bio: team.bio ?? '',
-        message: team.message ?? '',
-        department: team.department ?? '',
-        media_id: team.media_id ?? null,
-        category_id: team.category_id,
-        facebook_links: team.facebook_links ?? '',
-        twitter_links: team.twitter_links ?? '',
-        linkedin_links: team.linkedin_links ?? '',
-        instagram_links: team.instagram_links ?? '',
-        youtube_links: team.youtube_links ?? '',
-        whatsapp_links: team.whatsapp_links ?? '',
-        github_links: team.github_links ?? '',
-        email: team.email ?? '',
-        phone: team.phone ?? '',
-        address: team.address ?? '',
-        status: team.status,
+        name: '',
+        designation: '',
+        bio: '',
+        message: '',
+        department: '',
+        media_id: null as number | null,
+        category_id: 0,
+        facebook_links: '',
+        twitter_links: '',
+        linkedin_links: '',
+        instagram_links: '',
+        youtube_links: '',
+        pinterest_links: '',
+        tiktok_links: '',
+        snapchat_links: '',
+        whatsapp_links: '',
+        telegram_links: '',
+        github_links: '',
+        discord_links: '',
+        email: '',
+        phone: '',
+        address: '',
+        status: '',
     });
 
-    const [selectedMedia, setSelectedMedia] = useState<Media | null>(team.media ?? null);
+    const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [errors, setErrors] = useState<any>({});
     const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        router.put(route('teams.update', team.id), form, {
+        router.post(route('teams.store'), form, {
             onError: (err) => setErrors(err),
             onSuccess: () => setRecentlySuccessful(true),
         });
@@ -62,14 +65,14 @@ export default function Edit({ team, categories, media }: EditProps) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
         { title: 'Teams', href: route('teams.index') },
-        { title: `Edit ${team.name}`, href: '' },
+        { title: `Add Teacher`, href: '' },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Edit ${team.name}`} />
+            <Head title="Add Teacher" />
             <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
-                <HeadingSmall title={`Edit ${team.name}`} description="Update team member details" />
+                <HeadingSmall title="Add Teacher" description="Add a new teacher" />
 
                 <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 md:w-4xl dark:bg-gray-900">
                     {/* Name + Designation */}
@@ -161,7 +164,6 @@ export default function Edit({ team, categories, media }: EditProps) {
                                 setForm({ ...form, media_id: null });
                             }}
                             error={errors.media_id}
-                            label="Photo"
                         />
                     </div>
 
@@ -190,7 +192,7 @@ export default function Edit({ team, categories, media }: EditProps) {
 
                     {/* Actions */}
                     <div className="flex items-center gap-4">
-                        <Button type="submit">Update</Button>
+                        <Button type="submit">Create</Button>
                         <Transition
                             show={recentlySuccessful}
                             enter="transition ease-in-out"
@@ -198,7 +200,7 @@ export default function Edit({ team, categories, media }: EditProps) {
                             leave="transition ease-in-out"
                             leaveTo="opacity-0"
                         >
-                            <p className="text-sm text-neutral-600">Updated</p>
+                            <p className="text-sm text-neutral-600">Created</p>
                         </Transition>
                     </div>
                 </form>

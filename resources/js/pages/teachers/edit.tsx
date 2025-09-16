@@ -9,54 +9,39 @@ import { MediaSelector } from '../../components/media-selector';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
-import { Select } from '../../components/ui/select';
 import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
-import { Category } from '../../types/category';
 import { Media } from '../../types/media';
 import { PaginatedData } from '../../types/paginated_meta';
+import { Teacher } from '../../types/teacher';
 import MediaBrowserModal from '../media/media_browser_modal';
 
-interface CreateProps {
-    categories: Category[];
+interface EditProps {
+    teacher: Teacher;
     media: PaginatedData<Media>;
 }
 
-export default function Create({ categories, media }: CreateProps) {
+export default function Edit({ teacher, media }: EditProps) {
     const [form, setForm] = useState({
-        name: '',
-        designation: '',
-        bio: '',
-        message: '',
-        department: '',
-        media_id: null as number | null,
-        category_id: 0,
-        facebook_links: '',
-        twitter_links: '',
-        linkedin_links: '',
-        instagram_links: '',
-        youtube_links: '',
-        pinterest_links: '',
-        tiktok_links: '',
-        snapchat_links: '',
-        whatsapp_links: '',
-        telegram_links: '',
-        github_links: '',
-        discord_links: '',
-        email: '',
-        phone: '',
-        address: '',
-        status: '',
+        name: teacher.name,
+        designation: teacher.designation,
+        bio: teacher.bio ?? '',
+        department: teacher.department ?? '',
+        media_id: teacher.media_id ?? null,
+        email: teacher.email ?? '',
+        phone: teacher.phone ?? '',
+        address: teacher.address ?? '',
+        status: teacher.status,
     });
 
-    const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
+    const [selectedMedia, setSelectedMedia] = useState<Media | null>(teacher.media ?? null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [errors, setErrors] = useState<any>({});
     const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        router.post(route('teams.store'), form, {
+        router.put(route('teams.update', teacher.id), form, {
             onError: (err) => setErrors(err),
             onSuccess: () => setRecentlySuccessful(true),
         });
@@ -65,14 +50,14 @@ export default function Create({ categories, media }: CreateProps) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
         { title: 'Teams', href: route('teams.index') },
-        { title: `Create Team Member`, href: '' },
+        { title: `Edit ${teacher.name}`, href: '' },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Create Team Member" />
+            <Head title={`Edit ${teacher.name}`} />
             <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
-                <HeadingSmall title="Create Team Member" description="Add a new team member" />
+                <HeadingSmall title={`Edit ${teacher.name}`} description="Update teacher member details" />
 
                 <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 md:w-4xl dark:bg-gray-900">
                     {/* Name + Designation */}
@@ -85,24 +70,8 @@ export default function Create({ categories, media }: CreateProps) {
 
                         <div className="flex flex-col gap-2">
                             <Label>Designation</Label>
-                            <Input value={form.designation} onChange={(e) => setForm({ ...form, designation: e.target.value })} />
+                            <Input value={form.designation ?? ''} onChange={(e) => setForm({ ...form, designation: e.target.value })} />
                             <InputError message={errors.designation} />
-                        </div>
-                    </div>
-
-                    {/* Category + Status */}
-                    <div className="grid gap-4 md:grid-cols-2">
-                        <div className="flex flex-col gap-2">
-                            <Label>Category</Label>
-                            <Select
-                                value={form.category_id?.toString() || ''}
-                                onChange={(e) => setForm({ ...form, category_id: Number(e.target.value) })}
-                                options={categories.map((cat) => ({
-                                    value: cat.id.toString(),
-                                    label: `${cat.name} 🌿`,
-                                }))}
-                            />
-                            <InputError message={errors.category_id} />
                         </div>
                     </div>
 
@@ -144,16 +113,6 @@ export default function Create({ categories, media }: CreateProps) {
                         <InputError message={errors.bio} />
                     </div>
 
-                    <div className="flex flex-col gap-2">
-                        <Label>Message</Label>
-                        <CKEditor
-                            editor={ClassicEditor as any}
-                            data={form.message}
-                            onChange={(_, editor) => setForm({ ...form, message: editor.getData() })}
-                        />
-                        <InputError message={errors.message} />
-                    </div>
-
                     {/* Media */}
                     <div className="flex flex-col gap-2">
                         <MediaSelector
@@ -164,6 +123,7 @@ export default function Create({ categories, media }: CreateProps) {
                                 setForm({ ...form, media_id: null });
                             }}
                             error={errors.media_id}
+                            label="Photo"
                         />
                     </div>
 
@@ -192,7 +152,7 @@ export default function Create({ categories, media }: CreateProps) {
 
                     {/* Actions */}
                     <div className="flex items-center gap-4">
-                        <Button type="submit">Create</Button>
+                        <Button type="submit">Update</Button>
                         <Transition
                             show={recentlySuccessful}
                             enter="transition ease-in-out"
@@ -200,7 +160,7 @@ export default function Create({ categories, media }: CreateProps) {
                             leave="transition ease-in-out"
                             leaveTo="opacity-0"
                         >
-                            <p className="text-sm text-neutral-600">Created</p>
+                            <p className="text-sm text-neutral-600">Updated</p>
                         </Transition>
                     </div>
                 </form>
