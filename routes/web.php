@@ -90,7 +90,7 @@ Route::prefix('admin')
         Route::resource('testimonials', TestimonialController::class);
         Route::resource('visitors', VisitorController::class);
         Route::resource('careers', CareerController::class);
-        Route::resource('job_applications', JobApplicationController::class);
+        Route::resource('job-applications', JobApplicationController::class);
         // Users
         // Route::resource('users', UserController::class);
     });

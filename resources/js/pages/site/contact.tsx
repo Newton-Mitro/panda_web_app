@@ -121,9 +121,20 @@ const ContactPage: React.FC<ContactPageProps> = ({ contacts }) => {
                 {/* Map */}
                 <section className="w-full">
                     <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={8}>
-                        {locations.map((contact) => (
-                            <Marker key={contact.id} position={{ lat: contact.lat, lng: contact.lng }} onClick={() => setSelectedContact(contact)} />
-                        ))}
+                        {locations.map((contact) => {
+                            const icon = {
+                                url: '/logo.png', // your custom icon
+                                scaledSize: new google.maps.Size(40, 40),
+                            };
+                            return (
+                                <Marker
+                                    key={contact.id}
+                                    icon={icon}
+                                    position={{ lat: contact.lat, lng: contact.lng }}
+                                    onClick={() => setSelectedContact(contact)}
+                                />
+                            );
+                        })}
                         {selectedContact && (
                             <InfoWindow
                                 position={{
@@ -132,7 +143,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ contacts }) => {
                                 }}
                                 onCloseClick={() => setSelectedContact(null)}
                             >
-                                <div className="space-y-1 text-gray-800 dark:text-gray-100">
+                                <div className="space-y-1 text-gray-100 dark:text-gray-800">
                                     <p className="font-semibold">{selectedContact.title}</p>
                                     <p>{selectedContact.address}</p>
                                     <p>📞 {selectedContact.phone || 'N/A'}</p>

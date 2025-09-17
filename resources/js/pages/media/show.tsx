@@ -1,20 +1,26 @@
 import { Head } from '@inertiajs/react';
-import React from 'react';
 import HeadingSmall from '../../components/heading-small';
+import { Button } from '../../components/ui/button';
 import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
 import { Media } from '../../types/media';
 
-interface PageProps {
+interface ShowProps {
     media: Media;
 }
 
-const Show: React.FC<PageProps> = ({ media }) => {
+export default function Show({ media }: ShowProps) {
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: 'Dashboard', href: '/dashboard' },
+        { title: 'Medias', href: route('media.index') },
+        { title: media.alt_text || 'View Media', href: '' },
+    ];
+
     const renderMediaPreview = () => {
         const [mainType, subType] = media.file_type.split('/');
 
         if (mainType === 'image') {
-            return <img src={media.url} className="w-full rounded object-cover" alt={media.alt_text || 'Image preview'} />;
+            return <img src={media.url} alt={media.alt_text || 'Preview'} className="w-full rounded" />;
         } else if (mainType === 'video') {
             return (
                 <video controls className="w-full rounded">
@@ -30,64 +36,64 @@ const Show: React.FC<PageProps> = ({ media }) => {
                 </audio>
             );
         } else if (mainType === 'application' && subType === 'pdf') {
-            // PDF preview embedded
-            return <iframe src={media.url} className="h-[600px] w-full rounded border" title={media.alt_text || 'PDF Preview'} />;
+            return <iframe src={media.url} title="PDF Preview" className="h-[600px] w-full rounded border" />;
         } else {
-            // Other documents
             return (
-                <div className="flex flex-col items-start gap-2">
+                <div className="flex flex-col gap-2">
                     <a href={media.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
                         Open document
                     </a>
-                    <a href={media.url} download className="inline-block rounded bg-green-600 px-4 py-2 text-white transition hover:bg-green-700">
-                        Download
-                    </a>
+                    <Button asChild>
+                        <a href={media.url} download>
+                            Download
+                        </a>
+                    </Button>
                 </div>
             );
         }
     };
 
-    const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Dashboard', href: '/dashboard' },
-        { title: 'Medias', href: '/admin/media' },
-        { title: 'View Media', href: '' },
-    ];
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Show Media" />
-            <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
-                {/* Page Header */}
-                <HeadingSmall title="Show Media" description="Show media file details" />
+            <Head title={`Media: ${media.alt_text || media.file_type}`} />
+            <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6 md:w-4xl">
+                {/* Header */}
+                <HeadingSmall title={media.alt_text || 'Media Details'} description="Media file details and preview" />
 
-                {/* Media Details */}
-                <div className="rounded border p-2 md:w-3xl">
-                    {/* Media Preview */}
-                    <div className="">{renderMediaPreview()}</div>
+                <div className="space-y-6">
+                    {/* Preview */}
+                    <div>
+                        <p className="mb-1 text-sm font-medium text-muted-foreground">Preview</p>
+                        {renderMediaPreview()}
+                    </div>
 
-                    {/* Media Info */}
-                    <div className="space-y-2 py-4 text-gray-500">
-                        <div>
-                            <span className="font-semibold">ID: </span>
-                            <span>{media.id || '-'}</span>
-                        </div>
-                        <div>
-                            <span className="font-semibold">URL: </span>
-                            <span className="break-all">{media.url}</span>
-                        </div>
-                        <div>
-                            <span className="font-semibold">File Type: </span>
-                            <span>{media.file_type}</span>
-                        </div>
-                        <div>
-                            <span className="font-semibold">Alt Text: </span>
-                            <span>{media.alt_text || '-'}</span>
-                        </div>
+                    <div>
+                        <p className="text-sm font-medium text-muted-foreground">ID</p>
+                        <p>{media.id}</p>
+                    </div>
+
+                    <div>
+                        <p className="text-sm font-medium text-muted-foreground">File Type</p>
+                        <p>{media.file_type}</p>
+                    </div>
+
+                    <div>
+                        <p className="text-sm font-medium text-muted-foreground">Alt Text</p>
+                        <p>{media.alt_text || '—'}</p>
+                    </div>
+
+                    <div>
+                        <p className="text-sm font-medium text-muted-foreground">URL</p>
+                        <p className="break-all">{media.url}</p>
+                    </div>
+
+                    <div className="flex gap-4">
+                        <Button asChild>
+                            <a href={route('media.edit', media.id)}>Edit</a>
+                        </Button>
                     </div>
                 </div>
             </div>
         </AppLayout>
     );
-};
-
-export default Show;
+}

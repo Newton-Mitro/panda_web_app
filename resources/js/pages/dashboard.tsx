@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 
 // Charts
 import { ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip } from 'chart.js';
@@ -54,36 +54,129 @@ export default function Dashboard() {
                 {/* 🔹 Top KPI Cards */}
                 <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-6">
                     {[
-                        { label: 'Users', value: stats.users, icon: 'fa-users', color: 'text-emerald-500' },
-                        { label: 'Pages', value: stats.pages, icon: 'fa-solid fa-newspaper', color: 'text-blue-600' },
-                        { label: 'Services', value: stats.services, icon: 'fa-solid fa-truck-fast', color: 'text-amber-500' },
-                        { label: 'Contact Messages', value: stats.contactMessages, icon: 'fa-solid fa-envelope-open-text', color: 'text-indigo-500' },
-                        { label: 'Products', value: stats.products, icon: 'fa-solid fa-basket-shopping', color: 'text-fuchsia-500' },
-                        { label: 'Projects', value: stats.projects, icon: 'fa-solid fa-medal', color: 'text-cyan-500' },
-                        { label: 'Notices', value: stats.notices, icon: 'fa-solid fa-bell', color: 'text-lime-500' },
-                        { label: 'Events', value: stats.events, icon: 'fa-solid fa-calendar-day', color: 'text-sky-500' },
-                        { label: 'Awards', value: stats.awards, icon: 'fa-solid fa-trophy', color: 'text-yellow-500' },
-                        { label: 'Medias', value: stats.media, icon: 'fa-solid fa-cloud-arrow-up', color: 'text-rose-500' },
-                        { label: 'Testimonials', value: stats.testimonials, icon: 'fa-solid fa-circle-check', color: 'text-teal-500' },
-                        { label: 'Partners', value: stats.partners, icon: 'fa-solid fa-handshake', color: 'text-green-600' },
-                        { label: 'Teams', value: stats.teams, icon: 'fa-solid fa-users-viewfinder', color: 'text-pink-500' },
-                        { label: 'Leaders', value: stats.leaders, icon: 'fa-solid fa-dharmachakra', color: 'text-pink-500' },
-                        { label: 'Instructors', value: stats.instructors, icon: 'fa-solid fa-chalkboard-user', color: 'text-purple-600' },
-                        { label: 'Students', value: stats.students, icon: 'fa-user-graduate', color: 'text-emerald-600' },
-                        { label: 'Articles', value: stats.articles, icon: 'fa-solid fa-square-rss', color: 'text-blue-500' },
-                        { label: 'Office Locations', value: stats.officeLocations, icon: 'fa-solid fa-map-location-dot', color: 'text-orange-600' },
-                        { label: 'Job Applications', value: stats.jobApplications, icon: 'fa-solid fa-toolbox', color: 'text-yellow-600' },
-                        { label: 'Job Circulars', value: stats.jobCirculars, icon: 'fa-solid fa-person-digging', color: 'text-red-600' },
-                        { label: 'Total Visitors', value: stats.totalVisitors, icon: 'fa-solid fa-traffic-light', color: 'text-slate-600' },
+                        { label: 'Users', value: stats.users, icon: 'fa-users', color: 'text-emerald-500', route: '' },
+                        { label: 'Pages', value: stats.pages, icon: 'fa-solid fa-newspaper', color: 'text-blue-600', route: route('pages.index') },
+                        {
+                            label: 'Services',
+                            value: stats.services,
+                            icon: 'fa-solid fa-truck-fast',
+                            color: 'text-amber-500',
+                            route: route('services.index'),
+                        },
+                        {
+                            label: 'Contact Messages',
+                            value: stats.contactMessages,
+                            icon: 'fa-solid fa-envelope-open-text',
+                            color: 'text-indigo-500',
+                            route: route('contact-messages.index'),
+                        },
+                        {
+                            label: 'Projects',
+                            value: stats.projects,
+                            icon: 'fa-solid fa-medal',
+                            color: 'text-cyan-500',
+                            route: route('projects.index'),
+                        },
+                        { label: 'Notices', value: stats.notices, icon: 'fa-solid fa-bell', color: 'text-lime-500', route: route('notices.index') },
+                        {
+                            label: 'Events',
+                            value: stats.events,
+                            icon: 'fa-solid fa-calendar-day',
+                            color: 'text-sky-500',
+                            route: route('events.index'),
+                        },
+                        { label: 'Awards', value: stats.awards, icon: 'fa-solid fa-trophy', color: 'text-yellow-500', route: route('awards.index') },
+                        {
+                            label: 'Medias',
+                            value: stats.media,
+                            icon: 'fa-solid fa-cloud-arrow-up',
+                            color: 'text-rose-500',
+                            route: route('media.index'),
+                        },
+                        {
+                            label: 'Testimonials',
+                            value: stats.testimonials,
+                            icon: 'fa-solid fa-circle-check',
+                            color: 'text-teal-500',
+                            route: route('testimonials.index'),
+                        },
+                        {
+                            label: 'Partners',
+                            value: stats.partners,
+                            icon: 'fa-solid fa-handshake',
+                            color: 'text-green-600',
+                            route: route('partners.index'),
+                        },
+                        {
+                            label: 'Teams',
+                            value: stats.teams,
+                            icon: 'fa-solid fa-users-viewfinder',
+                            color: 'text-pink-500',
+                            route: route('teams.index'),
+                        },
+                        {
+                            label: 'Leaders',
+                            value: stats.leaders,
+                            icon: 'fa-solid fa-dharmachakra',
+                            color: 'text-pink-500',
+                            route: route('leaders.index'),
+                        },
+                        {
+                            label: 'Instructors',
+                            value: stats.instructors,
+                            icon: 'fa-solid fa-chalkboard-user',
+                            color: 'text-purple-600',
+                            route: route('instructors.index'),
+                        },
+                        {
+                            label: 'Students',
+                            value: stats.students,
+                            icon: 'fa-user-graduate',
+                            color: 'text-emerald-600',
+                            route: route('students.index'),
+                        },
+                        {
+                            label: 'Articles',
+                            value: stats.articles,
+                            icon: 'fa-solid fa-square-rss',
+                            color: 'text-blue-500',
+                            route: route('articles.index'),
+                        },
+                        {
+                            label: 'Office Locations',
+                            value: stats.officeLocations,
+                            icon: 'fa-solid fa-map-location-dot',
+                            color: 'text-orange-600',
+                            route: route('contacts.index'),
+                        },
+                        {
+                            label: 'Job Applications',
+                            value: stats.jobApplications,
+                            icon: 'fa-solid fa-toolbox',
+                            color: 'text-yellow-600',
+                            route: route('job-applications.index'),
+                        },
+                        {
+                            label: 'Job Circulars',
+                            value: stats.jobCirculars,
+                            icon: 'fa-solid fa-person-digging',
+                            color: 'text-red-600',
+                            route: route('careers.index'),
+                        },
+                        {
+                            label: 'Total Visitors',
+                            value: stats.totalVisitors,
+                            icon: 'fa-solid fa-traffic-light',
+                            color: 'text-slate-600',
+                            route: route('visitors.index'),
+                        },
                     ].map((stat, idx) => (
                         <div
                             key={idx}
-                            className="flex items-center rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border dark:bg-neutral-900"
+                            onClick={() => router.visit(stat.route)}
+                            className="flex cursor-pointer items-center rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm transition-all hover:scale-[1.02] hover:shadow-md dark:border-sidebar-border dark:bg-neutral-900"
                         >
-                            {/* Icon on the left */}
                             <i className={`fa-solid ${stat.icon} ${stat.color} mr-6 text-3xl`} />
-
-                            {/* Text block */}
                             <div>
                                 <div className="text-2xl font-bold">{stat.value}</div>
                                 <div className="text-sm text-gray-500">{stat.label}</div>

@@ -23,6 +23,13 @@ export default function Show({ category }: ShowProps) {
                 <HeadingSmall title={category.name} description="Category details" />
 
                 <div className="space-y-6">
+                    {category.media && (
+                        <div>
+                            <p className="mb-1 text-sm font-medium text-muted-foreground">Image</p>
+                            <img src={category.media.url} alt={category.media.file_name} className="w-4xl rounded" />
+                        </div>
+                    )}
+
                     <div>
                         <p className="text-sm font-medium text-muted-foreground">Slug</p>
                         <p>{category.slug}</p>
@@ -37,13 +44,6 @@ export default function Show({ category }: ShowProps) {
                         <p className="text-sm font-medium text-muted-foreground">Description</p>
                         <p>{category.description || '—'}</p>
                     </div>
-
-                    {category.media && (
-                        <div>
-                            <p className="text-sm font-medium text-muted-foreground">Image</p>
-                            <img src={category.media.url} alt={category.media.file_name} className="h-32 rounded" />
-                        </div>
-                    )}
 
                     <div>
                         <p className="text-sm font-medium text-muted-foreground">Parent</p>
