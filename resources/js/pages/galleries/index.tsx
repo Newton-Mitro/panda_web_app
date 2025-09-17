@@ -1,6 +1,5 @@
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Head, Link, router } from '@inertiajs/react';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
+import { EyeIcon, PencilIcon, Trash2Icon } from 'lucide-react';
 import React from 'react';
 import Swal from 'sweetalert2';
 import HeadingSmall from '../../components/heading-small';
@@ -67,81 +66,51 @@ const Index: React.FC<IndexProps> = ({ galleries }) => {
                     </Link>
                 </div>
 
-                <div className="h-[calc(100vh-250px)] overflow-auto rounded border border-gray-200 dark:border-gray-700">
-                    <table className="w-full border-collapse">
-                        <thead className="sticky top-0 hidden bg-gray-50 md:table-header-group dark:bg-gray-800">
-                            <tr>
-                                <th className="border-b border-gray-200 p-2 text-left dark:border-gray-700">Title</th>
-                                <th className="border-b border-gray-200 p-2 text-left dark:border-gray-700">Media</th>
-                                <th className="border-b border-gray-200 p-2 text-left dark:border-gray-700">Actions</th>
-                            </tr>
-                        </thead>
+                <div className="h-[calc(100vh-320px)] space-y-8 overflow-auto">
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                        {galleries.data.map((slide) => (
+                            <div
+                                key={slide.id}
+                                className="relative rounded border border-gray-200 bg-white p-2 hover:border-blue-500 dark:border-gray-700 dark:bg-neutral-900 dark:hover:border-blue-400"
+                            >
+                                <div className="cursor-pointer" onClick={() => router.visit(route('media.show', slide.id))}>
+                                    <img src={slide.media?.url} alt={slide.media?.alt_text || 'media'} className="h-32 w-full rounded object-cover" />
+                                    <p className="mt-1 truncate text-center text-xs text-gray-700 sm:text-sm dark:text-gray-300">Associate With</p>
+                                    <p className="mt-2 truncate text-center text-xs text-gray-900 sm:text-sm dark:text-gray-100">{slide.title}</p>
+                                </div>
 
-                        <tbody className="flex flex-col md:table-row-group">
-                            {galleries.data.map((gallery) => (
-                                <tr
-                                    key={gallery.id}
-                                    className="flex flex-col border-b border-gray-200 even:bg-gray-50 md:table-row md:flex-row dark:border-gray-700 dark:even:bg-gray-900"
-                                >
-                                    {/* Title */}
-                                    <td className="px-2 py-1">
-                                        <label className="font-semibold text-gray-700 md:hidden dark:text-gray-300">Title</label>
-                                        <p className="text-gray-900 dark:text-gray-100">{gallery.title}</p>
-                                    </td>
+                                {/* View, Edit, Delete Buttons */}
+                                <div className="absolute top-2 right-2 flex gap-1">
+                                    {/* View Button */}
+                                    <button
+                                        onClick={() => router.visit(route('galleries.show', slide.id))}
+                                        className="rounded bg-blue-600 p-1 shadow hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600"
+                                    >
+                                        <span className="sr-only">View</span>
+                                        <EyeIcon className="h-3 w-3 text-white" />
+                                    </button>
 
-                                    {/* Media */}
-                                    <td className="px-2 py-1">
-                                        <label className="font-semibold text-gray-700 md:hidden dark:text-gray-300">Media</label>
-                                        <p className="text-gray-900 dark:text-gray-100">{gallery.media ? gallery.media.file_name : '-'}</p>
-                                    </td>
+                                    {/* Edit Button */}
+                                    <button
+                                        onClick={() => router.visit(route('galleries.edit', slide.id))}
+                                        className="rounded bg-green-600 p-1 shadow hover:bg-green-500 dark:bg-green-700 dark:hover:bg-green-600"
+                                    >
+                                        <span className="sr-only">Edit</span>
+                                        <PencilIcon className="h-3 w-3 text-white" />
+                                    </button>
 
-                                    {/* Actions */}
-                                    <td className="px-2 py-1">
-                                        <label className="font-semibold text-gray-700 md:hidden dark:text-gray-300">Actions</label>
-                                        <TooltipProvider>
-                                            <div className="flex space-x-2">
-                                                <Tooltip>
-                                                    <TooltipTrigger asChild>
-                                                        <Link
-                                                            href={route('galleries.show', gallery.id)}
-                                                            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-                                                        >
-                                                            <Eye className="h-5 w-5" />
-                                                        </Link>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>View</TooltipContent>
-                                                </Tooltip>
-
-                                                <Tooltip>
-                                                    <TooltipTrigger asChild>
-                                                        <Link
-                                                            href={route('galleries.edit', gallery.id)}
-                                                            className="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300"
-                                                        >
-                                                            <Pencil className="h-5 w-5" />
-                                                        </Link>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>Edit</TooltipContent>
-                                                </Tooltip>
-
-                                                <Tooltip>
-                                                    <TooltipTrigger asChild>
-                                                        <button
-                                                            onClick={() => deleteGallery(gallery.id)}
-                                                            className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-                                                        >
-                                                            <Trash2 className="h-5 w-5" />
-                                                        </button>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>Delete</TooltipContent>
-                                                </Tooltip>
-                                            </div>
-                                        </TooltipProvider>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                                    {/* Delete Button */}
+                                    <button
+                                        onClick={() => deleteGallery(slide.id)}
+                                        className="rounded bg-red-600 p-1 shadow hover:bg-red-500 dark:bg-red-700 dark:hover:bg-red-600"
+                                    >
+                                        <span className="sr-only">Delete</span>
+                                        <Trash2Icon className="h-3 w-3 text-white" />
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 {/* Pagination */}

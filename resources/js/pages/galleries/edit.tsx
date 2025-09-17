@@ -179,15 +179,15 @@ const Edit: React.FC<EditProps> = ({ media, gallery }) => {
                     </div>
 
                     <div className="mt-6">
-                        <HeadingSmall title="Gallery Media" description="Add or update multiple media items in this gallery" />
+                        <HeadingSmall title="Gallery Images" description="Add or update multiple images in this gallery" />
                     </div>
 
-                    {/* Gallery Media */}
+                    {/* Gallery Images */}
                     <div>
                         {form.media_items.map((item, index) => (
                             <div key={index} className="relative my-6 gap-6 space-y-6 rounded-lg border bg-white p-6 dark:bg-gray-900">
                                 <div className="flex items-center justify-between">
-                                    <span>Media {index + 1}</span>
+                                    <span>Image {index + 1}</span>
                                     <Button type="button" variant="outline" onClick={() => removeGalleryMedia(index)}>
                                         <Trash2 className="h-4 w-4" />
                                     </Button>

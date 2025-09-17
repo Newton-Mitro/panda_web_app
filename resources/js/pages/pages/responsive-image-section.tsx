@@ -2,40 +2,34 @@ import React from 'react';
 
 interface ResponsiveImageSectionProps {
     mediaUrl?: string;
-    mimeType?: string; // e.g., "image/jpeg", "video/mp4"
+    mimeType?: string;
     contentHtml: string;
     shape?: 'tall-left' | 'tall-right' | 'octagon-left' | 'octagon-right';
 }
 
 const ResponsiveImageSection: React.FC<ResponsiveImageSectionProps> = ({ mediaUrl, mimeType, contentHtml, shape = 'tall-left' }) => {
-    // Determine clip-path and float based on shape
     let clipPath = '';
-    let shapeOutside = '';
     let floatClass = 'md:float-left';
     let marginClass = 'md:mr-6';
 
     switch (shape) {
         case 'tall-left':
-            clipPath = 'polygon(0%_0%,0%_100%,100%_80%,100%_20%,0%_0%)';
-            shapeOutside = clipPath;
+            clipPath = 'polygon(0% 0%,0% 100%,100% 80%,100% 20%,0% 0%)';
             floatClass = 'md:float-left';
             marginClass = 'md:mr-6';
             break;
         case 'tall-right':
-            clipPath = 'polygon(100%_0%,100%_100%,0%_80%,0%_20%,100%_0%)';
-            shapeOutside = clipPath;
+            clipPath = 'polygon(100% 0%,100% 100%,0% 80%,0% 20%,100% 0%)';
             floatClass = 'md:float-right';
             marginClass = 'md:ml-6';
             break;
         case 'octagon-left':
-            clipPath = 'polygon(30%_0%,70%_0%,100%_30%,100%_70%,70%_100%,30%_100%,0%_70%,0%_30%)';
-            shapeOutside = clipPath;
+            clipPath = 'polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%)';
             floatClass = 'md:float-left';
             marginClass = 'md:mr-6';
             break;
         case 'octagon-right':
-            clipPath = 'polygon(30%_0%,70%_0%,100%_30%,100%_70%,70%_100%,30%_100%,0%_70%,0%_30%)';
-            shapeOutside = clipPath;
+            clipPath = 'polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%)';
             floatClass = 'md:float-right';
             marginClass = 'md:ml-6';
             break;
@@ -44,27 +38,21 @@ const ResponsiveImageSection: React.FC<ResponsiveImageSectionProps> = ({ mediaUr
     const renderMedia = () => {
         if (!mediaUrl || !mimeType) return null;
 
+        const sharedProps = {
+            style: { clipPath, shapeOutside: clipPath },
+            className: `h-72 object-cover shadow-lg transition-transform duration-300 md:h-96 md:w-96 mt-6 mb-6 hover:scale-105 ${floatClass} ${marginClass}`,
+        };
+
         if (mimeType.startsWith('image/')) {
-            return (
-                <img
-                    src={mediaUrl}
-                    alt="Custom Shape"
-                    className={`h-72 w-72 object-cover shadow-lg transition-transform duration-300 md:h-[500px] md:w-[500px] ${floatClass} ${marginClass} mt-6 mb-6 [clip-path:${clipPath}] [shape-outside:${shapeOutside}] hover:scale-105`}
-                />
-            );
+            return <img src={mediaUrl} alt="Custom Shape" {...sharedProps} />;
         }
 
         if (mimeType.startsWith('video/')) {
-            return (
-                <video
-                    src={mediaUrl}
-                    controls
-                    className={`h-72 w-full shadow-lg transition-transform duration-300 md:h-96 md:w-96 ${floatClass} ${marginClass} mt-6 mb-6 hover:scale-105`}
-                />
-            );
+            // Note: clip-path won't affect video text wrapping; usually shape-outside works only with floated elements and images.
+            return <video src={mediaUrl} controls {...sharedProps} className={`${sharedProps.className} w-full md:w-[500px]`} />;
         }
 
-        return null; // unsupported mime type
+        return null;
     };
 
     return (
