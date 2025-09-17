@@ -25,17 +25,10 @@ class CategorySeeder extends Seeder
                 'Beauty',
             ],
             'Service' => [
-                'Development',
-                'Design',
-                'Marketing',
-                'Solar Energy',
-                'Real Estate',
-                'Legal Services',
-                'Financial Services',
-                'Transportation',
-                'Healthcare',
-                'Educational Services',
-                'Tourism',
+                'Renewable Energy Solutions',
+                'Industrial Solutions & Services',
+                'Consulting Services',
+                'Operation & Maintenance',
             ],
             'Team' => [
                 'Management',
@@ -46,7 +39,7 @@ class CategorySeeder extends Seeder
                 'Customer Support',
             ],
             'Leader' => [
-                'Director',
+                'Directors',
             ],
             'Student' => [
                 'Class I',

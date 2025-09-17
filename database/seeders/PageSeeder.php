@@ -21,42 +21,50 @@ class PageSeeder extends Seeder
             [
                 'title' => 'About Us',
                 'children' => [
-                    'Our Story',
-                    'Philosophy',
-                    'Certifications & Accreditations',
+                    'Company Overview',
+                    'Mission & Vision',
+                    'Core Values',
                 ],
             ],
+            // [
+            //     'title' => 'Programs',
+            //     'children' => [
+            //         'Infant Care',
+            //         'Toddler Care',
+            //         'Preschool',
+            //         'After-school Care',
+            //     ],
+            // ],
+            // [
+            //     'title' => 'Admissions',
+            //     'children' => [
+            //         'How to Enroll',
+            //         'Tuition & Fees',
+            //         'FAQs',
+            //     ],
+            // ],
+            // [
+            //     'title' => 'Parent Resources',
+            //     'children' => [
+            //         'Handbook',
+            //         'Nutrition & Meals',
+            //         'Health & Safety',
+            //         'Communication',
+            //     ],
+            // ],
+            // [
+            //     'title' => 'Facilities',
+            //     'children' => [
+            //         'Virtual Tour',
+            //         'Safety Measures',
+            //     ],
+            // ],
             [
-                'title' => 'Programs',
+                'title' => 'Finance Options',
                 'children' => [
-                    'Infant Care',
-                    'Toddler Care',
-                    'Preschool',
-                    'After-school Care',
-                ],
-            ],
-            [
-                'title' => 'Admissions',
-                'children' => [
-                    'How to Enroll',
-                    'Tuition & Fees',
-                    'FAQs',
-                ],
-            ],
-            [
-                'title' => 'Parent Resources',
-                'children' => [
-                    'Handbook',
-                    'Nutrition & Meals',
-                    'Health & Safety',
-                    'Communication',
-                ],
-            ],
-            [
-                'title' => 'Facilities',
-                'children' => [
-                    'Virtual Tour',
-                    'Safety Measures',
+                    'CAPEX Model',
+                    'OPEX Model',
+                    'Debt Model',
                 ],
             ],
             [
