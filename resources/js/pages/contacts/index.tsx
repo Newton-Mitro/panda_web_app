@@ -1,7 +1,6 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { BreadcrumbItem } from '@/types';
 import { Contact } from '@/types/contact';
-import { PaginationLink } from '@/types/pagination_link';
 import { Head, Link, router } from '@inertiajs/react';
 import { GoogleMap, InfoWindow, Marker, useLoadScript } from '@react-google-maps/api';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
@@ -11,10 +10,7 @@ import HeadingSmall from '../../components/heading-small';
 import AppLayout from '../../layouts/app-layout';
 
 interface IndexProps {
-    contacts: {
-        data: Contact[];
-        links: PaginationLink[];
-    };
+    contacts: Contact[];
 }
 
 const containerStyle = {
@@ -66,7 +62,7 @@ const Index: React.FC<IndexProps> = ({ contacts }) => {
     const [selectedContact, setSelectedContact] = React.useState<Contact | null>(null);
 
     // Filter valid locations and convert lat/lng to numbers
-    const locations = contacts.data
+    const locations = contacts
         .filter((c) => c.latitude && c.longitude)
         .map((c) => ({
             ...c,

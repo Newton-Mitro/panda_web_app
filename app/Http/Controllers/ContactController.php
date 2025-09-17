@@ -12,8 +12,7 @@ class ContactController extends Controller
 {
     public function index(Request $request)
     {
-        $contacts = Contact::latest()->paginate($request->input('perPage', 10))
-            ->withQueryString();
+        $contacts = Contact::latest()->get();
 
         return Inertia::render('contacts/index', [
             'contacts' => $contacts

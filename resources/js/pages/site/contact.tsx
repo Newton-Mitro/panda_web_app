@@ -48,7 +48,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ contacts }) => {
             <Head title="Contact Us" />
             <PageLayout>
                 {/* Hero */}
-                <section className="relative bg-gradient-to-r from-primary to-purple-600 py-20 text-white">
+                <section className="bg-gradient-to-r from-primary to-purple-600 py-20 text-white">
                     <div className="mx-auto max-w-4xl px-4 text-center">
                         <h1 className="mb-4 text-4xl font-bold md:text-5xl">Contact Us</h1>
                         <p className="text-lg opacity-90 md:text-xl">

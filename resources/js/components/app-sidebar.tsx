@@ -6,7 +6,6 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import {
     BadgeCheckIcon,
-    BarcodeIcon,
     BellDotIcon,
     CalendarClockIcon,
     ContactRoundIcon,
@@ -65,11 +64,6 @@ const mainNavItems: NavItem[] = [
         icon: HandPlatterIcon,
     },
     {
-        title: 'Products',
-        href: '/admin/products',
-        icon: BarcodeIcon,
-    },
-    {
         title: 'Projects',
         href: '/admin/projects',
         icon: MedalIcon,
@@ -93,16 +87,6 @@ const mainNavItems: NavItem[] = [
         title: 'Leaders',
         href: '/admin/leaders',
         icon: ShipWheel,
-    },
-    {
-        title: 'Instructors',
-        href: '/admin/instructors',
-        icon: Glasses,
-    },
-    {
-        title: 'Courses',
-        href: '/admin/courses',
-        icon: TvMinimalPlay,
     },
     {
         title: 'Students',
@@ -149,6 +133,21 @@ const mainNavItems: NavItem[] = [
         href: '/admin/job_applications',
         icon: ViewIcon,
     },
+    {
+        title: 'Instructors',
+        href: '/admin/instructors',
+        icon: Glasses,
+    },
+    {
+        title: 'Courses',
+        href: '/admin/courses',
+        icon: TvMinimalPlay,
+    },
+    // {
+    //     title: 'Products',
+    //     href: '/admin/products',
+    //     icon: BarcodeIcon,
+    // },
     // {
     //     title: 'Inventory Logs',
     //     href: '/admin/inventory_logs',
