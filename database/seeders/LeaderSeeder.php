@@ -2,16 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Infrastructure\Models\Leader;
 use Illuminate\Database\Seeder;
 
 class LeaderSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        Leader::factory()->count(9)->create();
     }
 }

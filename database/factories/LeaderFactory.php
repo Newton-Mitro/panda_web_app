@@ -2,22 +2,32 @@
 
 namespace Database\Factories;
 
+use App\Infrastructure\Models\Category;
+use App\Infrastructure\Models\Leader;
+use App\Infrastructure\Models\Media;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Leader>
- */
 class LeaderFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Leader::class;
+
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->name(),
+            'designation' => $this->faker->jobTitle(),
+            'bio' => $this->faker->optional(0.7)->paragraphs(3, true),
+            'message' => $this->faker->optional(0.6)->paragraphs(2, true),
+            'media_id' => Media::inRandomOrder()->first()?->id,
+            'facebook_links' => $this->faker->optional(0.5)->url(),
+            'twitter_links' => $this->faker->optional(0.5)->url(),
+            'linkedin_links' => $this->faker->optional(0.5)->url(),
+            'instagram_links' => $this->faker->optional(0.5)->url(),
+            'email' => $this->faker->optional(0.8)->safeEmail(),
+            'phone' => $this->faker->optional(0.7)->phoneNumber(),
+            'address' => $this->faker->optional(0.7)->address(),
+            'category_id' => Category::where('category_of', 'Leader')->inRandomOrder()->first()?->id,
+            'status' => $this->faker->randomElement(['Active', 'Inactive']),
         ];
     }
 }

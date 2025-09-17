@@ -2,65 +2,114 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreInstructorRequest;
-use App\Http\Requests\UpdateInstructorRequest;
-use App\Instructor;
+use App\Infrastructure\Models\Instructor;
+use App\Infrastructure\Models\Media;
+use App\Infrastructure\Models\Category;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class InstructorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $perPage = $request->input('perPage', 20);
+
+        $instructors = Instructor::with('media')
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+
+        return Inertia::render('instructors/index', [
+            'instructors' => $instructors,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $perPage = $request->input('perPage', 10);
+
+        $media = Media::latest()->paginate($perPage)->withQueryString();
+        $categories = Category::where('category_of', 'Instructor')->get();
+
+        return Inertia::render('instructors/create', [
+            'categories' => $categories,
+            'media' => $media,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreInstructorRequest $request)
+    public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:100',
+            'instructor_id' => 'required|string|max:20|unique:instructors,instructor_id',
+            'bio' => 'nullable|string|max:100',
+            'email' => 'nullable|email|unique:instructors,email',
+            'phone' => 'nullable|string|max:15|unique:instructors,phone',
+            'date_of_birth' => 'nullable|date',
+            'gender' => 'nullable|in:MALE,FEMALE,OTHER',
+            'designation' => 'nullable|string|max:100',
+            'department' => 'nullable|string|max:100',
+            'national_id_no' => 'nullable|string|max:20',
+            'religion' => 'nullable|in:ISLAM,HINDUISM,CHRISTIANITY,BUDDHISM,OTHER',
+            'address' => 'nullable|string',
+            'status' => 'required|in:Active,Inactive',
+            'media_id' => 'nullable|exists:media,id',
+        ]);
+
+        Instructor::create($data);
+
+        return redirect()->route('instructors.index')->with('success', 'Instructor created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Instructor $instructor)
     {
-        //
+        return Inertia::render('instructors/show', [
+            'instructor' => $instructor->load('media'),
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Instructor $instructor)
+    public function edit(Instructor $instructor, Request $request)
     {
-        //
+        $perPage = $request->input('perPage', 10);
+
+        $media = Media::latest()->paginate($perPage)->withQueryString();
+        $categories = Category::where('category_of', 'Instructor')->get();
+
+        return Inertia::render('instructors/edit', [
+            'instructor' => $instructor->load('media'),
+            'categories' => $categories,
+            'media' => $media,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateInstructorRequest $request, Instructor $instructor)
+    public function update(Request $request, Instructor $instructor)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:100',
+            'instructor_id' => "required|string|max:20|unique:instructors,instructor_id,{$instructor->id}",
+            'bio' => 'nullable|string|max:100',
+            'email' => "nullable|email|unique:instructors,email,{$instructor->id}",
+            'phone' => "nullable|string|max:15|unique:instructors,phone,{$instructor->id}",
+            'date_of_birth' => 'nullable|date',
+            'gender' => 'nullable|in:MALE,FEMALE,OTHER',
+            'designation' => 'nullable|string|max:100',
+            'department' => 'nullable|string|max:100',
+            'national_id_no' => 'nullable|string|max:20',
+            'religion' => 'nullable|in:ISLAM,HINDUISM,CHRISTIANITY,BUDDHISM,OTHER',
+            'address' => 'nullable|string',
+            'status' => 'required|in:Active,Inactive',
+            'media_id' => 'nullable|exists:media,id',
+        ]);
+
+        $instructor->update($data);
+
+        return redirect()->route('instructors.index')->with('success', 'Instructor updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Instructor $instructor)
     {
-        //
+        $instructor->delete();
+
+        return redirect()->route('instructors.index')->with('success', 'Instructor deleted successfully.');
     }
 }

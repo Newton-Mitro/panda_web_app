@@ -12,9 +12,9 @@ return new class extends Migration {
             $table->enum('category_of', [
                 'Team',
                 'Course',
-                'Leaders',
+                'Leader',
                 'Student',
-                'Teacher',
+                'Instructor',
                 'Doctor',
                 'Service',
                 'Product',

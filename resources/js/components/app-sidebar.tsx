@@ -26,7 +26,6 @@ import {
     NotebookIcon,
     PickaxeIcon,
     RssIcon,
-    ShipIcon,
     ShipWheel,
     ShoppingBasketIcon,
     Stethoscope,
@@ -99,9 +98,14 @@ const mainNavItems: NavItem[] = [
         icon: ShipWheel,
     },
     {
-        title: 'Teachers',
-        href: '/admin/teachers',
+        title: 'Instructors',
+        href: '/admin/instructors',
         icon: Glasses,
+    },
+    {
+        title: 'Courses',
+        href: '/admin/courses',
+        icon: TvMinimalPlay,
     },
     {
         title: 'Students',
@@ -147,16 +151,6 @@ const mainNavItems: NavItem[] = [
         title: 'Job Applications',
         href: '/admin/job_applications',
         icon: ViewIcon,
-    },
-    {
-        title: 'Courses',
-        href: '/admin/courses',
-        icon: TvMinimalPlay,
-    },
-    {
-        title: 'Instructors',
-        href: '/admin/instructors',
-        icon: ShipIcon,
     },
     {
         title: 'Products',

@@ -1,86 +1,74 @@
 import { Head } from '@inertiajs/react';
-import { Facebook, Github, Instagram, Linkedin, Twitter, Youtube } from 'lucide-react';
 import HeadingSmall from '../../components/heading-small';
 import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
-import { Team } from '../../types/team';
+import { Student } from '../../types/student';
 
 interface ShowProps {
-    team: Team;
+    student: Student;
 }
 
-export default function Show({ team }: ShowProps) {
+export default function Show({ student }: ShowProps) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
-        { title: 'Teams', href: route('teams.index') },
-        { title: team.name, href: '' },
-    ];
-
-    const socialLinks = [
-        { icon: Facebook, url: team.facebook_links },
-        { icon: Twitter, url: team.twitter_links },
-        { icon: Linkedin, url: team.linkedin_links },
-        { icon: Instagram, url: team.instagram_links },
-        { icon: Youtube, url: team.youtube_links },
-        { icon: Github, url: team.github_links },
+        { title: 'Students', href: route('students.index') },
+        { title: student.first_name + (student.last_name ? ` ${student.last_name}` : ''), href: '' },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={team.name} />
+            <Head title={`${student.first_name} ${student.last_name || ''}`} />
             <div className="w-full space-y-6 p-6 md:w-4xl">
-                <HeadingSmall title={team.name} description={`Designation: ${team.designation}`} />
+                <HeadingSmall title={`${student.first_name} ${student.last_name || ''}`} description={`Roll Number: ${student.roll_number}`} />
 
-                {/* Main card: left info + right content */}
                 <div className="flex flex-col gap-6 rounded-xl md:flex-row">
-                    {/* Left: Image + basic info */}
+                    {/* Left: Profile Image + basic info */}
                     <div className="flex flex-shrink-0 flex-col items-center space-y-4 md:w-80 md:items-start">
-                        {/* Centered Info Card */}
                         <div className="mx-auto w-full max-w-md space-y-4 rounded-lg bg-gray-50 p-6 dark:bg-gray-800">
                             {/* Profile Image */}
-                            {team.media && <img src={team.media.url} alt={team.name} className="mx-auto mb-4 h-48 w-48 rounded-full object-cover" />}
+                            {student.media && (
+                                <img
+                                    src={student.media.url}
+                                    alt={`${student.first_name} ${student.last_name || ''}`}
+                                    className="mx-auto mb-4 h-48 w-48 rounded-full object-cover"
+                                />
+                            )}
 
                             {/* Info Fields */}
-                            <div className="text-center text-gray-700 dark:text-gray-200">
-                                {team.category && <div>{team.category.name}</div>}
-                                {team.department && <div>{team.department}</div>}
-                                {team.email && <div>{team.email}</div>}
-                                {team.phone && <div>{team.phone}</div>}
-                                {team.address && <div>{team.address}</div>}
-                            </div>
-
-                            {/* Social Links */}
-                            <div className="mt-4 flex flex-wrap justify-center gap-3">
-                                {socialLinks.map(
-                                    (link, idx) =>
-                                        link.url && (
-                                            <a
-                                                key={idx}
-                                                href={link.url}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center justify-center rounded-full border border-gray-300 p-2 text-gray-600 transition duration-300 hover:scale-110 hover:border-blue-500 hover:text-blue-500 dark:border-gray-600 dark:text-gray-300 dark:hover:border-blue-400 dark:hover:text-blue-400"
-                                            >
-                                                <link.icon className="h-5 w-5" />
-                                            </a>
-                                        ),
-                                )}
+                            <div className="space-y-1 text-center text-gray-700 dark:text-gray-200">
+                                {student.category && <div>Class: {student.category.name}</div>}
+                                {student.email && <div>Email: {student.email}</div>}
+                                {student.phone && <div>Phone: {student.phone}</div>}
+                                {student.address && <div>Address: {student.address}</div>}
+                                {student.date_of_birth && <div>DOB: {student.date_of_birth}</div>}
+                                {student.gender && <div>Gender: {student.gender}</div>}
+                                {student.national_id_no && <div>NID: {student.national_id_no}</div>}
+                                {student.religion && <div>Religion: {student.religion}</div>}
+                                {student.guardian_name && <div>Guardian: {student.guardian_name}</div>}
+                                {student.guardian_phone && <div>Guardian Phone: {student.guardian_phone}</div>}
+                                <div>Status: {student.status}</div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Right: Bio & Message */}
+                    {/* Right: Optional details / extended info */}
                     <div className="flex-1 space-y-4 text-gray-700 dark:text-gray-300">
-                        {team.bio && (
+                        {student.birth_registration_no && (
                             <div className="prose dark:prose-invert rounded-lg bg-gray-50 p-4 shadow-sm dark:bg-gray-800">
-                                <strong>Bio:</strong>
-                                <div dangerouslySetInnerHTML={{ __html: team.bio }} />
+                                <strong>Birth Registration No:</strong>
+                                <div>{student.birth_registration_no}</div>
                             </div>
                         )}
-                        {team.message && (
+                        {student.roll_number && (
                             <div className="prose dark:prose-invert rounded-lg bg-gray-50 p-4 shadow-sm dark:bg-gray-800">
-                                <strong>Message:</strong>
-                                <div dangerouslySetInnerHTML={{ __html: team.message }} />
+                                <strong>Roll Number:</strong>
+                                <div>{student.roll_number}</div>
+                            </div>
+                        )}
+                        {student.category && (
+                            <div className="prose dark:prose-invert rounded-lg bg-gray-50 p-4 shadow-sm dark:bg-gray-800">
+                                <strong>Class:</strong>
+                                <div>{student.category.name}</div>
                             </div>
                         )}
                     </div>

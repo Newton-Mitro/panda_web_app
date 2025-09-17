@@ -9,6 +9,7 @@ use App\Infrastructure\Models\Contact;
 use App\Infrastructure\Models\ContactMessage;
 use App\Infrastructure\Models\Instructor;
 use App\Infrastructure\Models\JobApplication;
+use App\Infrastructure\Models\Leader;
 use App\Infrastructure\Models\Media;
 use App\Infrastructure\Models\Notice;
 use App\Infrastructure\Models\Page;
@@ -44,6 +45,7 @@ class DashboardController extends Controller
             'testimonials' => Testimonial::count(),
             'partners' => Partner::count(),
             'teams' => Team::count(),
+            'leaders' => Leader::count(),
             'students' => Student::count(),
             'instructors' => Instructor::count(),
             'articles' => Article::count(),

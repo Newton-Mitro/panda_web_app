@@ -1,3 +1,4 @@
+import { Category } from './category';
 import { Media } from './media';
 
 export interface Leader {
@@ -20,6 +21,7 @@ export interface Leader {
     address?: string | null;
 
     category_id: number; // FK to categories table
+    category?: Category | null;
     status: 'Active' | 'Inactive'; // default: Active
 
     created_at: string; // ISO timestamp

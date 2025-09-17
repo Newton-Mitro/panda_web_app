@@ -45,6 +45,9 @@ class CategorySeeder extends Seeder
                 'Sales',
                 'Customer Support',
             ],
+            'Leader' => [
+                'Director',
+            ],
             'Student' => [
                 'Class I',
                 'Class II',

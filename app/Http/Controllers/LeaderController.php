@@ -2,65 +2,110 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreLeaderRequest;
-use App\Http\Requests\UpdateLeaderRequest;
-use App\Leader;
+use App\Infrastructure\Models\Leader;
+use App\Infrastructure\Models\Media;
+use App\Infrastructure\Models\Category;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class LeaderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $perPage = $request->input('perPage', 20);
+        $leaders = Leader::with('media', 'category')
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+
+        return Inertia::render('leaders/index', [
+            'leaders' => $leaders,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $perPage = $request->input('perPage', 10);
+        $media = Media::latest()->paginate($perPage)->withQueryString();
+        $categories = Category::where('category_of', 'Leader')->get();
+
+        return Inertia::render('leaders/create', [
+            'categories' => $categories,
+            'media' => $media,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreLeaderRequest $request)
+    public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'designation' => 'required|string|max:255',
+            'bio' => 'nullable|string',
+            'message' => 'nullable|string',
+            'media_id' => 'nullable|exists:media,id',
+            'category_id' => 'required|exists:categories,id',
+            'status' => 'required|in:Active,Inactive',
+            'facebook_links' => 'nullable|string',
+            'twitter_links' => 'nullable|string',
+            'linkedin_links' => 'nullable|string',
+            'instagram_links' => 'nullable|string',
+            'email' => 'nullable|email|unique:leaders,email',
+            'phone' => 'nullable|string|unique:leaders,phone',
+            'address' => 'nullable|string',
+        ]);
+
+        Leader::create($data);
+
+        return redirect()->route('leaders.index')->with('success', 'Leader created.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Leader $leader)
     {
-        //
+        return Inertia::render('leaders/show', [
+            'leader' => $leader->load('media', 'category'),
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Leader $leader)
+    public function edit(Leader $leader, Request $request)
     {
-        //
+        $perPage = $request->input('perPage', 10);
+        $media = Media::latest()->paginate($perPage)->withQueryString();
+        $categories = Category::where('category_of', 'Leader')->get();
+
+        return Inertia::render('leaders/edit', [
+            'leader' => $leader->load('media'),
+            'categories' => $categories,
+            'media' => $media,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateLeaderRequest $request, Leader $leader)
+    public function update(Request $request, Leader $leader)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'designation' => 'required|string|max:255',
+            'bio' => 'nullable|string',
+            'message' => 'nullable|string',
+            'media_id' => 'nullable|exists:media,id',
+            'category_id' => 'required|exists:categories,id',
+            'status' => 'required|in:Active,Inactive',
+            'facebook_links' => 'nullable|string',
+            'twitter_links' => 'nullable|string',
+            'linkedin_links' => 'nullable|string',
+            'instagram_links' => 'nullable|string',
+            'email' => 'nullable|email|unique:leaders,email,' . $leader->id,
+            'phone' => 'nullable|string|unique:leaders,phone,' . $leader->id,
+            'address' => 'nullable|string',
+        ]);
+
+        $leader->update($data);
+
+        return redirect()->route('leaders.index')->with('success', 'Leader updated.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Leader $leader)
     {
-        //
+        $leader->delete();
+        return redirect()->route('leaders.index')->with('success', 'Leader deleted.');
     }
 }

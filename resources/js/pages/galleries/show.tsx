@@ -32,7 +32,7 @@ const Show: React.FC<ShowProps> = ({ gallery }) => {
                 </a>
             );
         } else {
-            return <img src={url} alt={alt} className="max-w-full rounded" />;
+            return <img src={url} alt={alt} className="w-full rounded object-cover" />;
         }
     };
 
@@ -51,9 +51,9 @@ const Show: React.FC<ShowProps> = ({ gallery }) => {
                         </div>
                     )}
 
-                    {/* Gallery Media */}
+                    {/* Gallery Images */}
                     <div className="space-y-4">
-                        <h2 className="text-lg font-semibold">Gallery Media</h2>
+                        <h2 className="text-lg font-semibold">Gallery Images</h2>
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                             {gallery.media_items?.length ? (
                                 gallery.media_items.map((item, index) => (
@@ -64,7 +64,11 @@ const Show: React.FC<ShowProps> = ({ gallery }) => {
                                             <div className="text-sm text-neutral-500">No media selected</div>
                                         )}
                                         {item.caption && <p className="mt-1 font-medium">{item.caption}</p>}
-                                        {item.description && <p className="text-sm text-neutral-600">{item.description}</p>}
+                                        {item.description && (
+                                            <p className="text-sm text-neutral-600">
+                                                {item.description.length > 100 ? `${item.description.slice(0, 100)}…` : item.description}
+                                            </p>
+                                        )}
                                     </div>
                                 ))
                             ) : (

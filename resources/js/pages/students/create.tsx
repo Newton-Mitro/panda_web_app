@@ -1,6 +1,5 @@
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { Transition } from '@headlessui/react';
 import { Head, router } from '@inertiajs/react';
 import React, { useState } from 'react';
 import HeadingSmall from '../../components/heading-small';
@@ -9,7 +8,6 @@ import { MediaSelector } from '../../components/media-selector';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
-import { Select } from '../../components/ui/select';
 import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
 import { Category } from '../../types/category';
@@ -18,35 +16,29 @@ import { PaginatedData } from '../../types/paginated_meta';
 import MediaBrowserModal from '../media/media_browser_modal';
 
 interface CreateProps {
-    categories: Category[];
     media: PaginatedData<Media>;
+    categories: Category[];
 }
 
-export default function Create({ categories, media }: CreateProps) {
+export default function Create({ media, categories }: CreateProps) {
     const [form, setForm] = useState({
-        name: '',
-        designation: '',
-        bio: '',
-        message: '',
-        department: '',
-        media_id: null as number | null,
-        category_id: 0,
-        facebook_links: '',
-        twitter_links: '',
-        linkedin_links: '',
-        instagram_links: '',
-        youtube_links: '',
-        pinterest_links: '',
-        tiktok_links: '',
-        snapchat_links: '',
-        whatsapp_links: '',
-        telegram_links: '',
-        github_links: '',
-        discord_links: '',
+        student_id: '',
+        first_name: '',
+        last_name: '',
         email: '',
         phone: '',
+        date_of_birth: '',
+        gender: '',
+        religion: '',
+        guardian_name: '',
+        guardian_phone: '',
+        roll_number: '',
+        category_id: 0,
+        birth_registration_no: '',
+        national_id_no: '',
         address: '',
-        status: '',
+        media_id: null as number | null,
+        status: 'Active',
     });
 
     const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
@@ -56,7 +48,7 @@ export default function Create({ categories, media }: CreateProps) {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        router.post(route('teams.store'), form, {
+        router.post(route('students.store'), form, {
             onError: (err) => setErrors(err),
             onSuccess: () => setRecentlySuccessful(true),
         });
@@ -64,54 +56,41 @@ export default function Create({ categories, media }: CreateProps) {
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
-        { title: 'Teams', href: route('teams.index') },
-        { title: `Create Team Member`, href: '' },
+        { title: 'Students', href: route('students.index') },
+        { title: `Create Student`, href: '' },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Create Team Member" />
+            <Head title="Create Student" />
             <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
-                <HeadingSmall title="Create Team Member" description="Add a new team member" />
+                <HeadingSmall title="Create Student" description="Add a new student" />
 
                 <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 md:w-4xl dark:bg-gray-900">
-                    {/* Name + Designation */}
+                    {/* Student Info */}
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="flex flex-col gap-2">
-                            <Label>Name</Label>
-                            <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-                            <InputError message={errors.name} />
+                            <Label>Student ID</Label>
+                            <Input value={form.student_id} onChange={(e) => setForm({ ...form, student_id: e.target.value })} />
+                            <InputError message={errors.student_id} />
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <Label>Designation</Label>
-                            <Input value={form.designation} onChange={(e) => setForm({ ...form, designation: e.target.value })} />
-                            <InputError message={errors.designation} />
+                            <Label>Roll Number</Label>
+                            <Input value={form.roll_number} onChange={(e) => setForm({ ...form, roll_number: e.target.value })} />
+                            <InputError message={errors.roll_number} />
                         </div>
-                    </div>
 
-                    {/* Category + Status */}
-                    <div className="grid gap-4 md:grid-cols-2">
                         <div className="flex flex-col gap-2">
-                            <Label>Category</Label>
-                            <Select
-                                value={form.category_id?.toString() || ''}
-                                onChange={(e) => setForm({ ...form, category_id: Number(e.target.value) })}
-                                options={categories.map((cat) => ({
-                                    value: cat.id.toString(),
-                                    label: `${cat.name} 🌿`,
-                                }))}
-                            />
-                            <InputError message={errors.category_id} />
+                            <Label>First Name</Label>
+                            <Input value={form.first_name} onChange={(e) => setForm({ ...form, first_name: e.target.value })} />
+                            <InputError message={errors.first_name} />
                         </div>
-                    </div>
 
-                    {/* Department + Contact Info */}
-                    <div className="grid gap-4 md:grid-cols-2">
                         <div className="flex flex-col gap-2">
-                            <Label>Department</Label>
-                            <Input value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} />
-                            <InputError message={errors.department} />
+                            <Label>Last Name</Label>
+                            <Input value={form.last_name} onChange={(e) => setForm({ ...form, last_name: e.target.value })} />
+                            <InputError message={errors.last_name} />
                         </div>
 
                         <div className="flex flex-col gap-2">
@@ -127,31 +106,53 @@ export default function Create({ categories, media }: CreateProps) {
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <Label>Address</Label>
-                            <Input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
-                            <InputError message={errors.address} />
+                            <Label>Roll Number</Label>
+                            <Input value={form.roll_number} onChange={(e) => setForm({ ...form, roll_number: e.target.value })} />
+                            <InputError message={errors.roll_number} />
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <Label>Class</Label>
+                            <select
+                                value={form.category_id}
+                                onChange={(e) => setForm({ ...form, category_id: Number(e.target.value) })}
+                                className="rounded-md border px-2 py-1 dark:bg-gray-800 dark:text-gray-200"
+                            >
+                                <option value={0}>Select Class</option>
+                                {categories.map((cat) => (
+                                    <option key={cat.id} value={cat.id}>
+                                        {cat.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <InputError message={errors.category_id} />
                         </div>
                     </div>
 
-                    {/* Bio + Message */}
+                    {/* Bio / Address */}
                     <div className="flex flex-col gap-2">
-                        <Label>Bio</Label>
+                        <Label>Address</Label>
                         <CKEditor
                             editor={ClassicEditor as any}
-                            data={form.bio}
-                            onChange={(_, editor) => setForm({ ...form, bio: editor.getData() })}
+                            data={form.address || ''}
+                            onChange={(_, editor) => setForm({ ...form, address: editor.getData() })}
                         />
-                        <InputError message={errors.bio} />
+                        <InputError message={errors.address} />
                     </div>
 
-                    <div className="flex flex-col gap-2">
-                        <Label>Message</Label>
-                        <CKEditor
-                            editor={ClassicEditor as any}
-                            data={form.message}
-                            onChange={(_, editor) => setForm({ ...form, message: editor.getData() })}
-                        />
-                        <InputError message={errors.message} />
+                    {/* Guardian Info */}
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <div className="flex flex-col gap-2">
+                            <Label>Guardian Name</Label>
+                            <Input value={form.guardian_name} onChange={(e) => setForm({ ...form, guardian_name: e.target.value })} />
+                            <InputError message={errors.guardian_name} />
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <Label>Guardian Phone</Label>
+                            <Input value={form.guardian_phone} onChange={(e) => setForm({ ...form, guardian_phone: e.target.value })} />
+                            <InputError message={errors.guardian_phone} />
+                        </div>
                     </div>
 
                     {/* Media */}
@@ -167,41 +168,10 @@ export default function Create({ categories, media }: CreateProps) {
                         />
                     </div>
 
-                    {/* Social Links */}
-                    <div className="grid gap-4 md:grid-cols-2">
-                        {[
-                            { key: 'facebook_links', label: 'Facebook', placeholder: 'https://facebook.com/username' },
-                            { key: 'twitter_links', label: 'Twitter', placeholder: 'https://twitter.com/username' },
-                            { key: 'linkedin_links', label: 'LinkedIn', placeholder: 'https://linkedin.com/in/username' },
-                            { key: 'instagram_links', label: 'Instagram', placeholder: 'https://instagram.com/username' },
-                            { key: 'youtube_links', label: 'YouTube', placeholder: 'https://youtube.com/channel/...' },
-                            { key: 'whatsapp_links', label: 'WhatsApp', placeholder: 'https://wa.me/1234567890' },
-                            { key: 'github_links', label: 'GitHub', placeholder: 'https://github.com/username' },
-                        ].map((social) => (
-                            <div className="flex flex-col gap-2" key={social.key}>
-                                <Label>{social.label}</Label>
-                                <Input
-                                    value={form[social.key as keyof typeof form] as string}
-                                    placeholder={social.placeholder}
-                                    onChange={(e) => setForm({ ...form, [social.key]: e.target.value })}
-                                />
-                                <InputError message={errors[social.key]} />
-                            </div>
-                        ))}
-                    </div>
-
                     {/* Actions */}
                     <div className="flex items-center gap-4">
-                        <Button type="submit">Create</Button>
-                        <Transition
-                            show={recentlySuccessful}
-                            enter="transition ease-in-out"
-                            enterFrom="opacity-0"
-                            leave="transition ease-in-out"
-                            leaveTo="opacity-0"
-                        >
-                            <p className="text-sm text-neutral-600">Created</p>
-                        </Transition>
+                        <Button type="submit">Create Student</Button>
+                        {recentlySuccessful && <p className="text-sm text-neutral-600">Created</p>}
                     </div>
                 </form>
 

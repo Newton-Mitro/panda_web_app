@@ -11,42 +11,44 @@ import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
-import { Instructor } from '../../types/instructor';
+import { Category } from '../../types/category';
+import { Leader } from '../../types/leader';
 import { Media } from '../../types/media';
 import { PaginatedData } from '../../types/paginated_meta';
 import MediaBrowserModal from '../media/media_browser_modal';
 
 interface EditProps {
-    instructor: Instructor;
+    leader: Leader;
     media: PaginatedData<Media>;
+    categories: Category[];
 }
 
-export default function Edit({ instructor, media }: EditProps) {
+export default function Edit({ leader, media, categories }: EditProps) {
     const [form, setForm] = useState({
-        media_id: instructor.media_id || null,
-        instructor_id: instructor.instructor_id,
-        name: instructor.name,
-        bio: instructor.bio || '',
-        email: instructor.email,
-        phone: instructor.phone || '',
-        date_of_birth: instructor.date_of_birth || '',
-        gender: instructor.gender || null,
-        designation: instructor.designation || '',
-        department: instructor.department || '',
-        national_id_no: instructor.national_id_no || '',
-        religion: instructor.religion || null,
-        address: instructor.address || '',
-        status: instructor.status,
+        name: leader.name,
+        designation: leader.designation ?? '',
+        bio: leader.bio ?? '',
+        message: leader.message ?? '',
+        media_id: leader.media_id ?? null,
+        category_id: leader.category_id ?? 0,
+        facebook_links: leader.facebook_links ?? '',
+        twitter_links: leader.twitter_links ?? '',
+        linkedin_links: leader.linkedin_links ?? '',
+        instagram_links: leader.instagram_links ?? '',
+        email: leader.email ?? '',
+        phone: leader.phone ?? '',
+        address: leader.address ?? '',
+        status: leader.status,
     });
 
-    const [selectedMedia, setSelectedMedia] = useState<Media | null>(instructor.media || null);
+    const [selectedMedia, setSelectedMedia] = useState<Media | null>(leader.media ?? null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [errors, setErrors] = useState<Record<string, any>>({});
+    const [errors, setErrors] = useState<any>({});
     const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        router.put(route('instructors.update', instructor.id), form, {
+        router.put(route('leaders.update', leader.id), form, {
             onError: (err) => setErrors(err),
             onSuccess: () => setRecentlySuccessful(true),
         });
@@ -54,15 +56,15 @@ export default function Edit({ instructor, media }: EditProps) {
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
-        { title: 'Instructors', href: route('instructors.index') },
-        { title: `Edit Instructor`, href: '' },
+        { title: 'Leaders', href: route('leaders.index') },
+        { title: `Edit: ${leader.name}`, href: '' },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Edit Instructor" />
+            <Head title={`Edit Leader: ${leader.name}`} />
             <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6">
-                <HeadingSmall title="Edit Instructor" description="Update instructor details" />
+                <HeadingSmall title="Edit Leader" description={`Update ${leader.name}`} />
 
                 <form onSubmit={submit} className="space-y-6 rounded-lg border bg-white p-6 md:w-4xl dark:bg-gray-900">
                     {/* Name + Designation */}
@@ -75,19 +77,46 @@ export default function Edit({ instructor, media }: EditProps) {
 
                         <div className="flex flex-col gap-2">
                             <Label>Designation</Label>
-                            <Input value={form.designation || ''} onChange={(e) => setForm({ ...form, designation: e.target.value })} />
+                            <Input value={form.designation} onChange={(e) => setForm({ ...form, designation: e.target.value })} />
                             <InputError message={errors.designation} />
                         </div>
                     </div>
 
-                    {/* Department + Contact Info */}
+                    {/* Category + Status */}
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="flex flex-col gap-2">
-                            <Label>Department</Label>
-                            <Input value={form.department || ''} onChange={(e) => setForm({ ...form, department: e.target.value })} />
-                            <InputError message={errors.department} />
+                            <Label>Category</Label>
+                            <select
+                                value={form.category_id}
+                                onChange={(e) => setForm({ ...form, category_id: Number(e.target.value) })}
+                                className="rounded border border-gray-300 px-2 py-1 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+                            >
+                                <option value={0}>Select Category</option>
+                                {categories.map((c) => (
+                                    <option key={c.id} value={c.id}>
+                                        {c.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <InputError message={errors.category_id} />
                         </div>
 
+                        <div className="flex flex-col gap-2">
+                            <Label>Status</Label>
+                            <select
+                                value={form.status}
+                                onChange={(e) => setForm({ ...form, status: e.target.value })}
+                                className="rounded border border-gray-300 px-2 py-1 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+                            >
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                            <InputError message={errors.status} />
+                        </div>
+                    </div>
+
+                    {/* Contact Info */}
+                    <div className="grid gap-4 md:grid-cols-2">
                         <div className="flex flex-col gap-2">
                             <Label>Email</Label>
                             <Input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
@@ -96,71 +125,36 @@ export default function Edit({ instructor, media }: EditProps) {
 
                         <div className="flex flex-col gap-2">
                             <Label>Phone</Label>
-                            <Input value={form.phone || ''} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                            <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
                             <InputError message={errors.phone} />
                         </div>
 
                         <div className="flex flex-col gap-2">
                             <Label>Address</Label>
-                            <Input value={form.address || ''} onChange={(e) => setForm({ ...form, address: e.target.value })} />
+                            <Input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
                             <InputError message={errors.address} />
                         </div>
                     </div>
 
-                    {/* Bio */}
+                    {/* Bio + Message */}
                     <div className="flex flex-col gap-2">
                         <Label>Bio</Label>
                         <CKEditor
                             editor={ClassicEditor as any}
-                            data={form.bio || ''}
+                            data={form.bio}
                             onChange={(_, editor) => setForm({ ...form, bio: editor.getData() })}
                         />
                         <InputError message={errors.bio} />
                     </div>
 
-                    {/* Gender, Date of Birth, Religion */}
-                    <div className="grid gap-4 md:grid-cols-3">
-                        <div className="flex flex-col gap-2">
-                            <Label>Gender</Label>
-                            <select
-                                value={form.gender || ''}
-                                onChange={(e) => setForm({ ...form, gender: e.target.value as any })}
-                                className="rounded border px-3 py-2"
-                            >
-                                <option value="">Select Gender</option>
-                                <option value="MALE">Male</option>
-                                <option value="FEMALE">Female</option>
-                                <option value="OTHER">Other</option>
-                            </select>
-                            <InputError message={errors.gender} />
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <Label>Date of Birth</Label>
-                            <Input
-                                type="date"
-                                value={form.date_of_birth || ''}
-                                onChange={(e) => setForm({ ...form, date_of_birth: e.target.value })}
-                            />
-                            <InputError message={errors.date_of_birth} />
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <Label>Religion</Label>
-                            <select
-                                value={form.religion || ''}
-                                onChange={(e) => setForm({ ...form, religion: e.target.value as any })}
-                                className="rounded border px-3 py-2"
-                            >
-                                <option value="">Select Religion</option>
-                                <option value="ISLAM">Islam</option>
-                                <option value="HINDUISM">Hinduism</option>
-                                <option value="CHRISTIANITY">Christianity</option>
-                                <option value="BUDDHISM">Buddhism</option>
-                                <option value="OTHER">Other</option>
-                            </select>
-                            <InputError message={errors.religion} />
-                        </div>
+                    <div className="flex flex-col gap-2">
+                        <Label>Message</Label>
+                        <CKEditor
+                            editor={ClassicEditor as any}
+                            data={form.message}
+                            onChange={(_, editor) => setForm({ ...form, message: editor.getData() })}
+                        />
+                        <InputError message={errors.message} />
                     </div>
 
                     {/* Media */}
@@ -176,18 +170,24 @@ export default function Edit({ instructor, media }: EditProps) {
                         />
                     </div>
 
-                    {/* Status */}
-                    <div className="flex flex-col gap-2">
-                        <Label>Status</Label>
-                        <select
-                            value={form.status}
-                            onChange={(e) => setForm({ ...form, status: e.target.value as 'Active' | 'Inactive' })}
-                            className="rounded border px-3 py-2"
-                        >
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                        </select>
-                        <InputError message={errors.status} />
+                    {/* Social Links */}
+                    <div className="grid gap-4 md:grid-cols-2">
+                        {[
+                            { key: 'facebook_links', label: 'Facebook', placeholder: 'https://facebook.com/username' },
+                            { key: 'twitter_links', label: 'Twitter', placeholder: 'https://twitter.com/username' },
+                            { key: 'linkedin_links', label: 'LinkedIn', placeholder: 'https://linkedin.com/in/username' },
+                            { key: 'instagram_links', label: 'Instagram', placeholder: 'https://instagram.com/username' },
+                        ].map((social) => (
+                            <div className="flex flex-col gap-2" key={social.key}>
+                                <Label>{social.label}</Label>
+                                <Input
+                                    value={form[social.key as keyof typeof form] as string}
+                                    placeholder={social.placeholder}
+                                    onChange={(e) => setForm({ ...form, [social.key]: e.target.value })}
+                                />
+                                <InputError message={errors[social.key]} />
+                            </div>
+                        ))}
                     </div>
 
                     {/* Actions */}

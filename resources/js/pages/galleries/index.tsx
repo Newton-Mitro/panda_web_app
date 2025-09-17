@@ -73,7 +73,7 @@ const Index: React.FC<IndexProps> = ({ galleries }) => {
                                 key={slide.id}
                                 className="relative rounded border border-gray-200 bg-white p-2 hover:border-blue-500 dark:border-gray-700 dark:bg-neutral-900 dark:hover:border-blue-400"
                             >
-                                <div className="cursor-pointer" onClick={() => router.visit(route('media.show', slide.id))}>
+                                <div className="cursor-pointer" onClick={() => router.visit(route('galleries.show', slide.id))}>
                                     <img src={slide.media?.url} alt={slide.media?.alt_text || 'media'} className="h-32 w-full rounded object-cover" />
                                     <p className="mt-1 truncate text-center text-xs text-gray-700 sm:text-sm dark:text-gray-300">Associate With</p>
                                     <p className="mt-2 truncate text-center text-xs text-gray-900 sm:text-sm dark:text-gray-100">{slide.title}</p>

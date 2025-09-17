@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\InventoryLogController;
 use App\Http\Controllers\JobApplicationController;
+use App\Http\Controllers\LeaderController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\PaymentController;
@@ -52,7 +53,6 @@ Route::get('/awards', [WebPageController::class, 'awards'])->name('site.awards')
 Route::get('/careers', [WebPageController::class, 'careers'])->name('site.careers');
 Route::get('/notices', [WebPageController::class, 'notices'])->name('site.notices');
 
-
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
@@ -60,97 +60,36 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
 
-
-Route::get('/awards', [AwardController::class, 'publicIndex'])->name('awards.publicIndex');
-Route::get('/awards/{award}', [AwardController::class, 'publicShow'])->name('awards.publicShow');
-
 Route::prefix('admin')
     ->middleware(['auth', 'verified'])
     ->group(function () {
-        // Awards
         Route::resource('awards', AwardController::class);
-
-        // Categories
         Route::resource('categories', CategoryController::class);
-
-        // Contacts
         Route::resource('contacts', ContactController::class);
-
-        // Contact Messages
         Route::resource('contact-messages', ContactMessageController::class);
-
-        // Events
         Route::resource('events', EventController::class);
-
-        // Galleries
         Route::resource('galleries', GalleryController::class);
-
-        // Hero Sliders
         Route::resource('hero-sliders', HeroSliderController::class);
-
-        // Likes
         Route::resource('likes', LikeController::class);
-
-        // Media
         Route::resource('media', MediaController::class);
-
-        // Notices
         Route::resource('notices', NoticeController::class);
-
-        // Pages
         Route::resource('pages', PageController::class);
-
-        // Posts
         Route::resource('articles', ArticleController::class);
-
-        // Products
         Route::resource('products', ProductController::class);
-
-        // Projects
         Route::resource('projects', ProjectController::class);
-
-        // Route Visit Logs
         Route::resource('route-visit-logs', RouteVisitLogController::class);
-
-        // Services
         Route::resource('services', ServiceController::class);
-
-        // Settings
         Route::resource('settings', SettingController::class);
-
-        // Tags
         Route::resource('tags', TagController::class);
-
-        // Teams
         Route::resource('teams', TeamController::class);
-
         Route::resource('instructors', InstructorController::class);
-
-        Route::prefix('partners')->name('partners.')->group(function () {
-            Route::get('/', [PartnerController::class, 'index'])->name('index');
-            Route::get('/create', [PartnerController::class, 'create'])->name('create');
-            Route::post('/', [PartnerController::class, 'store'])->name('store');
-            Route::get('/{partner}', [PartnerController::class, 'show'])->name('show');
-            Route::get('/{partner}/edit', [PartnerController::class, 'edit'])->name('edit');
-            Route::put('/{partner}', [PartnerController::class, 'update'])->name('update');
-            Route::delete('/{partner}', [PartnerController::class, 'destroy'])->name('destroy');
-        });
-
-        // Testimonials
-        Route::resource('testimonials', TestimonialController::class);
-
-        // Visitors
-        Route::resource('visitors', VisitorController::class);
-
-        // Job Circulars
-        Route::resource('careers', CareerController::class);
-
-        // Job Applications
-        Route::resource('job_applications', JobApplicationController::class);
-
-        // Students
+        Route::resource('leaders', LeaderController::class);
         Route::resource('students', StudentController::class);
-
+        Route::resource('partners', PartnerController::class);
+        Route::resource('testimonials', TestimonialController::class);
+        Route::resource('visitors', VisitorController::class);
+        Route::resource('careers', CareerController::class);
+        Route::resource('job_applications', JobApplicationController::class);
         // Users
         // Route::resource('users', UserController::class);
     });
