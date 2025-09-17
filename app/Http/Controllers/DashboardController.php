@@ -7,10 +7,10 @@ use App\Infrastructure\Models\Award;
 use App\Infrastructure\Models\Career;
 use App\Infrastructure\Models\Contact;
 use App\Infrastructure\Models\ContactMessage;
+use App\Infrastructure\Models\Instructor;
 use App\Infrastructure\Models\JobApplication;
 use App\Infrastructure\Models\Media;
 use App\Infrastructure\Models\Notice;
-use App\Infrastructure\Models\Order;
 use App\Infrastructure\Models\Page;
 use App\Infrastructure\Models\Partner;
 use App\Infrastructure\Models\Project;
@@ -19,7 +19,6 @@ use App\Infrastructure\Models\Student;
 use App\Infrastructure\Models\Product;
 use App\Infrastructure\Models\Service;
 use App\Infrastructure\Models\Event;
-use App\Infrastructure\Models\Teacher;
 use App\Infrastructure\Models\Team;
 use App\Infrastructure\Models\Testimonial;
 use App\Infrastructure\Models\User;
@@ -46,8 +45,7 @@ class DashboardController extends Controller
             'partners' => Partner::count(),
             'teams' => Team::count(),
             'students' => Student::count(),
-            'instructors' => Team::count(),
-            'teachers' => Teacher::count(),
+            'instructors' => Instructor::count(),
             'articles' => Article::count(),
             'officeLocations' => Contact::count(),
             'jobCirculars' => Career::count(),

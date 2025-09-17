@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreProductReviewRequest;
-use App\Http\Requests\UpdateProductReviewRequest;
-use App\ProductReview;
+use App\Http\Requests\StoreInstructorRequest;
+use App\Http\Requests\UpdateInstructorRequest;
+use App\Instructor;
 
-class ProductReviewController extends Controller
+class InstructorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +27,7 @@ class ProductReviewController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductReviewRequest $request)
+    public function store(StoreInstructorRequest $request)
     {
         //
     }
@@ -35,7 +35,7 @@ class ProductReviewController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProductReview $productReview)
+    public function show(Instructor $instructor)
     {
         //
     }
@@ -43,7 +43,7 @@ class ProductReviewController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProductReview $productReview)
+    public function edit(Instructor $instructor)
     {
         //
     }
@@ -51,7 +51,7 @@ class ProductReviewController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductReviewRequest $request, ProductReview $productReview)
+    public function update(UpdateInstructorRequest $request, Instructor $instructor)
     {
         //
     }
@@ -59,7 +59,7 @@ class ProductReviewController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductReview $productReview)
+    public function destroy(Instructor $instructor)
     {
         //
     }

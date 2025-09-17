@@ -2,17 +2,22 @@
 
 namespace App\Infrastructure\Models;
 
-
+use Database\Factories\InstructorFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Teacher extends Model
+class Instructor extends Model
 {
     use HasFactory;
 
+    protected $table = 'instructors';
+
+    /**
+     * Fields that are mass assignable.
+     */
     protected $fillable = [
         'media_id',
-        'teacher_id',
+        'instructor_id',
         'name',
         'bio',
         'email',
@@ -27,8 +32,23 @@ class Teacher extends Model
         'status',
     ];
 
+    /**
+     * Casts for proper data types.
+     */
+    protected $casts = [
+        'date_of_birth' => 'date',
+    ];
+
+    /**
+     * Relationship: An instructor may have one associated media item (profile picture, etc.).
+     */
     public function media()
     {
         return $this->belongsTo(Media::class);
+    }
+
+    protected static function newFactory()
+    {
+        return InstructorFactory::new();
     }
 }

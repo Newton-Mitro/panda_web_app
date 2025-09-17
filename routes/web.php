@@ -3,6 +3,7 @@
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CuponController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\InventoryLogController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\OrderController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\WebPageController;
+use App\Infrastructure\Models\Instructor;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
@@ -101,9 +103,6 @@ Route::prefix('admin')
         // Posts
         Route::resource('articles', ArticleController::class);
 
-        // Post Tags
-        Route::resource('post-tags', PostTagController::class);
-
         // Products
         Route::resource('products', ProductController::class);
 
@@ -125,7 +124,7 @@ Route::prefix('admin')
         // Teams
         Route::resource('teams', TeamController::class);
 
-        Route::resource('teachers', TeacherController::class);
+        Route::resource('instructors', InstructorController::class);
 
         Route::prefix('partners')->name('partners.')->group(function () {
             Route::get('/', [PartnerController::class, 'index'])->name('index');
@@ -143,32 +142,14 @@ Route::prefix('admin')
         // Visitors
         Route::resource('visitors', VisitorController::class);
 
-        // Appointments
-        // Route::resource('appointments', AppointmentController::class);
-    
         // Job Circulars
         Route::resource('careers', CareerController::class);
 
         // Job Applications
         Route::resource('job_applications', JobApplicationController::class);
 
-        // Classes
-        // Route::resource('classes', ClassController::class);
-    
         // Students
         Route::resource('students', StudentController::class);
-
-        // Inventory Logs
-        Route::resource('inventory_logs', InventoryLogController::class);
-
-        // Orders
-        Route::resource('orders', OrderController::class);
-
-        // Cupons
-        Route::resource('cupons', CuponController::class);
-
-        // Payments
-        Route::resource('payments', PaymentController::class);
 
         // Users
         // Route::resource('users', UserController::class);

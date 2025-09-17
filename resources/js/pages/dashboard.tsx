@@ -67,7 +67,6 @@ export default function Dashboard() {
                         { label: 'Testimonials', value: stats.testimonials, icon: 'fa-solid fa-circle-check', color: 'text-teal-500' },
                         { label: 'Partners', value: stats.partners, icon: 'fa-solid fa-handshake', color: 'text-green-600' },
                         { label: 'Teams', value: stats.teams, icon: 'fa-solid fa-users-viewfinder', color: 'text-pink-500' },
-                        { label: 'Teachers', value: stats.teachers, icon: 'fa-solid fa-person-chalkboard', color: 'text-violet-500' },
                         { label: 'Instructors', value: stats.instructors, icon: 'fa-solid fa-chalkboard-user', color: 'text-purple-600' },
                         { label: 'Students', value: stats.students, icon: 'fa-user-graduate', color: 'text-emerald-600' },
                         { label: 'Articles', value: stats.articles, icon: 'fa-solid fa-square-rss', color: 'text-blue-500' },

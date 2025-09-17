@@ -10,10 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('teachers', function (Blueprint $table) {
+        Schema::create('instructors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();
-            $table->string('teacher_id', 20)->unique();
+            $table->string('instructor_id', 20)->unique();
             $table->string('name', 100);
             $table->string('bio', 100)->nullable();
             $table->string('email')->unique();
@@ -35,6 +35,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('teachers');
+        Schema::dropIfExists('instructors');
     }
 };
