@@ -11,7 +11,7 @@ export default ({ children, ...props }: PageLayoutProps) => (
         <div className="flex min-h-screen flex-col bg-background" {...props}>
             <Navigation />
 
-            {children}
+            <main className="flex-grow">{children}</main>
 
             {/* Footer always at bottom */}
             <FooterTemplate />

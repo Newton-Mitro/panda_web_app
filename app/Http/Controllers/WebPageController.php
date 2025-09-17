@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Infrastructure\Models\Contact;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -19,12 +20,15 @@ class WebPageController extends Controller
 
     public function contact()
     {
-        return Inertia::render('site/contact');
+        $contacts = Contact::latest()->get();
+        return Inertia::render('site/contact', [
+            'contacts' => $contacts
+        ]);
     }
 
-    public function team()
+    public function teams()
     {
-        return Inertia::render('site/team');
+        return Inertia::render('site/teams');
     }
 
     public function services()
@@ -32,9 +36,14 @@ class WebPageController extends Controller
         return Inertia::render('site/services');
     }
 
+    public function products()
+    {
+        return Inertia::render('site/products');
+    }
+
     public function projects()
     {
-        return Inertia::render('srojects');
+        return Inertia::render('site/projects');
     }
 
     public function articles()
