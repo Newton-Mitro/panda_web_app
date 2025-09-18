@@ -2,79 +2,48 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreContactMessageRequest;
-use App\Http\Requests\UpdateContactMessageRequest;
 use App\Infrastructure\Models\ContactMessage;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ContactMessageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(): View
+    public function index()
     {
-        $messages = ContactMessage::orderBy('created_at', 'desc')->paginate(10);
-        return view('contact_messages.index', compact('messages'));
+        $messages = ContactMessage::latest()->paginate(10);
+
+        return Inertia::render('contact_messages/index', [
+            'contactMessages' => $messages,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): View
+    public function show(ContactMessage $contactMessage)
     {
-        return view('contact_messages.create');
+        return Inertia::render('contact_messages/show', [
+            'message' => $contactMessage,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreContactMessageRequest $request): RedirectResponse
+    public function store(Request $request)
     {
-        $data = $request->validated();
-        ContactMessage::create($data);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:20',
+            'subject' => 'nullable|string|max:255',
+            'message' => 'required|string',
+        ]);
 
-        return redirect()->route('contact_messages.index')
-            ->with('success', 'Message sent successfully.');
+        ContactMessage::create($validated);
+
+        return redirect()->back()->with('success', 'Your message has been sent successfully!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ContactMessage $contactMessage): View
-    {
-        return view('contact_messages.show', compact('contactMessage'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ContactMessage $contactMessage): View
-    {
-        return view('contact_messages.edit', compact('contactMessage'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateContactMessageRequest $request, ContactMessage $contactMessage): RedirectResponse
-    {
-        $data = $request->validated();
-        $contactMessage->update($data);
-
-        return redirect()->route('contact_messages.index')
-            ->with('success', 'Message updated successfully.');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ContactMessage $contactMessage): RedirectResponse
+    public function destroy(ContactMessage $contactMessage)
     {
         $contactMessage->delete();
 
-        return redirect()->route('contact_messages.index')
+        return redirect()->route('contact-messages.index')
             ->with('success', 'Message deleted successfully.');
     }
 }

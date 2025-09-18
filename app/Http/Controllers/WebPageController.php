@@ -36,9 +36,9 @@ class WebPageController extends Controller
         return Inertia::render('site/services');
     }
 
-    public function products()
+    public function financeOptions()
     {
-        return Inertia::render('site/products');
+        return Inertia::render('site/finance-options');
     }
 
     public function projects()

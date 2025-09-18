@@ -16,6 +16,7 @@ import {
     ImagePlusIcon,
     ImagesIcon,
     LayoutGrid,
+    MailQuestion,
     MapPinnedIcon,
     MedalIcon,
     NotebookIcon,
@@ -130,7 +131,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Job Applications',
-        href: '/admin/job_applications',
+        href: '/admin/job-applications',
         icon: ViewIcon,
     },
     {
@@ -143,31 +144,6 @@ const mainNavItems: NavItem[] = [
         href: '/admin/courses',
         icon: TvMinimalPlay,
     },
-    // {
-    //     title: 'Products',
-    //     href: '/admin/products',
-    //     icon: BarcodeIcon,
-    // },
-    // {
-    //     title: 'Inventory Logs',
-    //     href: '/admin/inventory_logs',
-    //     icon: Tally5Icon,
-    // },
-    // {
-    //     title: 'Orders',
-    //     href: '/admin/orders',
-    //     icon: ShoppingBasketIcon,
-    // },
-    // {
-    //     title: 'Cupons',
-    //     href: '/admin/cupons',
-    //     icon: TicketPercentIcon,
-    // },
-    // {
-    //     title: 'Payments',
-    //     href: '/admin/payments',
-    //     icon: CreditCardIcon,
-    // },
     // {
     //     title: 'Departments',
     //     href: '/admin/departments',
@@ -188,6 +164,11 @@ const mainNavItems: NavItem[] = [
     //     href: '/admin/appointments',
     //     icon: CalendarCheck2Icon,
     // },
+    {
+        title: 'Contact Messages',
+        href: '/admin/contact-messages',
+        icon: MailQuestion,
+    },
     {
         title: 'Users',
         href: '/admin/users',

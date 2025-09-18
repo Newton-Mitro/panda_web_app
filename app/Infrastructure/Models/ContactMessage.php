@@ -10,7 +10,13 @@ class ContactMessage extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'email', 'phone', 'message'];
+    protected $fillable = [
+        'name',
+        'email',
+        'phone',
+        'subject',
+        'message',
+    ];
 
     protected static function newFactory()
     {

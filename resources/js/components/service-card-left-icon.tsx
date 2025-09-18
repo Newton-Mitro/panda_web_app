@@ -11,14 +11,14 @@ const ServiceCardLeftIcon: React.FC<ServiceCardLeftIconProps> = ({ icon, title, 
     return (
         <div key={key} className="flex items-start gap-3 sm:flex-row">
             {icon && (
-                <div className="flex h-6 w-6 items-center justify-center rounded-full border border-[var(--primary)] p-6">
-                    <i className={`fa-solid ${icon} text-xl text-[var(--primary)]`}></i>
+                <div className="flex h-6 w-6 items-center justify-center rounded-full border border-primary bg-primary p-6">
+                    <i className={`${icon} text-xl text-primary-foreground`}></i>
                 </div>
             )}
 
-            <div className="flex flex-col gap-0.5 text-sm text-[var(--foreground)]">
-                {title && <p className="font-semibold">{title}</p>}
-                {text && <p className="text-[var(--muted-foreground)]">{text}</p>}
+            <div className="flex flex-col gap-0.5 text-sm text-foreground">
+                {title && <h4 className="text-xl font-semibold">{title}</h4>}
+                {text && <p className="text-muted-foreground">{text}</p>}
             </div>
         </div>
     );

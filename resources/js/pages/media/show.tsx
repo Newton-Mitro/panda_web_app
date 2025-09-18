@@ -86,12 +86,6 @@ export default function Show({ media }: ShowProps) {
                         <p className="text-sm font-medium text-muted-foreground">URL</p>
                         <p className="break-all">{media.url}</p>
                     </div>
-
-                    <div className="flex gap-4">
-                        <Button asChild>
-                            <a href={route('media.edit', media.id)}>Edit</a>
-                        </Button>
-                    </div>
                 </div>
             </div>
         </AppLayout>

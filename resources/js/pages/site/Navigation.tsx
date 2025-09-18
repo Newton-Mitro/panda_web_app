@@ -5,12 +5,11 @@ import { SharedData } from '../../types';
 
 const Navigation = () => {
     const navItems = [
-        { name: 'About', href: '/about' },
+        { name: 'About Us', href: '/about-us' },
         { name: 'Services', href: '/services' },
-        { name: 'Products', href: '/products' },
+        { name: 'Finance Options', href: '/finance-options' },
         { name: 'Projects', href: '/projects' },
-        { name: 'Our Partners', href: '/partners' },
-        { name: 'Contact', href: '/contact' },
+        { name: 'Contact Us', href: '/contact-us' },
     ];
 
     const page = usePage<SharedData>();
@@ -51,26 +50,11 @@ const Navigation = () => {
 
                 {/* Auth & Donate buttons */}
                 <div className="hidden items-center space-x-4 md:flex">
-                    {auth.user ? (
-                        <Link
-                            href={route('dashboard')}
-                            className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
-                        >
-                            Dashboard
-                        </Link>
-                    ) : (
-                        <Link
-                            href={route('login')}
-                            className="inline-block rounded-sm border border-transparent px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#19140035] dark:text-[#EDEDEC] dark:hover:border-[#3E3E3A]"
-                        >
-                            Log in
-                        </Link>
-                    )}
                     <Link
                         href={route('register')}
                         className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
                     >
-                        Donate
+                        Ask for a quote
                     </Link>
                 </div>
 

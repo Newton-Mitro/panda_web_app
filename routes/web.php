@@ -42,11 +42,11 @@ use App\Http\Controllers\ContactMessageController;
 
 
 Route::get('/', [WebPageController::class, 'home'])->name('site.home');
-Route::get('/about', [WebPageController::class, 'about'])->name('site.about');
-Route::get('/contact', [WebPageController::class, 'contact'])->name('site.contact');
+Route::get('/about-us', [WebPageController::class, 'about'])->name('site.about');
+Route::get('/contact-us', [WebPageController::class, 'contact'])->name('site.contact');
 Route::get('/teams', [WebPageController::class, 'teams'])->name('site.teams');
 Route::get('/services', [WebPageController::class, 'services'])->name('site.services');
-Route::get('/products', [WebPageController::class, 'products'])->name('site.products');
+Route::get('/finance-options', [WebPageController::class, 'financeOptions'])->name('site.finance-options');
 Route::get('/projects', [WebPageController::class, 'projects'])->name('site.projects');
 Route::get('/articles', [WebPageController::class, 'articles'])->name('site.articles');
 Route::get('/events', [WebPageController::class, 'events'])->name('site.events');
