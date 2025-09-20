@@ -1,11 +1,16 @@
 import { Head } from '@inertiajs/react';
 import PageLayout from '../../layouts/page-layout';
+import { Page } from '../../types/page';
 import AttributeSection from './sections/AttributeSection';
 
-export default function FinanceOptions() {
+interface FinanceOptionsPageProps {
+    page: Page;
+}
+
+const FinanceOptionsPage: React.FC<FinanceOptionsPageProps> = ({ page }) => {
     return (
         <>
-            <Head title="Finance Options" />
+            <Head title={page.title} />
             <PageLayout>
                 {/* Hero */}
                 <section className="mt-16 bg-gradient-to-r from-primary to-purple-600 py-20 text-white">
@@ -20,4 +25,6 @@ export default function FinanceOptions() {
             </PageLayout>
         </>
     );
-}
+};
+
+export default FinanceOptionsPage;

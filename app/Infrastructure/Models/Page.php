@@ -21,7 +21,7 @@ class Page extends Model
 
     public function sections()
     {
-        return $this->hasMany(PageSection::class);
+        return $this->hasMany(PageSection::class)->with('media')->orderBy('sort_order');
     }
 
     protected static function newFactory()

@@ -2,7 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Infrastructure\Models\Article;
+use App\Infrastructure\Models\Award;
+use App\Infrastructure\Models\Career;
 use App\Infrastructure\Models\Contact;
+use App\Infrastructure\Models\Event;
+use App\Infrastructure\Models\Notice;
+use App\Infrastructure\Models\Page;
+use App\Infrastructure\Models\PageSection;
+use App\Infrastructure\Models\Project;
+use App\Infrastructure\Models\Service;
+use App\Infrastructure\Models\Team;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -10,64 +20,130 @@ class WebPageController extends Controller
 {
     public function home()
     {
-        return Inertia::render('site/welcome');
+        $homePage = Page::where('slug', 'home')->first();
+        return Inertia::render('site/home-page', [
+            'page' => $homePage
+        ]);
     }
 
     public function about()
     {
-        return Inertia::render('site/about');
+        $aboutPage = Page::with(['sections.media'])
+            ->where('slug', 'about-us')
+            ->first();
+
+        return Inertia::render('site/about-page', [
+            'page' => $aboutPage
+        ]);
     }
 
     public function contact()
     {
         $contacts = Contact::latest()->get();
-        return Inertia::render('site/contact', [
+        return Inertia::render('site/contact-page', [
             'contacts' => $contacts
         ]);
     }
 
-    public function teams()
+    public function teams(Request $request)
     {
-        return Inertia::render('site/teams');
+        $perPage = $request->input('perPage', 8);
+        $teams = Team::with('media', 'category')
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+        return Inertia::render('site/teams-page', [
+            'teams' => $teams,
+        ]);
     }
 
-    public function services()
+    public function services(Request $request)
     {
-        return Inertia::render('site/services');
+        $perPage = $request->input('perPage', 8);
+        $services = Service::with('media', 'category')
+            ->latest()
+            ->get();
+        return Inertia::render('site/services-page', [
+            'services' => $services,
+        ]);
     }
 
     public function financeOptions()
     {
-        return Inertia::render('site/finance-options');
+        $page = Page::where('slug', 'finance-options')->first();
+        return Inertia::render('site/finance-options-page', [
+            'page' => $page
+        ]);
     }
 
-    public function projects()
+    public function projects(Request $request)
     {
-        return Inertia::render('site/projects');
+        $perPage = $request->input('perPage', 8);
+        $projects = Project::with('media', 'category')
+            ->latest()
+            ->get();
+        return Inertia::render('site/projects-page', [
+            'projects' => $projects,
+        ]);
     }
 
-    public function articles()
+    public function articles(Request $request)
     {
-        return Inertia::render('site/articles');
+        $perPage = $request->input('perPage', 8);
+        $articles = Article::with('media', 'category')
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+        return Inertia::render('site/articles-page', [
+            'articles' => $articles,
+        ]);
     }
 
-    public function events()
+    public function events(Request $request)
     {
-        return Inertia::render('site/events');
+        $perPage = $request->input('perPage', 8);
+        $events = Event::with('media', 'category')
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+        return Inertia::render('site/events-page', [
+            'events' => $events,
+        ]);
     }
 
-    public function awards()
+    public function awards(Request $request)
     {
-        return Inertia::render('site/awards');
+        $perPage = $request->input('perPage', 8);
+        $awards = Award::with('media', 'category')
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+        return Inertia::render('site/awards-page', [
+            'awards' => $awards,
+        ]);
     }
 
-    public function careers()
+    public function careers(Request $request)
     {
-        return Inertia::render('site/careers');
+        $perPage = $request->input('perPage', 8);
+        $jobCirculars = Career::with('media', 'category')
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+        return Inertia::render('site/careers-page', [
+            'jobCirculars' => $jobCirculars,
+        ]);
     }
 
-    public function notices()
+    public function notices(Request $request)
     {
-        return Inertia::render('site/notices');
+        $perPage = $request->input('perPage', 8);
+        $notices = Notice::with('media', 'category')
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+        return Inertia::render('site/notices-page', [
+            'notices' => $notices,
+        ]);
     }
 }

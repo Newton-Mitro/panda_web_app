@@ -61,9 +61,9 @@
 
 :root {
     /* Backgrounds & surfaces */
-    --background: oklch(0.98 0.02 220);
+    --background: oklch(95.69% 0.0066 209.622);
     --foreground: oklch(0.2 0.03 260);
-    --card: oklch(0.96 0.015 230);
+    --card: oklch(100% 0.00011 271.152);
     --card-foreground: var(--foreground);
     --popover: var(--card);
     --popover-foreground: var(--foreground);

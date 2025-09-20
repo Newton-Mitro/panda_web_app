@@ -1,24 +1,29 @@
 import { Head } from '@inertiajs/react';
 import PageLayout from '../../layouts/page-layout';
+import { Page } from '../../types/page';
 import AttributeSection from './sections/AttributeSection';
 import HeroSection from './sections/HeroSection';
 import ServicesSection from './sections/ServicesSection';
 import TeamSection from './sections/TeamSection';
 
-export default function Welcome({ page }) {
+interface HomePageProps {
+    page: Page;
+}
+
+const HomePage: React.FC<HomePageProps> = ({ page }) => {
     const pageUrl = window.location.href;
-    const imageUrl = page?.image;
-    const metaTitle = page?.meta_title;
-    const metaDescription = page?.meta_description;
-    const metaKeywords = page?.meta_keywords;
+    const imageUrl = '';
+    const metaTitle = page?.meta_title || 'YourSite';
+    const metaDescription = page?.meta_description || 'YourSite';
+    const metaKeywords = page?.meta_keywords || 'YourSite';
     return (
         <>
-            <Head title="Home Page">
+            <Head title={page.title}>
                 {/* Basic SEO */}
                 <meta name="title" content={metaTitle} />
                 <meta name="description" content={metaDescription} />
-                <meta name="keywords" content={`${page?.category?.name || ''}, ${metaKeywords || ''}, articles, blog`} />
-                <meta name="author" content={page?.author?.name || 'YourSite'} />
+                <meta name="keywords" content={`${metaKeywords || ''}, articles, blog`} />
+                <meta name="author" content={'YourSite'} />
 
                 {/* Open Graph (Facebook/LinkedIn) */}
                 <meta property="og:type" content="page" />
@@ -47,4 +52,6 @@ export default function Welcome({ page }) {
             </PageLayout>
         </>
     );
-}
+};
+
+export default HomePage;

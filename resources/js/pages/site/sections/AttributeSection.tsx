@@ -4,7 +4,7 @@ const AttributeSection = () => {
     const { ref, isVisible } = useScrollAnimation();
 
     return (
-        <section ref={ref} id="attribute" className="bg-background py-16 md:py-20">
+        <section ref={ref} id="attribute" className="pt-16 pb-32">
             <div className={`mx-auto max-w-6xl px-4 transition-all duration-700 sm:px-6 md:px-6 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`}>
                 <div className="flex flex-col gap-10">
                     <div className="group flex flex-col items-center group-hover:cursor-pointer md:relative md:flex-row">
@@ -17,7 +17,7 @@ const AttributeSection = () => {
                             className={`borderobject-cover z-10 mt-6 mb-6 h-72 w-72 border-6 shadow-lg transition-transform duration-300 group-hover:scale-105 md:h-96 md:w-96`}
                             // border-4 for thickness, border-blue-500 for color, adjust as needed
                         />
-                        <div className="flex h-62 flex-col justify-center rounded-2xl border-1 border-gray-200 bg-white p-6 md:absolute md:left-80 md:pl-20">
+                        <div className="flex min-h-62 flex-col justify-center rounded-2xl border-1 border-border bg-card p-6 md:absolute md:left-80 md:pl-20">
                             <p>
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio, ab. Corrupti deserunt maiores, eveniet culpa itaque
                                 quaerat, inventore recusandae cumque, animi porro nulla voluptate numquam totam maxime officia fugiat explicabo?
@@ -26,7 +26,7 @@ const AttributeSection = () => {
                     </div>
 
                     <div className="group flex flex-col items-center group-hover:cursor-pointer md:relative md:flex-row">
-                        <div className="flex h-62 flex-col justify-center rounded-2xl border-1 border-gray-200 bg-white p-6 md:mr-80 md:pr-20">
+                        <div className="flex min-h-62 flex-col justify-center rounded-2xl border-1 border-border bg-card p-6 md:mr-80 md:pr-20">
                             <p>
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio, ab. Corrupti deserunt maiores, eveniet culpa itaque
                                 quaerat, inventore recusandae cumque, animi porro nulla voluptate numquam totam maxime officia fugiat explicabo?

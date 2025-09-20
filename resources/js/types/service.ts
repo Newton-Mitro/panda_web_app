@@ -1,3 +1,5 @@
+import { Category } from './category';
+
 export interface Service {
     id: number;
     title: string;
@@ -12,5 +14,5 @@ export interface Service {
     updated_at: string;
     media?: any; // relation for media
     icon_media?: any; // relation for icon_media
-    category?: any; // relation for category
+    category?: Category | null;
 }
