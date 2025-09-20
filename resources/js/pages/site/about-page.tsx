@@ -1,6 +1,5 @@
 import { Head } from '@inertiajs/react';
 import Gallery from '../../components/gallery';
-import MediaPreview from '../../components/media-preview';
 import ServiceCardLeftIcon from '../../components/service-card-left-icon';
 import PageLayout from '../../layouts/page-layout';
 import { Page } from '../../types/page';
@@ -115,32 +114,9 @@ const AboutPage: React.FC<AboutPageProps> = ({ page }) => {
                                             mediaUrl={section.media?.url}
                                             mimeType={section.media?.file_type}
                                             contentHtml={section.content || ''}
-                                            shape="tall-left"
+                                            shape="octagon-left"
                                         />
 
-                                        <ResponsiveImageSection
-                                            mediaUrl={section.media?.url}
-                                            mimeType={section.media?.file_type}
-                                            contentHtml={section.content || ''}
-                                            shape="octagon-right"
-                                        />
-
-                                        {/* Media + Content */}
-                                        <div
-                                            className={`clear-both flex flex-col items-center gap-8 md:flex-row ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}
-                                        >
-                                            {section.media && (
-                                                <div className="w-full flex-shrink-0 md:w-1/3">
-                                                    <MediaPreview media={section.media} />
-                                                </div>
-                                            )}
-                                            <div className="flex-1">
-                                                <div
-                                                    dangerouslySetInnerHTML={{ __html: section.content || '' }}
-                                                    className="prose prose-sm [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500"
-                                                />
-                                            </div>
-                                        </div>
                                         <div className="py-6">{section.json_array && renderSectionContent(section)}</div>
 
                                         {/* Gallery */}
