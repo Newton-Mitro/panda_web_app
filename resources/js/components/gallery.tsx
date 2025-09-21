@@ -2,7 +2,7 @@ import { X } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface GalleryProps {
-    gallery: string[];
+    gallery: string;
 }
 
 const Gallery: React.FC<GalleryProps> = ({ gallery }) => {

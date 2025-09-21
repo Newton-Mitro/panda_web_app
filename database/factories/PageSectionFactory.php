@@ -13,18 +13,17 @@ class PageSectionFactory extends Factory
     public function definition(): array
     {
         $faker = $this->faker;
+
         return [
-            'page_id' => PageFactory::new(), // assign in seeder
+            'page_id' => null, // assign in seeder
             'heading' => $faker->sentence(3),
             'sub_heading' => $faker->sentence(6),
             'button_text' => $faker->optional()->word(),
             'button_link' => $faker->optional()->url(),
             'content' => null,
             'json_array' => null,
-            'gallery' => $faker->boolean(60)
-                ? json_encode([$faker->imageUrl(), $faker->imageUrl()])
-                : null,
-            'media_id' => MediaFactory::new(),
+            'gallery' => null,
+            'media_id' => null,
             'sort_order' => $faker->numberBetween(0, 10),
         ];
     }

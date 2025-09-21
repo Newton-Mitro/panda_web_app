@@ -120,7 +120,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ page }) => {
                                         <div className="py-6">{section.json_array && renderSectionContent(section)}</div>
 
                                         {/* Gallery */}
-                                        {section.gallery && section.gallery.length > 0 && (
+                                        {section?.gallery && section?.gallery.length > 0 && (
                                             <>
                                                 {/* Section Heading */}
                                                 {/* <div className="mb-6 flex flex-col items-center justify-center text-center">

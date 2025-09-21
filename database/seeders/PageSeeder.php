@@ -36,6 +36,7 @@ class PageSeeder extends Seeder
         ];
 
         $allMedia = Media::all();
+        $mediaItems = Media::inRandomOrder()->take(5)->get();
 
         foreach ($pages as $pageTitle) {
             $page = Page::factory()->create([
@@ -56,15 +57,18 @@ class PageSeeder extends Seeder
                     'json_array_with_icon_title_and_subtitle',
                     'json_array_with_title',
                     'json_array_with_question_answer',
-                    'custom_html',
                 ]);
 
-                $content = $this->generateContent($type);
+                $content = $this->generateContent('custom_html');
+                $jsonArray = $this->generateContent($type);
 
                 PageSection::factory()->create([
                     'page_id' => $page->id,
                     'content' => $content,
-                    'json_array' => $type !== 'custom_html' ? $content : null,
+                    'gallery' => $mediaItems->isNotEmpty()
+                        ? json_encode($mediaItems->pluck('url')->toArray())
+                        : null,
+                    'json_array' => $jsonArray,
                     'media_id' => $allMedia->random()->id,
                 ]);
             }

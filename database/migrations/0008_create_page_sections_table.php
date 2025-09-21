@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('button_text')->nullable();
             $table->string('button_link')->nullable();
             $table->longText('content')->nullable();
-            $table->longText('json_array')->nullable();
+            $table->json('json_array')->nullable();
             $table->json('gallery')->nullable();
             $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();
             $table->integer('sort_order')->default(0);

@@ -34,6 +34,8 @@ interface PageForm {
 }
 
 const Edit: React.FC<EditProps> = ({ page, sections, media }) => {
+    console.log('PAGE', page);
+    console.log('SECTIONS', sections);
     const [pageForm, setPageForm] = useState<PageForm>({
         title: page.title || '',
         meta_title: page.meta_title || '',
@@ -61,7 +63,7 @@ const Edit: React.FC<EditProps> = ({ page, sections, media }) => {
                     button_link: s.button_link || '',
                     content: s.content || '',
                     json_array: s.json_array || '',
-                    gallery: Array.isArray(s.gallery) ? s.gallery : [],
+                    gallery: s.gallery || '',
                     media_id: s.media_id || null,
                     sort_order: s.sort_order ?? idx + 1,
                 })),
@@ -111,7 +113,7 @@ const Edit: React.FC<EditProps> = ({ page, sections, media }) => {
                 button_text: '',
                 button_link: '',
                 content: '',
-                gallery: [],
+                gallery: '',
                 media_id: null,
                 media: null,
                 content_type: 'custom_html',
