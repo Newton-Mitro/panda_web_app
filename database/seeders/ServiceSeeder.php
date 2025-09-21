@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Infrastructure\Models\Category;
+use App\Infrastructure\Models\Media;
 use App\Infrastructure\Models\Service;
 use Illuminate\Database\Seeder;
 
@@ -9,6 +11,32 @@ class ServiceSeeder extends Seeder
 {
     public function run(): void
     {
-        Service::factory(count: 9)->create();
+        // Fetch all service categories once
+        $serviceCategoryIds = Category::where('category_of', 'Service')->pluck('id');
+
+        if ($serviceCategoryIds->isEmpty()) {
+            $this->command->warn('⚠️ No Service categories found. Skipping ServiceSeeder.');
+            return;
+        }
+
+        // Fetch all media once
+        $allMedia = Media::all();
+
+        if ($allMedia->isEmpty()) {
+            $this->command->warn('⚠️ No media found. Skipping ServiceSeeder.');
+            return;
+        }
+
+        $serviceCount = 9;
+
+        Service::factory($serviceCount)->create(
+            [
+                'category_id' => $serviceCategoryIds->random(),
+                'media_id' => $allMedia->random()->id,
+                'gallery' => $allMedia->random(rand(1, 5))->pluck('url')->toArray()
+            ]
+        );
+
+        $this->command->info("✅ {$serviceCount} services seeded with random categories, media, and galleries.");
     }
 }

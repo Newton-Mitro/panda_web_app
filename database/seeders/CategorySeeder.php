@@ -11,19 +11,17 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
-        $mediaIds = Media::pluck('id')->toArray();
-
         $categories = [
-            'Product' => [
-                'Electronics',
-                'Clothing',
-                'Books',
-                'Home Appliances',
-                'Sports',
-                'Furniture',
-                'Jewelry',
-                'Beauty',
-            ],
+            // 'Product' => [
+            //     'Electronics',
+            //     'Clothing',
+            //     'Books',
+            //     'Home Appliances',
+            //     'Sports',
+            //     'Furniture',
+            //     'Jewelry',
+            //     'Beauty',
+            // ],
             'Service' => [
                 'Renewable Energy Solutions',
                 'Industrial Solutions & Services',
@@ -38,9 +36,7 @@ class CategorySeeder extends Seeder
                 'Sales',
                 'Customer Support',
             ],
-            'Leader' => [
-                'Directors',
-            ],
+            'Leader' => ['Directors'],
             'Student' => [
                 'Class I',
                 'Class II',
@@ -53,41 +49,21 @@ class CategorySeeder extends Seeder
                 'Class IX',
                 'Class X',
             ],
-            'Article' => [
-                'Tech Insights',
-                'Business Strategy',
-                'Lifestyle',
-            ],
-            'Event' => [
-                'Conferences',
-                'Workshops',
-                'Meetups',
-            ],
-            'Notice' => [
-                'Announcements',
-                'Exams',
-                'General Notices',
-            ],
-            'Project' => [
-                'Open Source',
-                'Client Work',
-                'Internal Tools',
-            ],
+            'Article' => ['Tech Insights', 'Business Strategy', 'Lifestyle'],
+            'Event' => ['Conferences', 'Workshops', 'Meetups'],
+            'Notice' => ['Announcements', 'Exams', 'General Notices'],
+            'Project' => ['Open Source', 'Client Work', 'Internal Tools'],
         ];
 
-        foreach ($categories as $categoryOf => $parentCategories) {
-            foreach ($parentCategories as $parentName) {
-                Category::firstOrCreate(
-                    [
-                        'name' => $parentName,
-                        'category_of' => $categoryOf,
-                    ],
-                    [
-                        'slug' => Str::slug($parentName . '-' . strtolower($categoryOf)),
-                        'description' => $parentName . ' main category',
-                        'media_id' => $mediaIds[array_rand($mediaIds)] ?? null,
-                    ]
-                );
+        foreach ($categories as $categoryOf => $names) {
+            foreach ($names as $name) {
+                Category::factory()->create([
+                    'category_of' => $categoryOf,
+                    'name' => $name,
+                    'slug' => Str::slug($name . '-' . strtolower($categoryOf)),
+                    'description' => "{$name} main category",
+                    'media_id' => Media::inRandomOrder()->first()->id,
+                ]);
             }
         }
     }

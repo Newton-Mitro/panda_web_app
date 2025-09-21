@@ -84,8 +84,8 @@ class CareerFactory extends Factory
             'applications_count' => 0, // starts at 0
 
             // Meta
-            'created_by' => 1, // assume seeded admin user
-            'updated_by' => 1,
+            'created_by' => null,
+            'updated_by' => null,
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Models;
 
+use Database\Factories\CategoryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -50,5 +51,10 @@ class Category extends Model
     public static function types(): array
     {
         return ['Team', 'Leader', 'Student', 'Teacher', 'Doctor', 'Service', 'Product', 'Project', 'Event', 'Notice', 'Article'];
+    }
+
+    protected static function newFactory()
+    {
+        return CategoryFactory::new();
     }
 }

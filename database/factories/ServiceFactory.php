@@ -20,11 +20,11 @@ class ServiceFactory extends Factory
             'title' => $title,
             'slug' => Str::slug($title) . '-' . $this->faker->unique()->numberBetween(100, 999),
             'description' => $this->faker->paragraph(5),
-            'gallery' => Media::inRandomOrder()->take(2)->get()->pluck('url')->toArray(),
-            'media_id' => Media::inRandomOrder()->first()?->id,
+            'gallery' => null,
+            'media_id' => MediaFactory::new(),
 
             // ✅ Only pick categories that belong to "Service"
-            'category_id' => Category::where('category_of', 'Service')->inRandomOrder()->first()?->id,
+            'category_id' => CategoryFactory::new(),
 
             'status' => $this->faker->randomElement(['Active', 'Inactive']),
         ];

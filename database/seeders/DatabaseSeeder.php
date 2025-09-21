@@ -19,13 +19,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SettingSeeder::class,
             MediaSeeder::class,
-            PageSeeder::class,
-            PageSectionSeeder::class,
             CategorySeeder::class,
-            TagSeeder::class,
+            PageSeeder::class,
             ServiceSeeder::class,
             ProjectSeeder::class,
-            ProductSeeder::class,
             TeamSeeder::class,
             LeaderSeeder::class,
             InstructorSeeder::class,
@@ -36,15 +33,11 @@ class DatabaseSeeder extends Seeder
             EventSeeder::class,
             PartnerSeeder::class,
             CareerSeeder::class,
-            JobApplicationSeeder::class,
             ContactSeeder::class,
             ContactMessageSeeder::class,
             GallerySeeder::class,
             HeroSliderSeeder::class,
             ArticleSeeder::class,
-            ArticleTagSeeder::class,
-            CommentSeeder::class,
-            LikeSeeder::class,
         ]);
     }
 }

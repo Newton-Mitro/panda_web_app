@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->longText('json_array')->nullable();
             $table->json('gallery')->nullable();
             $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();
-            $table->enum('content_type', ['json_array', 'custom_html'])->default('custom_html');
             $table->integer('sort_order')->default(0);
             $table->timestamps();
         });

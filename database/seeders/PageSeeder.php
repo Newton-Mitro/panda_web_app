@@ -2,107 +2,127 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
+use App\Infrastructure\Models\Page;
+use App\Infrastructure\Models\PageSection;
+use App\Infrastructure\Models\Media;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
+use Faker\Factory as Faker;
 
 class PageSeeder extends Seeder
 {
+    private $faker;
+
+    public function __construct()
+    {
+        $this->faker = Faker::create();
+    }
+
     public function run(): void
     {
-        $now = Carbon::now();
-
         $pages = [
-            [
-                'title' => 'Home',
-                'children' => [],
-            ],
-            [
-                'title' => 'About Us',
-                'children' => [
-                    'Company Overview',
-                    'Mission & Vision',
-                    'Core Values',
-                ],
-            ],
-            // [
-            //     'title' => 'Programs',
-            //     'children' => [
-            //         'Infant Care',
-            //         'Toddler Care',
-            //         'Preschool',
-            //         'After-school Care',
-            //     ],
-            // ],
-            // [
-            //     'title' => 'Admissions',
-            //     'children' => [
-            //         'How to Enroll',
-            //         'Tuition & Fees',
-            //         'FAQs',
-            //     ],
-            // ],
-            // [
-            //     'title' => 'Parent Resources',
-            //     'children' => [
-            //         'Handbook',
-            //         'Nutrition & Meals',
-            //         'Health & Safety',
-            //         'Communication',
-            //     ],
-            // ],
-            // [
-            //     'title' => 'Facilities',
-            //     'children' => [
-            //         'Virtual Tour',
-            //         'Safety Measures',
-            //     ],
-            // ],
-            [
-                'title' => 'Finance Options',
-                'children' => [
-                    'CAPEX Model',
-                    'OPEX Model',
-                    'Debt Model',
-                ],
-            ],
-            [
-                'title' => 'Disclaimer',
-                'children' => [],
-            ],
-            [
-                'title' => 'Terms of Service',
-                'children' => [],
-            ],
-            [
-                'title' => 'Privacy Policy',
-                'children' => [],
-            ],
+            'Home',
+            'About Us',
+            'Company Overview',
+            'Mission & Vision',
+            'Core Values',
+            'Finance Options',
+            'CAPEX Model',
+            'OPEX Model',
+            'Debt Model',
+            'Disclaimer',
+            'Terms of Service',
+            'Privacy Policy',
         ];
 
-        foreach ($pages as $page) {
-            $parentId = DB::table('pages')->insertGetId([
-                'title' => $page['title'],
-                'slug' => Str::slug($page['title']),
-                'meta_title' => $page['title'],
-                'meta_description' => $page['title'] . ' page description.',
-                'parent_id' => null,
-                'created_at' => $now,
-                'updated_at' => $now,
+        $allMedia = Media::all();
+
+        foreach ($pages as $pageTitle) {
+            $page = Page::factory()->create([
+                'title' => $pageTitle,
+                'slug' => Str::slug($pageTitle),
+                'meta_title' => $pageTitle,
+                'meta_description' => "{$pageTitle} page description.",
+                'meta_keywords' => "{$pageTitle} page keywords.",
+                'media_id' => $allMedia->random()->id,
             ]);
 
-            foreach ($page['children'] as $childTitle) {
-                DB::table('pages')->insert([
-                    'title' => $childTitle,
-                    'slug' => Str::slug($childTitle),
-                    'meta_title' => $childTitle,
-                    'meta_description' => $childTitle . ' page description.',
-                    'parent_id' => $parentId,
-                    'created_at' => $now,
-                    'updated_at' => $now,
+            $sectionCount = rand(2, 4);
+
+            for ($i = 0; $i < $sectionCount; $i++) {
+                $type = $this->faker->randomElement([
+                    'json_array_with_image_title',
+                    'json_array_with_image_title_and_subtitle',
+                    'json_array_with_icon_title_and_subtitle',
+                    'json_array_with_title',
+                    'json_array_with_question_answer',
+                    'custom_html',
+                ]);
+
+                $content = $this->generateContent($type);
+
+                PageSection::factory()->create([
+                    'page_id' => $page->id,
+                    'content' => $content,
+                    'json_array' => $type !== 'custom_html' ? $content : null,
+                    'media_id' => $allMedia->random()->id,
                 ]);
             }
+        }
+    }
+
+    private function generateContent(string $type): ?string
+    {
+        $faker = $this->faker;
+        $allMedia = Media::all();
+
+        switch ($type) {
+            case 'json_array_with_image_title':
+                return json_encode(
+                    collect(range(1, rand(2, 4)))->map(fn() => [
+                        'image' => $allMedia->random()?->url,
+                        'title' => $faker->sentence(6),
+                    ])->filter()->values()
+                );
+
+            case 'json_array_with_image_title_and_subtitle':
+                return json_encode(
+                    collect(range(1, rand(2, 4)))->map(fn() => [
+                        'image' => $allMedia->random()?->url,
+                        'title' => $faker->sentence(6),
+                        'subtitle' => $faker->paragraph(),
+                    ])->filter()->values()
+                );
+
+            case 'json_array_with_icon_title_and_subtitle':
+                return json_encode(
+                    collect(range(1, rand(2, 4)))->map(fn() => [
+                        'icon' => 'fa fa-' . $faker->randomElement(['star', 'check', 'times', 'heart']),
+                        'title' => $faker->sentence(4),
+                        'subtitle' => $faker->paragraph(),
+                    ])->values()
+                );
+
+            case 'json_array_with_title':
+                return json_encode(
+                    collect(range(1, rand(2, 4)))->map(fn() => [
+                        'title' => $faker->sentence(6),
+                    ])->values()
+                );
+
+            case 'json_array_with_question_answer':
+                return json_encode(
+                    collect(range(1, rand(2, 4)))->map(fn() => [
+                        'question' => $faker->sentence(6) . '?',
+                        'answer' => $faker->paragraph(),
+                    ])->values()
+                );
+
+            case 'custom_html':
+                return "<div><h3>{$faker->sentence(3)}</h3><p>{$faker->paragraph(6)}</p></div>";
+
+            default:
+                return null;
         }
     }
 }

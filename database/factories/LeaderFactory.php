@@ -18,7 +18,7 @@ class LeaderFactory extends Factory
             'designation' => $this->faker->jobTitle(),
             'bio' => $this->faker->optional(0.7)->paragraphs(3, true),
             'message' => $this->faker->optional(0.6)->paragraphs(2, true),
-            'media_id' => Media::inRandomOrder()->first()?->id,
+            'media_id' => MediaFactory::new(),
             'facebook_links' => $this->faker->optional(0.5)->url(),
             'twitter_links' => $this->faker->optional(0.5)->url(),
             'linkedin_links' => $this->faker->optional(0.5)->url(),
@@ -26,7 +26,7 @@ class LeaderFactory extends Factory
             'email' => $this->faker->optional(0.8)->safeEmail(),
             'phone' => $this->faker->optional(0.7)->phoneNumber(),
             'address' => $this->faker->optional(0.7)->address(),
-            'category_id' => Category::where('category_of', 'Leader')->inRandomOrder()->first()?->id,
+            'category_id' => CategoryFactory::new(),
             'status' => $this->faker->randomElement(['Active', 'Inactive']),
         ];
     }

@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Infrastructure\Models\Gallery;
 use App\Infrastructure\Models\GalleryMedia;
-use App\Infrastructure\Models\Media;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class GalleryMediaFactory extends Factory
@@ -15,8 +13,8 @@ class GalleryMediaFactory extends Factory
         return [
             'caption' => $this->faker->sentence(5),
             'description' => $this->faker->paragraph(10, true),
-            'media_id' => Media::inRandomOrder()->value('id'),
-            'gallery_id' => Gallery::inRandomOrder()->value('id'),
+            'media_id' => null,
+            'gallery_id' => null,
         ];
     }
 }

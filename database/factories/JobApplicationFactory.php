@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Infrastructure\Models\Career;
 use App\Infrastructure\Models\JobApplication;
-use App\Infrastructure\Models\Media;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class JobApplicationFactory extends Factory
@@ -16,17 +14,18 @@ class JobApplicationFactory extends Factory
         $experienceLevels = ['Junior', 'Mid', 'Senior'];
         $statuses = ['pending', 'reviewed', 'shortlisted', 'interviewing', 'offered', 'hired', 'rejected'];
         $qualifications = ['High School', "Bachelor's", "Master's", 'PhD'];
+
         $availableFrom = $this->faker->optional()->dateTimeBetween('now', '+3 months');
 
         return [
-            'career_id' => Career::inRandomOrder()->first()?->id,
+            'career_id' => null,            // override in seeder
             'full_name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'phone' => $this->faker->phoneNumber(),
             'linkedin_url' => $this->faker->url(),
-            'portfolio_url' => Media::inRandomOrder()->first()?->url,
-            'resume_path' => Media::inRandomOrder()->first()?->file_path,
-            'cover_letter_path' => Media::inRandomOrder()->first()?->file_path,
+            'portfolio_url' => $this->faker->url(),
+            'resume_path' => null,           // override in seeder
+            'cover_letter_path' => null,     // override in seeder
             'why_choose' => $this->faker->paragraph(),
             'highest_qualification' => $this->faker->randomElement($qualifications),
             'experience_level' => $this->faker->randomElement($experienceLevels),

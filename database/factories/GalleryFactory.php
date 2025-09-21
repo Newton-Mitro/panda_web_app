@@ -15,7 +15,7 @@ class GalleryFactory extends Factory
         return [
             'title' => $this->faker->sentence(3),
             'description' => $this->faker->optional()->paragraph(4),
-            'media_id' => Media::inRandomOrder()->first()?->id,
+            'media_id' => null,
         ];
     }
 }

@@ -12,7 +12,11 @@ class GallerySeeder extends Seeder
     public function run(): void
     {
         // Create 5 galleries
-        $galleries = Gallery::factory(5)->create();
+        $galleries = Gallery::factory(5)->create(
+            [
+                'media_id' => Media::inRandomOrder()->first()->id
+            ]
+        );
 
         foreach ($galleries as $gallery) {
             // Attach 3–6 media per gallery

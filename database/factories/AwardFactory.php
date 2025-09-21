@@ -17,7 +17,7 @@ class AwardFactory extends Factory
             'organization' => $this->faker->company(),
             'year' => $this->faker->year(),
             'description' => $this->faker->optional()->paragraph(4),
-            'media_id' => Media::inRandomOrder()->first()?->id,
+            'media_id' => MediaFactory::new(),
         ];
     }
 }

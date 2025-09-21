@@ -18,7 +18,7 @@ class StudentFactory extends Factory
         $religions = ['ISLAM', 'HINDUISM', 'CHRISTIANITY', 'BUDDHISM', 'OTHER'];
 
         return [
-            'media_id' => Media::inRandomOrder()->first()?->id,
+            'media_id' => MediaFactory::new(),
             'student_id' => strtoupper(Str::random(10)),
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
@@ -30,8 +30,7 @@ class StudentFactory extends Factory
             'guardian_name' => $this->faker->name(),
             'guardian_phone' => $this->faker->phoneNumber(),
             'roll_number' => strtoupper(Str::random(6)),
-            'category_id' => Category::where('category_of', 'Student')->inRandomOrder()->first()?->id
-                ?? null,
+            'category_id' => CategoryFactory::new(),
             'birth_registration_no' => $this->faker->numerify('##########'),
             'national_id_no' => $this->faker->numerify('##########'),
             'address' => $this->faker->address(),

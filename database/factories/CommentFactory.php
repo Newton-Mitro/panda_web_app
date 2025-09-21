@@ -3,8 +3,6 @@
 namespace Database\Factories;
 
 use App\Infrastructure\Models\Comment;
-use App\Infrastructure\Models\Article;
-use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CommentFactory extends Factory
@@ -16,8 +14,8 @@ class CommentFactory extends Factory
         $isUserComment = $this->faker->boolean(70); // 70% chance comment is from a user
 
         return [
-            'article_id' => Article::inRandomOrder()->first()?->id ?? Article::factory(),
-            'user_id' => $isUserComment ? User::inRandomOrder()->first()?->id : null,
+            'article_id' => ArticleFactory::new(),
+            'user_id' => UserFactory::new(),
             'author_name' => $isUserComment ? null : $this->faker->name(),
             'author_email' => $isUserComment ? null : $this->faker->safeEmail(),
             'content' => $this->faker->paragraphs(2, true),

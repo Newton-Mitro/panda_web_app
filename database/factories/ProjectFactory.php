@@ -25,11 +25,10 @@ class ProjectFactory extends Factory
             'live_site_link' => $this->faker->url(),
             'start_date' => $this->faker->dateTimeBetween('-2 years', '-6 months')->format('Y-m-d'),
             'end_date' => optional($this->faker->optional()->dateTimeBetween('-6 months', 'now'))->format('Y-m-d'),
-            'gallery' => Media::inRandomOrder()->take(2)->get()->pluck('url')->toArray(),
-            'category_id' => Category::where('category_of', 'Project')->inRandomOrder()->first()?->id
-                ?? Category::factory()->create(['category_of' => 'Project'])->id,
+            'gallery' => null,
+            'category_id' => CategoryFactory::new(),
 
-            'media_id' => Media::inRandomOrder()->first()?->id,
+            'media_id' => MediaFactory::new(),
             'status' => $this->faker->randomElement(['Active', 'Inactive']),
         ];
     }

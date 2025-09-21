@@ -38,12 +38,12 @@ class MediaSeeder extends Seeder
             $mimeType = mime_content_type($file);
 
             // Create DB record
-            Media::create([
+            Media::factory()->create([
                 'file_name' => $fileName,
                 'file_path' => $path,
                 'file_type' => $mimeType,
                 'alt_text' => pathinfo($file, PATHINFO_FILENAME),
-                'uploaded_by' => User::inRandomOrder()->first()?->id,
+                'uploaded_by' => User::inRandomOrder()->first()->id,
             ]);
         }
     }

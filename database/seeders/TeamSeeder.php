@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Infrastructure\Models\Category;
+use App\Infrastructure\Models\Media;
 use App\Infrastructure\Models\Team;
 use Illuminate\Database\Seeder;
 
@@ -9,6 +11,31 @@ class TeamSeeder extends Seeder
 {
     public function run(): void
     {
-        Team::factory(8)->create();
+        // Fetch all team categories once
+        $teamCategoryIds = Category::where('category_of', 'Team')->pluck('id');
+
+        if ($teamCategoryIds->isEmpty()) {
+            $this->command->warn('⚠️ No Team categories found. Skipping TeamSeeder.');
+            return;
+        }
+
+        // Fetch all media once
+        $allMedia = Media::all();
+
+        if ($allMedia->isEmpty()) {
+            $this->command->warn('⚠️ No media found. Skipping TeamSeeder.');
+            return;
+        }
+
+        $teamCount = 8;
+
+        Team::factory($teamCount)->create(
+            [
+                'category_id' => $teamCategoryIds->random(),
+                'media_id' => $allMedia->random()->id
+            ]
+        );
+
+        $this->command->info("✅ {$teamCount} team members seeded with random categories and media.");
     }
 }

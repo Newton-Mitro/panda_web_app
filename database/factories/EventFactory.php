@@ -26,8 +26,8 @@ class EventFactory extends Factory
             'location' => $this->faker->city(),
             'start_date' => $startDate->format('Y-m-d'),
             'end_date' => $endDate?->format('Y-m-d'),
-            'media_id' => Media::inRandomOrder()->first()?->id,
-            'category_id' => Category::where('category_of', 'Event')->inRandomOrder()->first()?->id,
+            'media_id' => MediaFactory::new(),
+            'category_id' => CategoryFactory::new(),
             'status' => $this->faker->randomElement(['Active', 'Inactive']),
         ];
     }

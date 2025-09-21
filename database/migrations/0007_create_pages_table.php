@@ -13,7 +13,9 @@ return new class extends Migration {
             $table->string('slug')->unique();
             $table->string('meta_title')->nullable();
             $table->text('meta_description')->nullable();
-            $table->foreignId('parent_id')->nullable()->constrained('pages')->cascadeOnDelete();
+            $table->text('meta_keywords')->nullable();
+            $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();
+            $table->foreignId('parent_id')->nullable()->constrained('pages')->nullOnDelete();
             $table->timestamps();
         });
     }
