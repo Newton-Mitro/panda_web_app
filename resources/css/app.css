@@ -1,6 +1,6 @@
 @import 'tailwindcss';
-
-@plugin 'tailwindcss-animate';
+@plugin "@tailwindcss/typography";
+@plugin "tailwindcss-animate";
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -107,9 +107,9 @@
 
 .dark {
     /* Backgrounds & surfaces */
-    --background: oklch(0.15 0.02 220);
+    --background: oklch(18.896% 0.02748 226.601);
     --foreground: oklch(0.97 0.02 270);
-    --card: oklch(0.18 0.01 230);
+    --card: oklch(22.821% 0.01853 235.04);
     --card-foreground: var(--foreground);
     --popover: var(--card);
     --popover-foreground: var(--foreground);
@@ -176,6 +176,31 @@
 
     body {
         @apply bg-background text-foreground;
+    }
+
+    .ck-content h1,
+    .ck-content h2,
+    .ck-content h3,
+    .ck-content h4,
+    .ck-content h5,
+    .ck-content h6 {
+        color: var(--color-foreground);
+        font-weight: 600;
+    }
+
+    .ck-content p {
+        color: var(--color-muted-foreground);
+    }
+
+    strong {
+        color: var(--color-muted-foreground) !important;
+    }
+
+    .ck-content ul,
+    .ck-content ol {
+        color: var(--color-muted-foreground);
+        list-style: disc;
+        padding-left: 1.5rem;
     }
 
     .ck-sticky-panel__content {

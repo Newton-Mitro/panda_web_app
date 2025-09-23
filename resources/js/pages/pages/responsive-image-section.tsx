@@ -35,7 +35,7 @@ const ResponsiveImageSection: React.FC<ResponsiveImageSectionProps> = ({ mediaUr
 
         const sharedProps = {
             style: { clipPath, shapeOutside: clipPath },
-            className: `h-72 object-cover transition-transform duration-300 md:h-96 md:w-96 mt-6 mb-6 hover:scale-105 ${marginClass}`,
+            className: `h-82 w-82 object-cover transition-transform duration-300 md:h-[500px] md:w-[500px] mt-6 mb-6 hover:scale-110 ${marginClass}`,
         };
 
         if (mimeType.startsWith('image/')) {
@@ -52,11 +52,11 @@ const ResponsiveImageSection: React.FC<ResponsiveImageSectionProps> = ({ mediaUr
 
     return (
         <div className="clear-both mb-10">
-            <div className="flex flex-col items-center justify-center gap-8 md:flex-row">
+            <div className="flex flex-col items-center gap-16 md:flex-row">
                 {renderMedia()}
                 <div
                     dangerouslySetInnerHTML={{ __html: contentHtml }}
-                    className="prose prose-sm [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500"
+                    className="prose prose-sm max-w-none text-muted-foreground [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500"
                 />
             </div>
         </div>

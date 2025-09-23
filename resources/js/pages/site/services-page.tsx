@@ -16,7 +16,7 @@ const ServicePage: React.FC<ServicePageProps> = ({ services }) => {
             <Head title="Services" />
             <PageLayout>
                 {/* Hero Section */}
-                <section className="mt-16 bg-gradient-to-r from-primary to-purple-600 py-20 text-white">
+                <section className="mt-16 bg-secondary py-20 text-secondary-foreground">
                     <div className="mx-auto max-w-4xl px-4 text-center">
                         <h1 className="mb-4 text-4xl font-bold md:text-5xl">Services</h1>
                         <p className="text-lg opacity-90 md:text-xl">
@@ -48,13 +48,19 @@ const ServicePage: React.FC<ServicePageProps> = ({ services }) => {
                                                 // border-4 for thickness, border-blue-500 for color, adjust as needed
                                             />
                                             <div className="flex min-h-62 w-full flex-col justify-center rounded-2xl border-1 border-border bg-card p-6 md:ml-80 md:pl-20">
-                                                <p>{service.description}</p>
+                                                <div
+                                                    dangerouslySetInnerHTML={{ __html: service.description ?? '' }}
+                                                    className="prose prose-sm text-muted-foreground [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500"
+                                                />
                                             </div>
                                         </div>
                                     ) : (
                                         <div className="group clear-both flex w-full flex-col items-center group-hover:cursor-pointer md:relative md:flex-row">
                                             <div className="flex min-h-62 w-full flex-col justify-center rounded-2xl border-1 border-border bg-card p-6 md:mr-80 md:pr-20">
-                                                <p>{service.description}</p>
+                                                <div
+                                                    dangerouslySetInnerHTML={{ __html: service.description ?? '' }}
+                                                    className="prose prose-sm text-muted-foreground [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500"
+                                                />
                                             </div>
                                             <img
                                                 src={service.media.url}
