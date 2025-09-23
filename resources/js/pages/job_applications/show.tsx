@@ -19,14 +19,14 @@ const Show: React.FC<ShowProps> = ({ application }) => {
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
-        { title: 'Job Applications', href: route('job_applications.index') },
+        { title: 'Job Applications', href: route('job-applications.index') },
         { title: application.full_name, href: '' },
     ];
 
     const updateApplication = () => {
         setUpdating(true);
         router.put(
-            route('job_applications.update_status', application.id),
+            route('job-applications.update_status', application.id),
             { status, notes },
             {
                 onSuccess: () => setUpdating(false),
