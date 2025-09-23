@@ -28,13 +28,14 @@ class StudentSeeder extends Seeder
         }
 
         $studentCount = 29;
-
-        Student::factory($studentCount)->create(
-            [
-                'category_id' => $studentCategoryIds->random(),
-                'media_id' => $allMedia->random()->id
-            ]
-        );
+        for ($i = 0; $i < $studentCount; $i++) {
+            Student::factory()->create(
+                [
+                    'category_id' => $studentCategoryIds->random(),
+                    'media_id' => $allMedia->random()->id
+                ]
+            );
+        }
 
         $this->command->info("✅ {$studentCount} students seeded with random categories and media.");
     }

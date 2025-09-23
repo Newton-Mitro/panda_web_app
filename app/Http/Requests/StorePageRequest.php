@@ -21,7 +21,7 @@ class StorePageRequest extends FormRequest
             'sections.*.button_text' => 'nullable|string|max:255',
             'sections.*.button_link' => 'nullable|string|max:255',
             'sections.*.content' => 'nullable|string',
-            'sections.*.gallery' => 'nullable|array',
+            'sections.*.gallery' => 'nullable|string',
             'sections.*.media_id' => 'nullable|exists:media,id',
             'sections.*.content_type' => 'in:json_array,custom_html',
             'sections.*.sort_order' => 'integer',

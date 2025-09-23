@@ -28,13 +28,14 @@ class EventSeeder extends Seeder
         }
 
         $eventCount = 9;
-
-        Event::factory($eventCount)->create(
-            [
-                'category_id' => $eventCategoryIds->random(),
-                'media_id' => $allMedia->random()->id
-            ]
-        );
+        for ($i = 0; $i < $eventCount; $i++) {
+            Event::factory()->create(
+                [
+                    'category_id' => $eventCategoryIds->random(),
+                    'media_id' => $allMedia->random()->id
+                ]
+            );
+        }
 
         $this->command->info("✅ {$eventCount} events seeded with random categories and media.");
     }

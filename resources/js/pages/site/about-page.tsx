@@ -102,7 +102,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ page }) => {
                             {page.sections
                                 .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
                                 .map((section, index) => (
-                                    <div key={section.id} className="mb-30 w-full space-y-10 lg:w-6xl">
+                                    <div key={section.id || index} className="mb-30 w-full space-y-10 lg:w-6xl">
                                         {/* Section Heading */}
                                         <div className="mb-6 flex flex-col items-start justify-center text-center">
                                             {section.heading && <h2 className="mb-1 text-3xl font-semibold">{section.heading}</h2>}
@@ -127,7 +127,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ page }) => {
                                                 <h2 className="mb-1 text-2xl font-semibold">Gallery</h2>
                                                 <h3 className="mb-2 text-sm text-gray-500">Browse the gallery</h3>
                                             </div> */}
-                                                <Gallery gallery={section.gallery} />
+                                                <Gallery gallery={JSON.parse(section.gallery)} />
                                             </>
                                         )}
 

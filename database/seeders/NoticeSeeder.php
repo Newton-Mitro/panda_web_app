@@ -28,13 +28,14 @@ class NoticeSeeder extends Seeder
         }
 
         $noticeCount = 9;
-
-        Notice::factory($noticeCount)->create(
-            [
-                'category_id' => $noticeCategoryIds->random(),
-                'media_id' => $allMedia->random()->id
-            ]
-        );
+        for ($i = 0; $i < $noticeCount; $i++) {
+            Notice::factory()->create(
+                [
+                    'category_id' => $noticeCategoryIds->random(),
+                    'media_id' => $allMedia->random()->id
+                ]
+            );
+        }
 
         $this->command->info("✅ {$noticeCount} notices seeded with random categories and media.");
     }

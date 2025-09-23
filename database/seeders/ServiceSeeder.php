@@ -29,13 +29,14 @@ class ServiceSeeder extends Seeder
 
         $serviceCount = 9;
 
-        Service::factory($serviceCount)->create(
-            [
+        for ($i = 0; $i < $serviceCount; $i++) {
+            Service::factory()->create([
                 'category_id' => $serviceCategoryIds->random(),
                 'media_id' => $allMedia->random()->id,
                 'gallery' => $allMedia->random(rand(1, 5))->pluck('url')->toArray()
-            ]
-        );
+            ]);
+        }
+
 
         $this->command->info("✅ {$serviceCount} services seeded with random categories, media, and galleries.");
     }

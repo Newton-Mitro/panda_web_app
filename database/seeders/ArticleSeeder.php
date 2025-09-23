@@ -35,12 +35,13 @@ class ArticleSeeder extends Seeder
         }
 
         $articleCount = 9;
-
-        Article::factory($articleCount)->create([
-            'category_id' => $articleCategoryIds->random(),
-            'media_id' => $allMedia->random()->id,
-            'user_id' => $allUsers->random()->id,
-        ]);
+        for ($i = 0; $i < $articleCount; $i++) {
+            Article::factory()->create([
+                'category_id' => $articleCategoryIds->random(),
+                'media_id' => $allMedia->random()->id,
+                'user_id' => $allUsers->random()->id,
+            ]);
+        }
 
         $this->command->info("✅ {$articleCount} articles seeded with random categories, media, and users.");
     }

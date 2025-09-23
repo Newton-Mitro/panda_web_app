@@ -32,12 +32,13 @@ class CareerSeeder extends Seeder
         ])->each(function ($career) use ($allUsers, $allMedia) {
 
             $applicationsCount = rand(3, 7);
-
-            JobApplication::factory($applicationsCount)->create([
-                'career_id' => $career->id,
-                'resume_path' => $allMedia->random()->file_path,
-                'cover_letter_path' => $allMedia->random()->file_path,
-            ]);
+            for ($i = 0; $i < $applicationsCount; $i++) {
+                JobApplication::factory()->create([
+                    'career_id' => $career->id,
+                    'resume_path' => $allMedia->random()->file_path,
+                    'cover_letter_path' => $allMedia->random()->file_path,
+                ]);
+            }
         });
 
         $this->command->info("✅ Careers and associated Job Applications seeded.");

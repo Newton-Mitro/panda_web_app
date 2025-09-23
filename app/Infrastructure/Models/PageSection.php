@@ -17,6 +17,7 @@ class PageSection extends Model
         'button_text',
         'button_link',
         'content',
+        'json_array',
         'gallery',
         'media_id',
         'content_type',
@@ -24,7 +25,7 @@ class PageSection extends Model
     ];
 
     protected $casts = [
-        // 'content' => 'array',
+        'json_array' => 'array',
         'gallery' => 'array',
     ];
 

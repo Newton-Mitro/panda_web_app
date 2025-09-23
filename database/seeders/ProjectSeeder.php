@@ -29,13 +29,13 @@ class ProjectSeeder extends Seeder
 
         $projectCount = 9;
 
-        Project::factory($projectCount)->create(
-            [
+        for ($i = 0; $i < $projectCount; $i++) {
+            Project::factory()->create([
                 'category_id' => $projectCategoryIds->random(),
                 'media_id' => $allMedia->random()->id,
                 'gallery' => $allMedia->random(rand(1, 5))->pluck('url')->toArray()
-            ]
-        );
+            ]);
+        }
 
         $this->command->info("✅ {$projectCount} projects seeded with random categories, media, and galleries.");
     }

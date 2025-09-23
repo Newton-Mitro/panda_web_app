@@ -35,7 +35,7 @@ const ResponsiveImageSection: React.FC<ResponsiveImageSectionProps> = ({ mediaUr
 
         const sharedProps = {
             style: { clipPath, shapeOutside: clipPath },
-            className: `h-82 w-82 object-cover transition-transform duration-300 md:h-[500px] md:w-[500px] mt-6 mb-6 hover:scale-110 ${marginClass}`,
+            className: `h-82 bg-card w-82 object-cover transition-transform duration-300 md:h-[500px] md:w-[500px] mt-6 mb-6 hover:scale-110 ${marginClass}`,
         };
 
         if (mimeType.startsWith('image/')) {

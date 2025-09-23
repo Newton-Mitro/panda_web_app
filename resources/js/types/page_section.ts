@@ -9,7 +9,7 @@ export interface PageSection {
     button_link?: string | null;
     json_array?: string | null;
     content?: string | null;
-    gallery?: string | null; // JSON array of image URLs or IDs
+    gallery?: string | null;
     media_id?: number | null; // selected media
     media?: Media | null; // relation
     sort_order?: number;

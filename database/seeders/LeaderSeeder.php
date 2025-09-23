@@ -28,13 +28,14 @@ class LeaderSeeder extends Seeder
         }
 
         $leaderCount = 9;
-
-        Leader::factory($leaderCount)->create(
-            [
-                'category_id' => $leaderCategoryIds->random(),
-                'media_id' => $allMedia->random()->id
-            ]
-        );
+        for ($i = 0; $i < $leaderCount; $i++) {
+            Leader::factory()->create(
+                [
+                    'category_id' => $leaderCategoryIds->random(),
+                    'media_id' => $allMedia->random()->id
+                ]
+            );
+        }
 
         $this->command->info("✅ {$leaderCount} leaders seeded with random categories and media.");
     }

@@ -36,7 +36,6 @@ class PageSeeder extends Seeder
         ];
 
         $allMedia = Media::all();
-        $mediaItems = Media::inRandomOrder()->take(5)->get();
 
         foreach ($pages as $pageTitle) {
             $page = Page::factory()->create([
@@ -51,6 +50,7 @@ class PageSeeder extends Seeder
             $sectionCount = rand(2, 4);
 
             for ($i = 0; $i < $sectionCount; $i++) {
+                // Pick a random section type
                 $type = $this->faker->randomElement([
                     'json_array_with_image_title',
                     'json_array_with_image_title_and_subtitle',
@@ -59,74 +59,71 @@ class PageSeeder extends Seeder
                     'json_array_with_question_answer',
                 ]);
 
-                $content = $this->generateContent('custom_html');
-                $jsonArray = $this->generateContent($type);
+                // Generate gallery items (random 5 media)
+                $allMedia = Media::all(); // Eloquent models
+                $mediaItems = $allMedia->shuffle()->take(5)->map(fn($media) => $media->url)->toArray();
 
                 PageSection::factory()->create([
                     'page_id' => $page->id,
-                    'content' => $content,
-                    'gallery' => $mediaItems->isNotEmpty()
-                        ? json_encode($mediaItems->pluck('url')->toArray())
-                        : null,
-                    'json_array' => $jsonArray,
+                    'heading' => $this->faker->sentence(),
+                    'sub_heading' => $this->faker->sentence(),
+                    'button_text' => 'Click me',
+                    'button_link' => 'https://example.com',
+                    'content' => $this->generateContent(),                       // HTML content
+                    'json_array' => json_encode($this->generateJsonArray($type)), // JSON string
+                    'gallery' => json_encode($mediaItems),                       // JSON string
                     'media_id' => $allMedia->random()->id,
+                    'sort_order' => rand(1, 100),
                 ]);
             }
         }
     }
 
-    private function generateContent(string $type): ?string
+    private function generateContent(): string
+    {
+        $faker = $this->faker;
+        return "<div><h3>{$faker->sentence(3)}</h3><p>{$faker->paragraph(6)}</p></div>";
+    }
+
+    private function generateJsonArray(string $type): array
     {
         $faker = $this->faker;
         $allMedia = Media::all();
 
         switch ($type) {
             case 'json_array_with_image_title':
-                return json_encode(
-                    collect(range(1, rand(2, 4)))->map(fn() => [
-                        'image' => $allMedia->random()?->url,
-                        'title' => $faker->sentence(6),
-                    ])->filter()->values()
-                );
+                return collect(range(1, rand(2, 4)))->map(fn() => [
+                    'image' => $allMedia->random()?->url,
+                    'title' => $faker->sentence(6),
+                ])->values()->toArray();
 
             case 'json_array_with_image_title_and_subtitle':
-                return json_encode(
-                    collect(range(1, rand(2, 4)))->map(fn() => [
-                        'image' => $allMedia->random()?->url,
-                        'title' => $faker->sentence(6),
-                        'subtitle' => $faker->paragraph(),
-                    ])->filter()->values()
-                );
+                return collect(range(1, rand(2, 4)))->map(fn() => [
+                    'image' => $allMedia->random()?->url,
+                    'title' => $faker->sentence(6),
+                    'subtitle' => $faker->paragraph(),
+                ])->values()->toArray();
 
             case 'json_array_with_icon_title_and_subtitle':
-                return json_encode(
-                    collect(range(1, rand(2, 4)))->map(fn() => [
-                        'icon' => 'fa fa-' . $faker->randomElement(['star', 'check', 'times', 'heart']),
-                        'title' => $faker->sentence(4),
-                        'subtitle' => $faker->paragraph(),
-                    ])->values()
-                );
+                return collect(range(1, rand(2, 4)))->map(fn() => [
+                    'icon' => 'fa fa-' . $faker->randomElement(['star', 'check', 'times', 'heart']),
+                    'title' => $faker->sentence(4),
+                    'subtitle' => $faker->paragraph(),
+                ])->values()->toArray();
 
             case 'json_array_with_title':
-                return json_encode(
-                    collect(range(1, rand(2, 4)))->map(fn() => [
-                        'title' => $faker->sentence(6),
-                    ])->values()
-                );
+                return collect(range(1, rand(2, 4)))->map(fn() => [
+                    'title' => $faker->sentence(6),
+                ])->values()->toArray();
 
             case 'json_array_with_question_answer':
-                return json_encode(
-                    collect(range(1, rand(2, 4)))->map(fn() => [
-                        'question' => $faker->sentence(6) . '?',
-                        'answer' => $faker->paragraph(),
-                    ])->values()
-                );
-
-            case 'custom_html':
-                return "<div><h3>{$faker->sentence(3)}</h3><p>{$faker->paragraph(6)}</p></div>";
+                return collect(range(1, rand(2, 4)))->map(fn() => [
+                    'question' => $faker->sentence(6) . '?',
+                    'answer' => $faker->paragraph(),
+                ])->values()->toArray();
 
             default:
-                return null;
+                return [];
         }
     }
 }

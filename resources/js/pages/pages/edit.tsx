@@ -77,6 +77,8 @@ const Edit: React.FC<EditProps> = ({ page, sections, media }) => {
                 onError: (err) => {
                     const newErrors: any = {};
 
+                    console.log(err);
+
                     // Page-level errors
                     if (err.title) newErrors.title = err.title;
                     if (err.meta_title) newErrors.meta_title = err.meta_title;
@@ -327,17 +329,11 @@ const Edit: React.FC<EditProps> = ({ page, sections, media }) => {
                                 </div>
 
                                 <div className="flex flex-col gap-2">
-                                    <Label>Gallery URLs (comma separated)</Label>
+                                    <Label>Gallery URLs</Label>
                                     <Input
                                         type="text"
-                                        value={Array.isArray(section.gallery) ? section.gallery.join(',') : ''}
-                                        onChange={(e) =>
-                                            updateSectionField(
-                                                index,
-                                                'gallery',
-                                                e.target.value.split(',').map((g) => g.trim()),
-                                            )
-                                        }
+                                        value={section.gallery || ''}
+                                        onChange={(e) => updateSectionField(index, 'gallery', e.target.value)}
                                     />
                                     <InputError message={errors.sections?.[index]?.gallery} />
                                 </div>

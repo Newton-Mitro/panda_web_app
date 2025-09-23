@@ -28,13 +28,14 @@ class TeamSeeder extends Seeder
         }
 
         $teamCount = 8;
-
-        Team::factory($teamCount)->create(
-            [
-                'category_id' => $teamCategoryIds->random(),
-                'media_id' => $allMedia->random()->id
-            ]
-        );
+        for ($i = 0; $i < $teamCount; $i++) {
+            Team::factory()->create(
+                [
+                    'category_id' => $teamCategoryIds->random(),
+                    'media_id' => $allMedia->random()->id
+                ]
+            );
+        }
 
         $this->command->info("✅ {$teamCount} team members seeded with random categories and media.");
     }
