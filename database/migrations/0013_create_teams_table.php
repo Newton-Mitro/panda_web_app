@@ -26,6 +26,7 @@ return new class extends Migration {
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
+            $table->integer('sort_order')->default(0);
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });

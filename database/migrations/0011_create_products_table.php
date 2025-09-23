@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->json('gallery')->nullable();
             $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
+            $table->integer('sort_order')->default(0);
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });

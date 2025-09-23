@@ -25,6 +25,7 @@ return new class extends Migration {
             $table->string('national_id_no', 20)->nullable();
             $table->enum('religion', ['ISLAM', 'HINDUISM', 'CHRISTIANITY', 'BUDDHISM', 'OTHER'])->nullable();
             $table->text('address')->nullable();
+            $table->integer('sort_order')->default(0);
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });

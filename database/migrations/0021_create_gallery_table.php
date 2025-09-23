@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->string('title');
             $table->longText('description')->nullable();
+            $table->integer('sort_order')->default(0);
             $table->foreignId('media_id')->constrained('media')->cascadeOnDelete();
             $table->timestamps();
         });

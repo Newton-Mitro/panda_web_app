@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->longText('message');
             $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();
             $table->tinyInteger('rating')->nullable();
+            $table->integer('sort_order')->default(0);
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });

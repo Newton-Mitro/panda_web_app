@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('name');
             $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();
             $table->string('website')->nullable();
+            $table->integer('sort_order')->default(0);
             $table->timestamps();
         });
     }

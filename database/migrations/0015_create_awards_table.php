@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->year('year')->nullable();
             $table->longText('description')->nullable();
             $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();
+            $table->integer('sort_order')->default(0);
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });

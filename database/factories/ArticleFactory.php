@@ -21,7 +21,7 @@ class ArticleFactory extends Factory
             'content' => $this->faker->paragraphs(5, true),
             'media_id' => null,
             'category_id' => null,
-            'status' => $this->faker->randomElement(['draft', 'published', 'archived']),
+            'status' => $this->faker->randomElement(['Draft', 'Published', 'Archived']),
             'published_at' => $this->faker->optional()->dateTimeBetween('-1 year', 'now'),
         ];
     }
