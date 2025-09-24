@@ -20,9 +20,11 @@ class EventSeeder extends Seeder
         }
 
         // Fetch all media once
-        $allMedia = Media::all();
+        $allImages = Media::where(function ($query) {
+            $query->where('file_path', 'like', '%images%');
+        })->get();
 
-        if ($allMedia->isEmpty()) {
+        if ($allImages->isEmpty()) {
             $this->command->warn('⚠️ No media found. Skipping EventSeeder.');
             return;
         }
@@ -32,7 +34,7 @@ class EventSeeder extends Seeder
             Event::factory()->create(
                 [
                     'category_id' => $eventCategoryIds->random(),
-                    'media_id' => $allMedia->random()->id
+                    'media_id' => $allImages->random()->id
                 ]
             );
         }

@@ -20,9 +20,11 @@ class ServiceSeeder extends Seeder
         }
 
         // Fetch all media once
-        $allMedia = Media::all();
+        $allImages = Media::where(function ($query) {
+            $query->where('file_path', 'like', '%images%');
+        })->get();
 
-        if ($allMedia->isEmpty()) {
+        if ($allImages->isEmpty()) {
             $this->command->warn('⚠️ No media found. Skipping ServiceSeeder.');
             return;
         }
@@ -32,8 +34,8 @@ class ServiceSeeder extends Seeder
         for ($i = 0; $i < $serviceCount; $i++) {
             Service::factory()->create([
                 'category_id' => $serviceCategoryIds->random(),
-                'media_id' => $allMedia->random()->id,
-                'gallery' => $allMedia->random(rand(1, 5))->pluck('url')->toArray()
+                'media_id' => $allImages->random()->id,
+                'gallery' => $allImages->random(rand(1, 5))->pluck('url')->toArray()
             ]);
         }
 

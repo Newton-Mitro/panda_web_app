@@ -20,9 +20,11 @@ class ProjectSeeder extends Seeder
         }
 
         // Fetch all media once
-        $allMedia = Media::all();
+        $allImages = Media::where(function ($query) {
+            $query->where('file_path', 'like', '%images%');
+        })->get();
 
-        if ($allMedia->isEmpty()) {
+        if ($allImages->isEmpty()) {
             $this->command->warn('⚠️ No media found. Skipping ProjectSeeder.');
             return;
         }
@@ -32,8 +34,8 @@ class ProjectSeeder extends Seeder
         for ($i = 0; $i < $projectCount; $i++) {
             Project::factory()->create([
                 'category_id' => $projectCategoryIds->random(),
-                'media_id' => $allMedia->random()->id,
-                'gallery' => $allMedia->random(rand(1, 5))->pluck('url')->toArray()
+                'media_id' => $allImages->random()->id,
+                'gallery' => $allImages->random(rand(1, 5))->pluck('url')->toArray()
             ]);
         }
 

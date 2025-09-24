@@ -9,18 +9,18 @@ use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class MediaSeeder extends Seeder
+class DocumentMediaSeeder extends Seeder
 {
     public function run(): void
     {
         $disk = Storage::disk('public');
 
         // Clean old uploads
-        if ($disk->exists('uploads')) {
-            $disk->deleteDirectory('uploads');
+        if ($disk->exists('uploads/documents')) {
+            $disk->deleteDirectory('uploads/documents');
         }
 
-        $sourceFolder = database_path('seeders/media');
+        $sourceFolder = database_path('seeders/media/documents');
         $files = glob($sourceFolder . '/*.*');
 
         if (empty($files)) {
@@ -32,7 +32,7 @@ class MediaSeeder extends Seeder
             $fileName = ($index + 1) . '.' . $extension; // 1.jpg, 2.png, etc.
 
             // Copy file into storage/app/public/uploads
-            $path = $disk->putFileAs('uploads', new File($file), $fileName);
+            $path = $disk->putFileAs('uploads/documents', new File($file), $fileName);
 
             // Detect MIME type
             $mimeType = mime_content_type($file);

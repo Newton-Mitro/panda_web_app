@@ -20,10 +20,10 @@ export default function Show({ media }: ShowProps) {
         const [mainType, subType] = media.file_type.split('/');
 
         if (mainType === 'image') {
-            return <img src={media.url} alt={media.alt_text || 'Preview'} className="w-full rounded" />;
+            return <img src={media.url} alt={media.alt_text || 'Preview'} className="h-96 rounded" />;
         } else if (mainType === 'video') {
             return (
-                <video controls className="w-full rounded">
+                <video controls className="h-96 rounded">
                     <source src={media.url} type={media.file_type} />
                     Your browser does not support the video tag.
                 </video>
@@ -62,7 +62,7 @@ export default function Show({ media }: ShowProps) {
 
                 <div className="space-y-6">
                     {/* Preview */}
-                    <div>
+                    <div className="">
                         <p className="mb-1 text-sm font-medium text-muted-foreground">Preview</p>
                         {renderMediaPreview()}
                     </div>

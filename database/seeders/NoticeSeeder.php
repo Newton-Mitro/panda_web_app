@@ -20,9 +20,11 @@ class NoticeSeeder extends Seeder
         }
 
         // Fetch all media once
-        $allMedia = Media::all();
+        $allImages = Media::where(function ($query) {
+            $query->where('file_path', 'like', '%images%');
+        })->get();
 
-        if ($allMedia->isEmpty()) {
+        if ($allImages->isEmpty()) {
             $this->command->warn('⚠️ No media found. Skipping NoticeSeeder.');
             return;
         }
@@ -32,7 +34,7 @@ class NoticeSeeder extends Seeder
             Notice::factory()->create(
                 [
                     'category_id' => $noticeCategoryIds->random(),
-                    'media_id' => $allMedia->random()->id
+                    'media_id' => $allImages->random()->id
                 ]
             );
         }

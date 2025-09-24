@@ -26,7 +26,7 @@ export default function Show({ category }: ShowProps) {
                     {category.media && (
                         <div>
                             <p className="mb-1 text-sm font-medium text-muted-foreground">Image</p>
-                            <img src={category.media.url} alt={category.media.file_name} className="w-4xl rounded" />
+                            <img src={category.media.url} alt={category.media.file_name} className="h-96 rounded" />
                         </div>
                     )}
 

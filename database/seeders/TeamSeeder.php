@@ -20,9 +20,11 @@ class TeamSeeder extends Seeder
         }
 
         // Fetch all media once
-        $allMedia = Media::all();
+        $allImages = Media::where(function ($query) {
+            $query->where('file_path', 'like', '%images%');
+        })->get();
 
-        if ($allMedia->isEmpty()) {
+        if ($allImages->isEmpty()) {
             $this->command->warn('⚠️ No media found. Skipping TeamSeeder.');
             return;
         }
@@ -32,7 +34,7 @@ class TeamSeeder extends Seeder
             Team::factory()->create(
                 [
                     'category_id' => $teamCategoryIds->random(),
-                    'media_id' => $allMedia->random()->id
+                    'media_id' => $allImages->random()->id
                 ]
             );
         }

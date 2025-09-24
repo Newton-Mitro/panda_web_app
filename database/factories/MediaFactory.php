@@ -3,41 +3,26 @@
 namespace Database\Factories;
 
 use App\Infrastructure\Models\Media;
-use App\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Http\File;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class MediaFactory extends Factory
 {
     protected $model = Media::class;
 
-    public function definition()
+    public function definition(): array
     {
-        $sourceFolder = database_path('seeders/media');
-        $files = glob($sourceFolder . '/*.*');
-
-        if (empty($files)) {
-            throw new \Exception("No sample media files found in {$sourceFolder}");
-        }
-
-        $randomFile = $this->faker->randomElement($files);
-        $fileName = Str::uuid() . '.' . pathinfo($randomFile, PATHINFO_EXTENSION);
-
-        // Use storage disk 'public'
-        $disk = Storage::disk('public');
-
-        // Copy file to storage/app/public/uploads
-        $disk->putFileAs('uploads', new File($randomFile), $fileName);
+        // Pick a random extension and build a fake file name + path
+        $extension = $this->faker->randomElement(['jpg', 'png', 'pdf', 'mp4']);
+        $fileName = $this->faker->unique()->lexify('file_????') . '.' . $extension;
 
         return [
             'file_name' => $fileName,
-            'file_path' => 'storage/uploads/' . $fileName, // URL accessible via public/storage
-            'file_type' => pathinfo($randomFile, PATHINFO_EXTENSION),
+            // Assuming symbolic link via `php artisan storage:link`
+            'file_path' => "storage/uploads/{$fileName}",
+            'file_type' => $extension, // or use MIME: "image/jpeg" etc.
             'alt_text' => $this->faker->sentence(),
-            'uploaded_by' => null,
+            'uploaded_by' => null, // or use User::factory() if you have relationships
         ];
-
     }
 }

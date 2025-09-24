@@ -101,7 +101,9 @@ class WebPageController extends Controller
 
     public function financeOptions()
     {
-        $page = Page::where('slug', 'finance-options')->first();
+        $page = Page::with(['sections.media'])
+            ->where('slug', 'finance-options')
+            ->first();
         return Inertia::render('site/finance-options-page', [
             'page' => $page
         ]);

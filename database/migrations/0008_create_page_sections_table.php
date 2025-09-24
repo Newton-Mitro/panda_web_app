@@ -14,6 +14,10 @@ return new class extends Migration {
             $table->string('sub_heading')->nullable();
             $table->string('button_text')->nullable();
             $table->string('button_link')->nullable();
+            $table->enum('content_type', [
+                'HTML',
+                'TEXT'
+            ])->default('HTML');
             $table->longText('content')->nullable();
             $table->json('json_array')->nullable();
             $table->json('gallery')->nullable();

@@ -2,7 +2,6 @@ import { Head } from '@inertiajs/react';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 import PageLayout from '../../layouts/page-layout';
 import { Project } from '../../types/project';
-import AttributeSection from './sections/AttributeSection';
 
 interface ProjectsPageProps {
     projects: Project[];
@@ -24,7 +23,6 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects }) => {
                         </p>
                     </div>
                 </section>
-                <AttributeSection />
 
                 <section ref={ref} id="attribute" className="pt-16 pb-32">
                     <div

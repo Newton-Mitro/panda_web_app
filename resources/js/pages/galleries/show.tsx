@@ -20,7 +20,7 @@ const Show: React.FC<ShowProps> = ({ gallery }) => {
     const renderMedia = (url: string, alt: string) => {
         if (url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.ogg')) {
             return (
-                <video controls className="max-w-full rounded">
+                <video controls className="max-h-96 rounded">
                     <source src={url} type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
@@ -32,7 +32,7 @@ const Show: React.FC<ShowProps> = ({ gallery }) => {
                 </a>
             );
         } else {
-            return <img src={url} alt={alt} className="w-full rounded object-cover" />;
+            return <img src={url} alt={alt} className="max-h-96 rounded object-cover" />;
         }
     };
 
@@ -47,7 +47,7 @@ const Show: React.FC<ShowProps> = ({ gallery }) => {
                     {gallery.media && (
                         <div className="my-6">
                             <h2 className="mb-2 text-lg font-semibold">Gallery Cover</h2>
-                            <div className="rounded-md border p-2">{renderMedia(gallery.media.url, gallery.media.alt_text || gallery.title)}</div>
+                            <div className="rounded-md">{renderMedia(gallery.media.url, gallery.media.alt_text || gallery.title)}</div>
                         </div>
                     )}
 

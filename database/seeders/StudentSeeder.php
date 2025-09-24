@@ -20,9 +20,11 @@ class StudentSeeder extends Seeder
         }
 
         // Fetch all media once
-        $allMedia = Media::all();
+        $allImages = Media::where(function ($query) {
+            $query->where('file_path', 'like', '%images%');
+        })->get();
 
-        if ($allMedia->isEmpty()) {
+        if ($allImages->isEmpty()) {
             $this->command->warn('⚠️ No media found. Skipping StudentSeeder.');
             return;
         }
@@ -32,7 +34,7 @@ class StudentSeeder extends Seeder
             Student::factory()->create(
                 [
                     'category_id' => $studentCategoryIds->random(),
-                    'media_id' => $allMedia->random()->id
+                    'media_id' => $allImages->random()->id
                 ]
             );
         }

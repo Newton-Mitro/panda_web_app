@@ -23,7 +23,7 @@ export default function Show({ heroSlide }: Props) {
                 <HeadingSmall title={heroSlide.title || ''} description={heroSlide.subtitle || ''} />
 
                 {heroSlide.media && (
-                    <img src={heroSlide.media.url} alt={heroSlide.media.alt_text || heroSlide.media.file_name} className="mt-4 max-h-64 rounded" />
+                    <img src={heroSlide.media.url} alt={heroSlide.media.alt_text || heroSlide.media.file_name} className="mt-4 max-h-96 rounded" />
                 )}
 
                 <div className="mt-4 flex flex-col gap-4">

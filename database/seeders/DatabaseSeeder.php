@@ -18,7 +18,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             SettingSeeder::class,
-            MediaSeeder::class,
+            IconMediaSeeder::class,
+            ImageMediaSeeder::class,
+            DocumentMediaSeeder::class,
             CategorySeeder::class,
             PageSeeder::class,
             ServiceSeeder::class,

@@ -12,16 +12,6 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            // 'Product' => [
-            //     'Electronics',
-            //     'Clothing',
-            //     'Books',
-            //     'Home Appliances',
-            //     'Sports',
-            //     'Furniture',
-            //     'Jewelry',
-            //     'Beauty',
-            // ],
             'Service' => [
                 'Renewable Energy Solutions',
                 'Industrial Solutions & Services',
@@ -55,6 +45,14 @@ class CategorySeeder extends Seeder
             'Project' => ['Open Source', 'Client Work', 'Internal Tools'],
         ];
 
+        // Preload all available image IDs
+        $allImages = Media::where('file_path', 'like', '%images%')->pluck('id');
+
+        if ($allImages->isEmpty()) {
+            $this->command->warn('⚠ No media found containing "images" in file_path. Seed Media first!');
+            return;
+        }
+
         foreach ($categories as $categoryOf => $names) {
             foreach ($names as $name) {
                 Category::factory()->create([
@@ -62,7 +60,7 @@ class CategorySeeder extends Seeder
                     'name' => $name,
                     'slug' => Str::slug($name . '-' . strtolower($categoryOf)),
                     'description' => "{$name} main category",
-                    'media_id' => Media::inRandomOrder()->first()->id,
+                    'media_id' => $allImages->random(),
                 ]);
             }
         }

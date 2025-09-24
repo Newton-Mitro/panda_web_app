@@ -5,15 +5,17 @@ import { SharedData } from '../../types';
 
 const Navigation = () => {
     const navItems = [
+        { name: 'Home', href: '/' },
         { name: 'About Us', href: '/about-us' },
         { name: 'Services', href: '/services' },
         { name: 'Finance Options', href: '/finance-options' },
         { name: 'Projects', href: '/projects' },
-        { name: 'Contact Us', href: '/contact-us' },
+        { name: 'Doctors', href: '/doctors' },
+        { name: 'Appointment', href: '/appointment' },
+        { name: 'Courses', href: '/courses' },
     ];
 
     const page = usePage<SharedData>();
-    const { auth } = page.props;
     const url = page.url;
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const appName = import.meta.env.VITE_APP_NAME || 'SmartPanda';
@@ -34,7 +36,7 @@ const Navigation = () => {
                 </Link>
 
                 {/* Desktop nav */}
-                <div className="hidden items-center space-x-8 md:flex">
+                <div className="hidden items-center space-x-4 md:flex">
                     {navItems.map((item) => (
                         <Link
                             key={item.name}
@@ -51,10 +53,12 @@ const Navigation = () => {
                 {/* Auth & Donate buttons */}
                 <div className="hidden items-center space-x-4 md:flex">
                     <Link
-                        href={route('register')}
-                        className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
+                        href="/contact-us"
+                        className={`${
+                            isActive('/contact-us') ? 'bg-primary text-primary' : 'text-foreground'
+                        } inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]`}
                     >
-                        Ask for a quote
+                        Contact Us
                     </Link>
                 </div>
 
@@ -90,26 +94,13 @@ const Navigation = () => {
                         </Link>
                     ))}
                     <div className="mt-2 flex flex-col space-y-2">
-                        {auth.user ? (
-                            <Link
-                                href={route('dashboard')}
-                                className="block rounded-sm border border-[#19140035] px-5 py-1.5 text-center text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
-                            >
-                                Dashboard
-                            </Link>
-                        ) : (
-                            <Link
-                                href={route('login')}
-                                className="block rounded-sm border border-transparent px-5 py-1.5 text-center text-sm text-[#1b1b18] hover:border-[#19140035] dark:text-[#EDEDEC] dark:hover:border-[#3E3E3A]"
-                            >
-                                Log in
-                            </Link>
-                        )}
                         <Link
-                            href={route('register')}
-                            className="block rounded-sm border border-[#19140035] px-5 py-1.5 text-center text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
+                            href="/contact-us"
+                            className={`${
+                                isActive('/contact-us') ? 'bg-primary text-primary' : 'text-foreground'
+                            } inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]`}
                         >
-                            Donate
+                            Contact Us
                         </Link>
                     </div>
                 </div>

@@ -1,24 +1,5 @@
 ```sql
 -- ===========================
--- USERS (Base for Patients, Doctors, Admins)
--- ===========================
-CREATE TABLE users (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(150) NOT NULL,
-    email VARCHAR(150) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    phone VARCHAR(20),
-    gender ENUM('Male','Female','Other') DEFAULT 'Other',
-    date_of_birth DATE,
-    role ENUM('PATIENT','DOCTOR','ADMIN') NOT NULL DEFAULT 'PATIENT',
-    profile_photo VARCHAR(255),
-    last_login_at TIMESTAMP NULL,
-    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_role (role)
-);
-
--- ===========================
 -- DEPARTMENTS
 -- ===========================
 CREATE TABLE departments (

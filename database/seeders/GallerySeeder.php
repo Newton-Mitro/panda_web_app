@@ -11,16 +11,24 @@ class GallerySeeder extends Seeder
 {
     public function run(): void
     {
-        // Create 5 galleries
-        $galleries = Gallery::factory(5)->create(
-            [
-                'media_id' => Media::inRandomOrder()->first()->id
-            ]
-        );
+        // Get only image IDs (filter by file_path)
+        $allImages = Media::where('file_path', 'like', '%images%')->pluck('id');
+
+        if ($allImages->isEmpty()) {
+            $this->command->warn('⚠ No media found containing "images" in file_path. Seed Media first!');
+            return;
+        }
+
+        // Create 5 galleries with random cover images
+        $galleries = Gallery::factory(5)->create([
+            'media_id' => function () use ($allImages) {
+                return $allImages->random();
+            },
+        ]);
 
         foreach ($galleries as $gallery) {
-            // Attach 3–6 media per gallery
-            $mediaIds = Media::inRandomOrder()->take(rand(3, 6))->pluck('id');
+            // Randomly pick 3–6 images for each gallery
+            $mediaIds = $allImages->random(rand(3, 6));
 
             foreach ($mediaIds as $mediaId) {
                 GalleryMedia::factory()->create([

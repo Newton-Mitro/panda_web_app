@@ -39,13 +39,13 @@ export default function Show({ notice }: ShowProps) {
                                 </a>
                             </div>
                         ) : (
-                            <img src={notice.media.url} alt={notice.title} className="max-w-full rounded shadow" />
+                            <img src={notice.media.url} alt={notice.title} className="max-h-96 rounded" />
                         )}
                     </div>
                 )}
 
                 {/* Content */}
-                <div className="prose dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: notice.content || '' }} />
+                <div className="prose max-w-none dark:prose-invert" dangerouslySetInnerHTML={{ __html: notice.content || '' }} />
 
                 <p className="text-sm text-gray-500">Status: {notice.status}</p>
             </div>

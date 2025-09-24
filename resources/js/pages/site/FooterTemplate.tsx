@@ -1,39 +1,76 @@
 import { Link, usePage } from '@inertiajs/react';
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTwitter } from 'react-icons/fa';
 import AppLogoIcon from '../../components/app-logo-icon';
 import { SharedData } from '../../types';
 
 function FooterTemplate() {
-    const appName = import.meta.env.VITE_APP_NAME || 'SmartPanda'; // fallback
-    const page = usePage<SharedData>();
-    const { auth } = page.props;
+    const appName = import.meta.env.VITE_APP_NAME || 'SmartPanda';
+    const { props } = usePage<SharedData>();
+    const { auth } = props;
+
+    const currentYear = new Date().getFullYear();
+
     return (
-        <footer className="mt-auto border-t border-border bg-background py-8">
-            <div className="mx-auto max-w-6xl px-6">
-                <div className="flex flex-col items-center justify-between gap-2 md:flex-row">
-                    <div className="flex items-center space-x-2">
-                        <div className="text-sm font-bold text-foreground">{appName}</div>
-                        <span className="flex items-start rounded bg-foreground p-1">
-                            <AppLogoIcon className="h-4 w-4 text-background" />
-                        </span>
+        <footer className="mt-auto border-t border-border bg-background text-foreground">
+            <div className="mx-auto max-w-7xl px-6 py-10">
+                {/* Top Section */}
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+                    {/* Branding */}
+                    <div className="flex flex-col items-center md:items-start">
+                        <div className="flex items-center gap-2">
+                            <span className="rounded bg-foreground p-1">
+                                <AppLogoIcon className="h-5 w-5 text-background" />
+                            </span>
+                            <span className="text-lg font-bold">{appName}</span>
+                        </div>
+                        <p className="mt-3 text-center text-sm text-muted-foreground md:text-left">
+                            Empowering digital innovation with smart solutions tailored for your success.
+                        </p>
                     </div>
-                    {auth.user ? (
-                        <Link
-                            href={route('dashboard')}
-                            className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
-                        >
-                            Dashboard
-                        </Link>
-                    ) : (
-                        <Link
-                            href={route('login')}
-                            className="inline-block rounded-sm border border-transparent px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#19140035] dark:text-[#EDEDEC] dark:hover:border-[#3E3E3A]"
-                        >
-                            Webmaster Login
-                        </Link>
-                    )}
-                    <p className="text-center text-xs text-muted-foreground md:text-right">
-                        Copyright © 2024 Bulwark Foundation by Prakash Foundation
-                    </p>
+
+                    {/* Quick Links */}
+                    <div className="flex flex-col items-center md:items-start">
+                        <h4 className="mb-3 text-sm font-semibold text-muted-foreground uppercase">Webmaster</h4>
+                        <nav className="flex flex-col gap-2 text-sm">
+                            {auth.user ? (
+                                <Link href={route('dashboard')} className="hover:underline">
+                                    Dashboard
+                                </Link>
+                            ) : (
+                                <Link href={route('login')} className="hover:underline">
+                                    Login
+                                </Link>
+                            )}
+                        </nav>
+                    </div>
+
+                    {/* Social Media */}
+                    <div className="flex flex-col items-center md:items-start">
+                        <h4 className="mb-3 text-sm font-semibold text-muted-foreground uppercase">Follow Us</h4>
+                        <div className="flex gap-4">
+                            <a href="#" className="rounded-full p-2 hover:bg-muted">
+                                <FaFacebookF />
+                            </a>
+                            <a href="#" className="rounded-full p-2 hover:bg-muted">
+                                <FaTwitter />
+                            </a>
+                            <a href="#" className="rounded-full p-2 hover:bg-muted">
+                                <FaLinkedinIn />
+                            </a>
+                            <a href="#" className="rounded-full p-2 hover:bg-muted">
+                                <FaInstagram />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Bottom Bar */}
+                <div className="mt-8 border-t border-border pt-4 text-center text-xs text-muted-foreground">
+                    © {currentYear} {appName}. Developed by{' '}
+                    <a href="https://denton.studio" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+                        denton.studio
+                    </a>
+                    . All rights reserved.
                 </div>
             </div>
         </footer>
