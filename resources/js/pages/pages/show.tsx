@@ -2,8 +2,7 @@ import { Head } from '@inertiajs/react';
 
 import React from 'react';
 import Gallery from '../../components/gallery';
-import MediaPreview from '../../components/media-preview';
-import ServiceCardLeftIcon from '../../components/service-card-left-icon';
+import ServiceCardBorderIcon from '../../components/service-card-border-icon';
 import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
 import { Page } from '../../types/page';
@@ -22,41 +21,40 @@ const Show: React.FC<PageProps> = ({ page, sections }) => {
         { title: page.title, href: '' },
     ];
 
-    const renderSectionContent = (section: PageSection) => {
+    const renderSectionContent = (jsonItems) => {
         try {
-            const items = section.json_array ? JSON.parse(section.json_array) : [];
+            const items = jsonItems ? JSON.parse(jsonItems) : [];
+            console.log('ITEMS', items);
             return (
-                <div className={`mx-auto items-start gap-4 ${items[0].question ? 'flex flex-col gap-4' : 'grid grid-cols-2 gap-4 md:grid-cols-3'}`}>
-                    {items.map((item: any, idx: number) => (
-                        //  // <ServiceCardLeftIcon key={idx} icon={item.icon} title={item.title} text={item.subtitle.substring(0, 80)} />
-                        // // <ServiceCardIcon key={idx} icon={item.icon} title={item.title} text={item.subtitle.substring(0, 80)} />
-                        // <ServiceCardBorderIcon key={idx} icon={item.icon} title={item.title} text={item.subtitle.substring(0, 80)} />
-
-                        <>
-                            {item.icon && <ServiceCardLeftIcon key={idx} icon={item.icon} title={item.title} text={item.subtitle.substring(0, 80)} />}
-
-                            {item.image && (
-                                <div className="flex flex-col items-center gap-3 md:items-start">
-                                    <img
-                                        src={item.image}
-                                        alt={item.text || `img-${idx}`}
-                                        className="h-20 w-20 flex-shrink-0 rounded-full border border-[var(--border)] object-cover"
-                                    />
+                <div className={`${items[0].image || items[0].icon ? 'grid grid-cols-1 gap-12 md:grid-cols-3' : 'flex flex-col gap-4'}`}>
+                    {items.map((item: any, idx: number) =>
+                        item.img_icon || item.question ? (
+                            item.question ? (
+                                <div className="">
+                                    {item.question && <p className="font-semibold">{`${idx + 1}. ${item.question}`}</p>}
+                                    {item.answer && <p className="text-[var(--muted-foreground)]">{item.answer}</p>}
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-6">
+                                    <img src={item.img_icon} alt={item.text || `img-${idx}`} className="h-8 w-8 flex-shrink-0 object-cover" />
                                     <div className="">
                                         {item.title && <p className="font-semibold">{item.title}</p>}
                                         {item.subtitle && <p className="text-[var(--muted-foreground)]">{item.subtitle.substring(0, 80)}</p>}
                                     </div>
                                 </div>
-                            )}
-
-                            {item.question && item.answer && (
+                            )
+                        ) : item.image ? (
+                            <div className="flex items-center gap-6 bg-card px-4 py-2">
+                                <img src={item.image} alt={item.text || `img-${idx}`} className="h-16 w-16 flex-shrink-0 object-cover" />
                                 <div className="">
-                                    {item.question && <p className="font-semibold">{`${idx + 1}. ${item.question}`}</p>}
-                                    {item.answer && <p className="text-[var(--muted-foreground)]">{`Answer: ${item.answer}`}</p>}
+                                    {item.title && <p className="font-semibold">{item.title}</p>}
+                                    {item.subtitle && <p className="text-[var(--muted-foreground)]">{item.subtitle.substring(0, 80)}</p>}
                                 </div>
-                            )}
-                        </>
-                    ))}
+                            </div>
+                        ) : (
+                            <ServiceCardBorderIcon key={idx} icon={item.icon} title={item.title} text={item.subtitle.substring(0, 80)} />
+                        ),
+                    )}
                 </div>
             );
         } catch {
@@ -72,7 +70,7 @@ const Show: React.FC<PageProps> = ({ page, sections }) => {
                     <div className="">
                         {sections
                             .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
-                            .map((section, index) => (
+                            .map((section) => (
                                 <div key={section.id} className="mb-30 w-full space-y-10 lg:w-6xl">
                                     {/* Section Heading */}
                                     <div className="mb-6 flex flex-col items-start justify-center text-center">
@@ -85,33 +83,10 @@ const Show: React.FC<PageProps> = ({ page, sections }) => {
                                         mediaUrl={section.media?.url}
                                         mimeType={section.media?.file_type}
                                         contentHtml={section.content || ''}
-                                        shape="tall-left"
-                                    />
-
-                                    <ResponsiveImageSection
-                                        mediaUrl={section.media?.url}
-                                        mimeType={section.media?.file_type}
-                                        contentHtml={section.content || ''}
                                         shape="octagon-right"
                                     />
 
-                                    {/* Media + Content */}
-                                    <div
-                                        className={`clear-both flex flex-col items-center gap-8 md:flex-row ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}
-                                    >
-                                        {section.media && (
-                                            <div className="w-full flex-shrink-0 md:w-1/3">
-                                                <MediaPreview media={section.media} />
-                                            </div>
-                                        )}
-                                        <div className="flex-1">
-                                            <div
-                                                dangerouslySetInnerHTML={{ __html: section.content || '' }}
-                                                className="prose prose-sm [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="py-6">{section.json_array && renderSectionContent(section)}</div>
+                                    <div className="py-6">{section.json_array && renderSectionContent(section.json_array)}</div>
 
                                     {/* Gallery */}
                                     {section.gallery && section.gallery.length > 0 && (
@@ -121,7 +96,7 @@ const Show: React.FC<PageProps> = ({ page, sections }) => {
                                                 <h2 className="mb-1 text-2xl font-semibold">Gallery</h2>
                                                 <h3 className="mb-2 text-sm text-gray-500">Browse the gallery</h3>
                                             </div> */}
-                                            <Gallery gallery={section.gallery} />
+                                            <Gallery gallery={JSON.parse(section.gallery)} />
                                         </>
                                     )}
 

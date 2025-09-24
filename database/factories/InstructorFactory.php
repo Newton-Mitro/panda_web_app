@@ -17,7 +17,7 @@ class InstructorFactory extends Factory
         $religions = ['ISLAM', 'HINDUISM', 'CHRISTIANITY', 'BUDDHISM', 'OTHER'];
 
         return [
-            'media_id' => MediaFactory::new(),
+            'media_id' => null,
             'instructor_id' => strtoupper(Str::random(8)),
             'name' => $this->faker->name(),
             'bio' => $this->faker->sentence(10),

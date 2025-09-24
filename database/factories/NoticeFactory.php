@@ -22,8 +22,8 @@ class NoticeFactory extends Factory
             'content' => $this->faker->paragraph(8),
             'publish_date' => $this->faker->dateTimeBetween('-1 years', 'now')->format('Y-m-d'),
             'expiry_date' => optional($this->faker->optional()->dateTimeBetween('now', '+6 months'))->format('Y-m-d'),
-            'media_id' => MediaFactory::new(),
-            'category_id' => CategoryFactory::new(),
+            'media_id' => null,
+            'category_id' => null,
             'status' => $this->faker->randomElement(['Active', 'Inactive']),
         ];
     }

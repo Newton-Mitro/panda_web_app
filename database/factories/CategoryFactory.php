@@ -35,7 +35,7 @@ class CategoryFactory extends Factory
             'name' => $name,
             'slug' => $slug,
             'description' => $this->faker->optional()->sentence(),
-            'media_id' => MediaFactory::new(),
+            'media_id' => null,
         ];
     }
 }

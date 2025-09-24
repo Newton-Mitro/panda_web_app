@@ -26,9 +26,9 @@ class ProjectFactory extends Factory
             'start_date' => $this->faker->dateTimeBetween('-2 years', '-6 months')->format('Y-m-d'),
             'end_date' => optional($this->faker->optional()->dateTimeBetween('-6 months', 'now'))->format('Y-m-d'),
             'gallery' => null,
-            'category_id' => CategoryFactory::new(),
+            'category_id' => null,
 
-            'media_id' => MediaFactory::new(),
+            'media_id' => null,
             'status' => $this->faker->randomElement(['Active', 'Inactive']),
         ];
     }

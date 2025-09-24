@@ -2,7 +2,7 @@ import { X } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface GalleryProps {
-    gallery: string;
+    gallery: string[];
 }
 
 const Gallery: React.FC<GalleryProps> = ({ gallery }) => {
@@ -50,7 +50,7 @@ const Gallery: React.FC<GalleryProps> = ({ gallery }) => {
             {/* Modal */}
             {currentIndex !== null && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
                     onClick={() => setCurrentIndex(null)} // Close on outside click
                 >
                     <div

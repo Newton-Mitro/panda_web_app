@@ -36,7 +36,7 @@ class MediaFactory extends Factory
             'file_path' => 'storage/uploads/' . $fileName, // URL accessible via public/storage
             'file_type' => pathinfo($randomFile, PATHINFO_EXTENSION),
             'alt_text' => $this->faker->sentence(),
-            'uploaded_by' => UserFactory::new(),
+            'uploaded_by' => null,
         ];
 
     }

@@ -26,8 +26,8 @@ class EventFactory extends Factory
             'location' => $this->faker->city(),
             'start_date' => $startDate->format('Y-m-d'),
             'end_date' => $endDate?->format('Y-m-d'),
-            'media_id' => MediaFactory::new(),
-            'category_id' => CategoryFactory::new(),
+            'media_id' => null,
+            'category_id' => null,
             'status' => $this->faker->randomElement(['Active', 'Inactive']),
         ];
     }

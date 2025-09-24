@@ -1,9 +1,8 @@
 import { Head } from '@inertiajs/react';
 import Gallery from '../../components/gallery';
-import ServiceCardLeftIcon from '../../components/service-card-left-icon';
+import ServiceCardBorderIcon from '../../components/service-card-border-icon';
 import PageLayout from '../../layouts/page-layout';
 import { Page } from '../../types/page';
-import { PageSection } from '../../types/page_section';
 import ResponsiveImageSection from '../pages/responsive-image-section';
 
 interface AboutPageProps {
@@ -18,41 +17,40 @@ const AboutPage: React.FC<AboutPageProps> = ({ page }) => {
     const metaDescription = page?.meta_description || 'YourSite';
     const metaKeywords = page?.meta_keywords || 'YourSite';
 
-    const renderSectionContent = (section: PageSection) => {
+    const renderSectionContent = (jsonItems) => {
         try {
-            const items = section.json_array ? JSON.parse(section.json_array) : [];
+            const items = jsonItems ? JSON.parse(jsonItems) : [];
+            console.log('ITEMS', items);
             return (
-                <div className={`mx-auto items-start gap-4 ${items[0].question ? 'flex flex-col gap-4' : 'grid grid-cols-2 gap-4 md:grid-cols-3'}`}>
-                    {items.map((item: any, idx: number) => (
-                        //  // <ServiceCardLeftIcon key={idx} icon={item.icon} title={item.title} text={item.subtitle.substring(0, 80)} />
-                        // // <ServiceCardIcon key={idx} icon={item.icon} title={item.title} text={item.subtitle.substring(0, 80)} />
-                        // <ServiceCardBorderIcon key={idx} icon={item.icon} title={item.title} text={item.subtitle.substring(0, 80)} />
-
-                        <>
-                            {item.icon && <ServiceCardLeftIcon key={idx} icon={item.icon} title={item.title} text={item.subtitle.substring(0, 80)} />}
-
-                            {item.image && (
-                                <div className="flex flex-col items-center gap-3 md:items-start">
-                                    <img
-                                        src={item.image}
-                                        alt={item.text || `img-${idx}`}
-                                        className="h-20 w-20 flex-shrink-0 rounded-full border border-[var(--border)] object-cover"
-                                    />
+                <div className={`${items[0].image || items[0].icon ? 'grid grid-cols-1 gap-12 md:grid-cols-3' : 'flex flex-col gap-4'}`}>
+                    {items.map((item: any, idx: number) =>
+                        item.img_icon || item.question ? (
+                            item.question ? (
+                                <div className="">
+                                    {item.question && <p className="font-semibold">{`${idx + 1}. ${item.question}`}</p>}
+                                    {item.answer && <p className="text-[var(--muted-foreground)]">{item.answer}</p>}
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-6">
+                                    <img src={item.img_icon} alt={item.text || `img-${idx}`} className="h-8 w-8 flex-shrink-0 object-cover" />
                                     <div className="">
                                         {item.title && <p className="font-semibold">{item.title}</p>}
                                         {item.subtitle && <p className="text-[var(--muted-foreground)]">{item.subtitle.substring(0, 80)}</p>}
                                     </div>
                                 </div>
-                            )}
-
-                            {item.question && item.answer && (
+                            )
+                        ) : item.image ? (
+                            <div className="flex items-center gap-6 bg-card px-4 py-2">
+                                <img src={item.image} alt={item.text || `img-${idx}`} className="h-16 w-16 flex-shrink-0 object-cover" />
                                 <div className="">
-                                    {item.question && <p className="font-semibold">{`${idx + 1}. ${item.question}`}</p>}
-                                    {item.answer && <p className="text-[var(--muted-foreground)]">{`Answer: ${item.answer}`}</p>}
+                                    {item.title && <p className="font-semibold">{item.title}</p>}
+                                    {item.subtitle && <p className="text-[var(--muted-foreground)]">{item.subtitle.substring(0, 80)}</p>}
                                 </div>
-                            )}
-                        </>
-                    ))}
+                            </div>
+                        ) : (
+                            <ServiceCardBorderIcon key={idx} icon={item.icon} title={item.title} text={item.subtitle.substring(0, 80)} />
+                        ),
+                    )}
                 </div>
             );
         } catch {
@@ -117,7 +115,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ page }) => {
                                             shape="octagon-left"
                                         />
 
-                                        <div className="py-6">{section.json_array && renderSectionContent(section)}</div>
+                                        <div className="py-6">{section.json_array && renderSectionContent(section.json_array)}</div>
 
                                         {/* Gallery */}
                                         {section?.gallery && section?.gallery.length > 0 && (

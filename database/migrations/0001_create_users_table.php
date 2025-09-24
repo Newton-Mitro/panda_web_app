@@ -13,6 +13,12 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('username')->nullable()->unique();
+            $table->string('avatar')->nullable();
+            $table->string('headline')->nullable(); // short about
+            $table->text('bio')->nullable();
+            $table->json('settings')->nullable();
+            $table->enum('role', ['CUSTOMER', 'STUDENT', 'INSTRUCTOR', 'DOCTOR', 'ADMIN'])->default('CUSTOMER');
             $table->rememberToken();
             $table->timestamps();
         });

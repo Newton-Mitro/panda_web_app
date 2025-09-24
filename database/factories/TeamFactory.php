@@ -19,7 +19,7 @@ class TeamFactory extends Factory
             'bio' => $this->faker->paragraph(6),
             'message' => $this->faker->sentence(),
             'department' => $this->faker->word(),
-            'media_id' => MediaFactory::new(),
+            'media_id' => null,
 
             'facebook_links' => 'https://facebook.com/' . $this->faker->userName(),
             'twitter_links' => 'https://twitter.com/' . $this->faker->userName(),
@@ -33,7 +33,7 @@ class TeamFactory extends Factory
             'phone' => $this->faker->phoneNumber(),
             'address' => $this->faker->address(),
 
-            'category_id' => CategoryFactory::new(),
+            'category_id' => null,
 
             'status' => $this->faker->randomElement(['Active', 'Inactive']),
         ];

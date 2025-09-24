@@ -34,7 +34,9 @@ const ServicePage: React.FC<ServicePageProps> = ({ services }) => {
                             {services.map((service, index) => (
                                 <div key={service.id ?? index} className="group flex cursor-pointer flex-col items-center md:relative md:flex-row">
                                     {index % 2 === 0 ? (
-                                        <div className="group clear-both flex w-full flex-col items-center group-hover:cursor-pointer md:relative md:flex-row">
+                                        <div
+                                            className={`group clear-both flex w-full ${index % 2 !== 0 ? 'flex-col-reverse' : 'flex-col'} items-center group-hover:cursor-pointer md:relative md:flex-row`}
+                                        >
                                             <img
                                                 src={
                                                     service.media.url ??
@@ -55,7 +57,9 @@ const ServicePage: React.FC<ServicePageProps> = ({ services }) => {
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="group clear-both flex w-full flex-col items-center group-hover:cursor-pointer md:relative md:flex-row">
+                                        <div
+                                            className={`group clear-both flex w-full ${index % 2 !== 0 ? 'flex-col-reverse' : 'flex-col'} items-center group-hover:cursor-pointer md:relative md:flex-row`}
+                                        >
                                             <div className="flex min-h-62 w-full flex-col justify-center rounded-2xl border-1 border-border bg-card p-6 md:mr-80 md:pr-20">
                                                 <div
                                                     dangerouslySetInnerHTML={{ __html: service.description ?? '' }}

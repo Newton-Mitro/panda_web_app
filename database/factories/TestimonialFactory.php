@@ -17,7 +17,7 @@ class TestimonialFactory extends Factory
             'author_designation' => $this->faker->jobTitle(),
             'company' => $this->faker->company(),
             'message' => $this->faker->paragraph(6),
-            'media_id' => MediaFactory::new(),
+            'media_id' => null,
             'rating' => $this->faker->numberBetween(3, 5), // ratings between 3–5
         ];
     }

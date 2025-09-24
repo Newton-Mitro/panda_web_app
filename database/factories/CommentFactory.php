@@ -14,8 +14,8 @@ class CommentFactory extends Factory
         $isUserComment = $this->faker->boolean(70); // 70% chance comment is from a user
 
         return [
-            'article_id' => ArticleFactory::new(),
-            'user_id' => UserFactory::new(),
+            'article_id' => null,
+            'user_id' => null,
             'author_name' => $isUserComment ? null : $this->faker->name(),
             'author_email' => $isUserComment ? null : $this->faker->safeEmail(),
             'content' => $this->faker->paragraphs(2, true),

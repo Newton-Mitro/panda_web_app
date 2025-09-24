@@ -22,12 +22,12 @@ class WebPageController extends Controller
 {
     public function home()
     {
-        $homePage = Page::where('slug', 'home')->first();
+        $homePage = Page::where('slug', 'home')->with(['sections.media', 'media'])->first();
         $heroSlides = HeroSlider::where('status', 'Active')
             ->orderBy('sort_order')
             ->get();
         $teams = Team::where('status', 'Active')->with('media')->orderBy('sort_order')->take(5)->get();
-        $services = Service::where('status', 'Active')->orderBy('sort_order')->take(5)->get();
+        $services = Service::where('status', 'Active')->with(['media'])->orderBy('sort_order')->take(3)->get();
         $testimonials = Testimonial::where('status', 'Active')->orderBy('sort_order')->take(5)->get();
         $awards = Award::where('status', 'Active')->orderBy('sort_order')->take(5)->get();
         $notices = Notice::where('status', 'Active')->orderBy('sort_order')->take(5)->get();

@@ -24,6 +24,11 @@ class Page extends Model
         return $this->hasMany(PageSection::class)->with('media')->orderBy('sort_order');
     }
 
+    public function media()
+    {
+        return $this->belongsTo(Media::class);
+    }
+
     protected static function newFactory()
     {
         return PageFactory::new();

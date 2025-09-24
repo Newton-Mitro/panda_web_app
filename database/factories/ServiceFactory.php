@@ -21,10 +21,10 @@ class ServiceFactory extends Factory
             'slug' => Str::slug($title) . '-' . $this->faker->unique()->numberBetween(100, 999),
             'description' => $this->faker->paragraph(5),
             'gallery' => null,
-            'media_id' => MediaFactory::new(),
+            'media_id' => null,
 
             // ✅ Only pick categories that belong to "Service"
-            'category_id' => CategoryFactory::new(),
+            'category_id' => null,
 
             'status' => $this->faker->randomElement(['Active', 'Inactive']),
         ];
