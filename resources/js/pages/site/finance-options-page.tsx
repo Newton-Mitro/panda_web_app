@@ -65,7 +65,7 @@ const FinanceOptionsPage: React.FC<FinanceOptionsPageProps> = ({ page }) => {
                         </p>
                     </div>
                 </section>
-                <div className="mx-auto w-full space-y-14 overflow-auto p-6 md:w-6xl">
+                <div className="mx-auto my-16 w-full space-y-14 overflow-auto p-6 md:w-6xl">
                     {page.sections.length > 0 ? (
                         <div className="">
                             {page.sections
@@ -73,7 +73,7 @@ const FinanceOptionsPage: React.FC<FinanceOptionsPageProps> = ({ page }) => {
                                 .map((section, index) => (
                                     <div key={section.id || index} className="mb-30 w-full space-y-10 lg:w-6xl">
                                         {/* Section Heading */}
-                                        <div className="mb-6 flex flex-col items-start justify-center text-center">
+                                        <div className="mb-6 flex flex-col items-center justify-center text-center">
                                             {section.heading && <h2 className="mb-1 text-3xl font-semibold">{section.heading}</h2>}
                                             {section.sub_heading && <h3 className="mb-2 text-sm text-gray-500">{section.sub_heading}</h3>}
                                             <div className="mx-auto mb-8 h-1 w-16 bg-foreground md:mx-0"></div>

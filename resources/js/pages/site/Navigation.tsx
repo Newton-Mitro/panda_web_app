@@ -15,8 +15,9 @@ const Navigation = () => {
         { name: 'Courses', href: '/courses' },
     ];
 
-    const page = usePage<SharedData>();
-    const url = page.url;
+    const { props } = usePage<SharedData>();
+    const { auth } = props;
+    const url = props.url;
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const appName = import.meta.env.VITE_APP_NAME || 'SmartPanda';
 
@@ -52,10 +53,25 @@ const Navigation = () => {
 
                 {/* Auth & Donate buttons */}
                 <div className="hidden items-center space-x-4 md:flex">
+                    {auth.user ? (
+                        <Link
+                            href={route('dashboard')}
+                            className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
+                        >
+                            Dashboard
+                        </Link>
+                    ) : (
+                        <Link
+                            href={route('login')}
+                            className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
+                        >
+                            Login
+                        </Link>
+                    )}
                     <Link
                         href="/contact-us"
                         className={`${
-                            isActive('/contact-us') ? 'bg-primary text-primary' : 'text-foreground'
+                            isActive('/contact-us') ? 'bg-primary text-primary-foreground' : 'text-foreground'
                         } inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]`}
                     >
                         Contact Us
@@ -93,7 +109,22 @@ const Navigation = () => {
                             {item.name}
                         </Link>
                     ))}
-                    <div className="mt-2 flex flex-col space-y-2">
+                    <div className="mt-2 flex flex-col items-center space-y-2">
+                        {auth.user ? (
+                            <Link
+                                href={route('dashboard')}
+                                className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
+                            >
+                                Dashboard
+                            </Link>
+                        ) : (
+                            <Link
+                                href={route('login')}
+                                className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
+                            >
+                                Login
+                            </Link>
+                        )}
                         <Link
                             href="/contact-us"
                             className={`${

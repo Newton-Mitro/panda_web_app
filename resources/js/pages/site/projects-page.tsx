@@ -24,7 +24,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects }) => {
                     </div>
                 </section>
 
-                <section ref={ref} id="attribute" className="pt-16 pb-32">
+                <section ref={ref} id="attribute" className="my-44">
                     <div
                         className={`mx-auto max-w-6xl px-4 transition-all duration-700 sm:px-6 md:px-6 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`}
                     >

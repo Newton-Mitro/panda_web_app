@@ -1,12 +1,9 @@
-import { Link, usePage } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTwitter } from 'react-icons/fa';
 import AppLogoIcon from '../../components/app-logo-icon';
-import { SharedData } from '../../types';
 
 function FooterTemplate() {
     const appName = import.meta.env.VITE_APP_NAME || 'SmartPanda';
-    const { props } = usePage<SharedData>();
-    const { auth } = props;
 
     const currentYear = new Date().getFullYear();
 
@@ -31,16 +28,22 @@ function FooterTemplate() {
                     {/* Quick Links */}
                     <div className="flex flex-col items-center md:items-start">
                         <h4 className="mb-3 text-sm font-semibold text-muted-foreground uppercase">Webmaster</h4>
-                        <nav className="flex flex-col gap-2 text-sm">
-                            {auth.user ? (
-                                <Link href={route('dashboard')} className="hover:underline">
-                                    Dashboard
-                                </Link>
-                            ) : (
-                                <Link href={route('login')} className="hover:underline">
-                                    Login
-                                </Link>
-                            )}
+                        <nav className="flex flex-col gap-2 text-sm md:flex-row">
+                            <Link href={route('dashboard')} className="hover:underline">
+                                Team
+                            </Link>
+                            <Link href={route('dashboard')} className="hover:underline">
+                                Career
+                            </Link>
+                            <Link href={route('dashboard')} className="hover:underline">
+                                Terms of Service
+                            </Link>
+                            <Link href={route('dashboard')} className="hover:underline">
+                                Privacy
+                            </Link>
+                            <Link href={route('dashboard')} className="hover:underline">
+                                Disclaimer
+                            </Link>
                         </nav>
                     </div>
 
@@ -65,7 +68,7 @@ function FooterTemplate() {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="mt-8 border-t border-border pt-4 text-center text-xs text-muted-foreground">
+                <div className="mt-8 pt-4 text-center text-xs text-muted-foreground">
                     © {currentYear} {appName}. Developed by{' '}
                     <a href="https://denton.studio" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
                         denton.studio

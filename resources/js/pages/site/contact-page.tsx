@@ -95,7 +95,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ contacts }) => {
                         </div>
 
                         {/* Form */}
-                        <div className="rounded-xl bg-white p-8 shadow-lg dark:bg-gray-800">
+                        <div className="rounded-xl bg-white p-8 shadow dark:bg-gray-800">
                             <h2 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-gray-100">Send a Message</h2>
                             <form className="space-y-5">
                                 <div>
