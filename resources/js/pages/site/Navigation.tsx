@@ -5,24 +5,88 @@ import { SharedData } from '../../types';
 
 const Navigation = () => {
     const navItems = [
-        { name: 'Home', href: '/' },
-        { name: 'About Us', href: '/about-us' },
-        { name: 'Services', href: '/services' },
-        { name: 'Finance Options', href: '/finance-options' },
-        { name: 'Projects', href: '/projects' },
-        { name: 'Doctors', href: '/doctors' },
-        { name: 'Appointment', href: '/appointment' },
-        { name: 'Courses', href: '/courses' },
+        {
+            name: 'Home',
+            label: 'home',
+            href: '/',
+        },
+        {
+            name: 'About Us',
+            label: 'about-us',
+            href: '#',
+            children: [
+                { name: 'Our Story', label: 'our-story', href: '/about-us/our-story' },
+                { name: 'Mission & Vision', label: 'mission-vision', href: '/about-us/mission-vision' },
+                { name: 'Our Team', label: 'team', href: '/about-us/team' },
+                { name: 'Careers', label: 'careers', href: '/about-us/careers' },
+            ],
+        },
+        {
+            name: 'Services',
+            label: 'services',
+            href: '/services',
+        },
+        // {
+        //     name: 'Finance Options',
+        //     label: 'finance-options',
+        //     href: '#',
+        //     children: [
+        //         { name: 'CAPEX Model', label: 'capex-model', href: '/finance-options/capex-model' },
+        //         { name: 'OPEX Model', label: 'opex-model', href: '/finance-options/opex-model' },
+        //         { name: 'Debt Model', label: 'debt-model', href: '/finance-options/debt-model' },
+        //     ],
+        // },
+        {
+            name: 'Projects',
+            label: 'projects',
+            href: '/projects',
+        },
+        {
+            name: 'Doctors',
+            label: 'doctors',
+            href: '/doctors',
+        },
+        {
+            name: 'Appointment',
+            label: 'appointment',
+            href: '/appointment',
+        },
+        {
+            name: 'Courses',
+            label: 'courses',
+            href: '/courses',
+        },
+        {
+            name: 'More',
+            label: 'more',
+            href: '#',
+            children: [
+                { name: 'Articles', label: 'articles', href: '/articles' },
+                { name: 'FAQ', label: 'faq', href: '/faq' },
+                { name: 'Notices', label: 'notices', href: '/notices' },
+                { name: 'Galleries', label: 'galleries', href: '/galleries' },
+            ],
+        },
     ];
 
     const { props } = usePage<SharedData>();
-    const { auth } = props;
-    const url = props.url;
+    const auth = props.auth;
+
+    const page = usePage<SharedData>();
+    const url = page.url;
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
     const appName = import.meta.env.VITE_APP_NAME || 'SmartPanda';
 
-    const isActive = (href: string) => {
-        return url === href;
+    const isActive = (menu: any) => {
+        console.log(menu);
+        console.log(url);
+
+        return url === menu.href || url.startsWith(`/${menu.label}`);
+    };
+
+    const toggleSubmenu = (name: string) => {
+        setExpandedMenus((prev) => (prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]));
     };
 
     return (
@@ -38,22 +102,49 @@ const Navigation = () => {
 
                 {/* Desktop nav */}
                 <div className="hidden items-center space-x-4 md:flex">
-                    {navItems.map((item) => (
-                        <Link
-                            key={item.name}
-                            href={item.href}
-                            className={`cursor-pointer text-sm transition-colors hover:text-foreground/80 ${
-                                isActive(item.href) ? 'border-b-2 border-primary text-primary' : 'text-foreground'
-                            }`}
-                        >
-                            {item.name}
-                        </Link>
-                    ))}
+                    {navItems.map((item) =>
+                        item.children ? (
+                            <div key={item.name} className="group relative">
+                                <Link
+                                    href={item.href}
+                                    className={`cursor-pointer text-sm transition-colors hover:text-foreground/80 ${
+                                        isActive(item) ? 'border-b-2 border-primary text-primary' : 'text-foreground'
+                                    }`}
+                                >
+                                    {item.name}
+                                </Link>
+                                {/* Dropdown */}
+                                <div className="absolute top-full left-0 hidden min-w-[180px] flex-col rounded-md border border-border bg-background shadow-md group-hover:flex">
+                                    {item.children.map((child) => (
+                                        <Link
+                                            key={child.name}
+                                            href={child.href}
+                                            className={`px-4 py-2 text-sm hover:bg-muted ${
+                                                isActive(child) ? 'font-medium text-primary' : 'text-foreground'
+                                            }`}
+                                        >
+                                            {child.name}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            <Link
+                                key={item.name}
+                                href={item.href}
+                                className={`cursor-pointer text-sm transition-colors hover:text-foreground/80 ${
+                                    isActive(item) ? 'border-b-2 border-primary text-primary' : 'text-foreground'
+                                }`}
+                            >
+                                {item.name}
+                            </Link>
+                        ),
+                    )}
                 </div>
 
-                {/* Auth & Donate buttons */}
+                {/* Auth & Contact */}
                 <div className="hidden items-center space-x-4 md:flex">
-                    {auth.user ? (
+                    {auth?.user ? (
                         <Link
                             href={route('dashboard')}
                             className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
@@ -97,30 +188,56 @@ const Navigation = () => {
 
             {/* Mobile nav */}
             {mobileMenuOpen && (
-                <div className="flex h-screen flex-col items-center justify-center space-y-4 border-t border-border bg-background px-6 py-4 md:hidden">
-                    {navItems.map((item) => (
-                        <Link
-                            key={item.name}
-                            href={item.href}
-                            className={`text-left text-sm transition-colors hover:text-foreground/80 ${
-                                isActive(item.href) ? 'border-b-2 border-primary text-primary' : 'text-foreground'
-                            }`}
-                        >
-                            {item.name}
-                        </Link>
-                    ))}
-                    <div className="mt-2 flex flex-col items-center space-y-2">
-                        {auth.user ? (
+                <div className="flex flex-col space-y-2 border-t border-border bg-background px-6 py-4 md:hidden">
+                    {navItems.map((item) =>
+                        item.children ? (
+                            <div key={item.name} className="w-full">
+                                <button
+                                    onClick={() => toggleSubmenu(item.name)}
+                                    className="flex w-full items-center justify-between py-2 text-left text-sm font-medium text-foreground hover:text-foreground/80"
+                                >
+                                    {item.name}
+                                    <span>{expandedMenus.includes(item.name) ? '−' : '+'}</span>
+                                </button>
+                                {expandedMenus.includes(item.name) && (
+                                    <div className="ml-4 flex flex-col space-y-1 border-l border-border pl-3">
+                                        {item.children.map((child) => (
+                                            <Link
+                                                key={child.name}
+                                                href={child.href}
+                                                className={`py-1 text-sm hover:text-foreground/80 ${
+                                                    isActive(child) ? 'font-medium text-primary' : 'text-foreground'
+                                                }`}
+                                            >
+                                                {child.name}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <Link
+                                key={item.name}
+                                href={item.href}
+                                className={`py-2 text-sm hover:text-foreground/80 ${isActive(item) ? 'font-medium text-primary' : 'text-foreground'}`}
+                            >
+                                {item.name}
+                            </Link>
+                        ),
+                    )}
+
+                    <div className="mt-4 flex flex-col space-y-2">
+                        {auth?.user ? (
                             <Link
                                 href={route('dashboard')}
-                                className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
+                                className="inline-block rounded-sm border border-border px-5 py-1.5 text-sm text-foreground hover:border-muted"
                             >
                                 Dashboard
                             </Link>
                         ) : (
                             <Link
                                 href={route('login')}
-                                className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
+                                className="inline-block rounded-sm border border-border px-5 py-1.5 text-sm text-foreground hover:border-muted"
                             >
                                 Login
                             </Link>
@@ -128,8 +245,8 @@ const Navigation = () => {
                         <Link
                             href="/contact-us"
                             className={`${
-                                isActive('/contact-us') ? 'bg-primary text-primary' : 'text-foreground'
-                            } inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]`}
+                                isActive('/contact-us') ? 'bg-primary text-primary-foreground' : 'text-foreground'
+                            } inline-block rounded-sm border border-border px-5 py-1.5 text-sm hover:border-muted`}
                         >
                             Contact Us
                         </Link>

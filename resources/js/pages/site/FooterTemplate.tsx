@@ -27,21 +27,15 @@ function FooterTemplate() {
 
                     {/* Quick Links */}
                     <div className="flex flex-col items-center md:items-start">
-                        <h4 className="mb-3 text-sm font-semibold text-muted-foreground uppercase">Webmaster</h4>
+                        <h4 className="mb-3 text-sm font-semibold text-muted-foreground uppercase">Other Links</h4>
                         <nav className="flex flex-col gap-2 text-sm md:flex-row">
-                            <Link href={route('dashboard')} className="hover:underline">
-                                Team
-                            </Link>
-                            <Link href={route('dashboard')} className="hover:underline">
-                                Career
-                            </Link>
-                            <Link href={route('dashboard')} className="hover:underline">
+                            <Link href="/terms-of-service" className="hover:underline">
                                 Terms of Service
                             </Link>
-                            <Link href={route('dashboard')} className="hover:underline">
+                            <Link href="/privacy-policy" className="hover:underline">
                                 Privacy
                             </Link>
-                            <Link href={route('dashboard')} className="hover:underline">
+                            <Link href="/disclaimer" className="hover:underline">
                                 Disclaimer
                             </Link>
                         </nav>

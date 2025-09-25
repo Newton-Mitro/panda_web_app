@@ -88,13 +88,13 @@ const AboutPage: React.FC<AboutPageProps> = ({ page }) => {
                 {/* Hero */}
                 <section className="mt-16 bg-secondary py-20 text-secondary-foreground">
                     <div className="mx-auto max-w-4xl px-4 text-center">
-                        <h1 className="mb-4 text-4xl font-bold md:text-5xl">About Us</h1>
+                        <h1 className="mb-4 text-4xl font-bold md:text-5xl">{page?.title}</h1>
                         <p className="text-lg opacity-90 md:text-xl">
                             We’d love to hear from you—reach out for support, partnerships, or just to say hi!
                         </p>
                     </div>
                 </section>
-                <div className="mx-auto my-16 w-full space-y-14 overflow-auto p-6 md:w-6xl">
+                <div className="mx-auto my-16 w-full space-y-14 p-6 md:w-6xl">
                     {page.sections.length > 0 ? (
                         <div className="">
                             {page.sections

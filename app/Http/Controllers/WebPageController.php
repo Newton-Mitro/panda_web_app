@@ -7,6 +7,7 @@ use App\Infrastructure\Models\Award;
 use App\Infrastructure\Models\Career;
 use App\Infrastructure\Models\Contact;
 use App\Infrastructure\Models\Event;
+use App\Infrastructure\Models\Gallery;
 use App\Infrastructure\Models\HeroSlider;
 use App\Infrastructure\Models\Notice;
 use App\Infrastructure\Models\Page;
@@ -49,21 +50,80 @@ class WebPageController extends Controller
             'projects' => $projects
         ]);
     }
-    /*************  ✨ Windsurf Command ⭐  *************/
-    /**
-     * About page
-     *
-     * @return \Inertia\Response
-     */
-    /*******  4e231114-9138-46a2-a445-9599b5a31933  *******/
 
     public function about()
     {
-        $aboutPage = Page::with(['sections.media'])
+        $page = Page::with(['sections.media'])
             ->where('slug', 'about-us')
             ->first();
 
         return Inertia::render('site/about-page', [
+            'page' => $page
+        ]);
+    }
+
+    public function ourStory()
+    {
+        $page = Page::with(['sections.media'])
+            ->where('slug', 'our-story')
+            ->first();
+
+        return Inertia::render('site/our-story-page', [
+            'page' => $page
+        ]);
+    }
+
+    public function missionVision()
+    {
+        $page = Page::with(['sections.media'])
+            ->where('slug', 'mission-vision')
+            ->first();
+
+        return Inertia::render('site/mission-vision-page', [
+            'page' => $page
+        ]);
+    }
+
+    public function faq()
+    {
+        $aboutPage = Page::with(['sections.media'])
+            ->where('slug', 'faq')
+            ->first();
+
+        return Inertia::render('site/faq-page', [
+            'page' => $aboutPage
+        ]);
+    }
+
+    public function termsOfService()
+    {
+        $aboutPage = Page::with(['sections.media'])
+            ->where('slug', 'terms-of-service')
+            ->first();
+
+        return Inertia::render('site/terms-of-service-page', [
+            'page' => $aboutPage
+        ]);
+    }
+
+    public function privacyPolicy()
+    {
+        $aboutPage = Page::with(['sections.media'])
+            ->where('slug', 'privacy-policy')
+            ->first();
+
+        return Inertia::render('site/privacy-policy-page', [
+            'page' => $aboutPage
+        ]);
+    }
+
+    public function disclaimer()
+    {
+        $aboutPage = Page::with(['sections.media'])
+            ->where('slug', 'disclaimer')
+            ->first();
+
+        return Inertia::render('site/disclaimer-page', [
             'page' => $aboutPage
         ]);
     }
@@ -81,9 +141,8 @@ class WebPageController extends Controller
         $perPage = $request->input('perPage', 8);
         $teams = Team::with('media', 'category')
             ->latest()
-            ->paginate($perPage)
-            ->withQueryString();
-        return Inertia::render('site/teams-page', [
+            ->get();
+        return Inertia::render('site/our-team-page', [
             'teams' => $teams,
         ]);
     }
@@ -132,18 +191,6 @@ class WebPageController extends Controller
         ]);
     }
 
-    public function events(Request $request)
-    {
-        $perPage = $request->input('perPage', 8);
-        $events = Event::with('media', 'category')
-            ->latest()
-            ->paginate($perPage)
-            ->withQueryString();
-        return Inertia::render('site/events-page', [
-            'events' => $events,
-        ]);
-    }
-
     public function awards(Request $request)
     {
         $perPage = $request->input('perPage', 8);
@@ -159,10 +206,8 @@ class WebPageController extends Controller
     public function careers(Request $request)
     {
         $perPage = $request->input('perPage', 8);
-        $jobCirculars = Career::with('media', 'category')
-            ->latest()
-            ->paginate($perPage)
-            ->withQueryString();
+        $jobCirculars = Career::latest()
+            ->get();
         return Inertia::render('site/careers-page', [
             'jobCirculars' => $jobCirculars,
         ]);
@@ -177,6 +222,18 @@ class WebPageController extends Controller
             ->withQueryString();
         return Inertia::render('site/notices-page', [
             'notices' => $notices,
+        ]);
+    }
+
+    public function galleries(Request $request)
+    {
+        $perPage = $request->input('perPage', 8);
+        $galleries = Gallery::with('media', 'category')
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+        return Inertia::render('site/galleries-page', [
+            'galleries' => $galleries,
         ]);
     }
 }

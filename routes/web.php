@@ -44,14 +44,19 @@ use App\Http\Controllers\ContactMessageController;
 Route::get('/', [WebPageController::class, 'home'])->name('site.home');
 Route::get('/about-us', [WebPageController::class, 'about'])->name('site.about');
 Route::get('/contact-us', [WebPageController::class, 'contact'])->name('site.contact');
-Route::get('/teams', [WebPageController::class, 'teams'])->name('site.teams');
+Route::get('/about-us/team', [WebPageController::class, 'teams'])->name('site.teams');
+Route::get('/about-us/our-story', [WebPageController::class, 'ourStory'])->name('site.our-story');
+Route::get('/about-us/mission-vision', [WebPageController::class, 'missionVision'])->name('site.mission-vision');
+Route::get('/about-us/careers', [WebPageController::class, 'careers'])->name('site.careers');
+Route::get('/faq', [WebPageController::class, 'faq'])->name('site.faq');
+Route::get('/disclaimer', [WebPageController::class, 'disclaimer'])->name('site.disclaimer');
+Route::get('/privacy-policy', [WebPageController::class, 'privacyPolicy'])->name('site.privacy-policy');
+Route::get('/terms-of-service', [WebPageController::class, 'termsOfService'])->name('site.terms-of-service');
 Route::get('/services', [WebPageController::class, 'services'])->name('site.services');
 Route::get('/finance-options', [WebPageController::class, 'financeOptions'])->name('site.finance-options');
 Route::get('/projects', [WebPageController::class, 'projects'])->name('site.projects');
 Route::get('/articles', [WebPageController::class, 'articles'])->name('site.articles');
-Route::get('/events', [WebPageController::class, 'events'])->name('site.events');
 Route::get('/awards', [WebPageController::class, 'awards'])->name('site.awards');
-Route::get('/careers', [WebPageController::class, 'careers'])->name('site.careers');
 Route::get('/notices', [WebPageController::class, 'notices'])->name('site.notices');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])

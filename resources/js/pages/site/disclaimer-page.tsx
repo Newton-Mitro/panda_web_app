@@ -5,12 +5,18 @@ import PageLayout from '../../layouts/page-layout';
 import { Page } from '../../types/page';
 import ResponsiveImageSection from '../pages/responsive-image-section';
 
-interface FinanceOptionsPageProps {
+interface DisclaimerPageProps {
     page: Page;
 }
 
-const FinanceOptionsPage: React.FC<FinanceOptionsPageProps> = ({ page }) => {
+const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ page }) => {
     console.log(page);
+    const pageUrl = window.location.href;
+    const imageUrl = '';
+    const metaTitle = page?.meta_title || 'YourSite';
+    const metaDescription = page?.meta_description || 'YourSite';
+    const metaKeywords = page?.meta_keywords || 'YourSite';
+
     const renderSectionContent = (jsonItems) => {
         try {
             const items = jsonItems ? JSON.parse(jsonItems) : [];
@@ -54,7 +60,30 @@ const FinanceOptionsPage: React.FC<FinanceOptionsPageProps> = ({ page }) => {
 
     return (
         <>
-            <Head title={page.title} />
+            <Head title={page.title}>
+                {/* Basic SEO */}
+                <meta name="title" content={metaTitle} />
+                <meta name="description" content={metaDescription} />
+                <meta name="keywords" content={`${metaKeywords || ''}, articles, blog`} />
+                <meta name="author" content={'YourSite'} />
+
+                {/* Open Graph (Facebook/LinkedIn) */}
+                <meta property="og:type" content="page" />
+                <meta property="og:title" content={page?.title} />
+                <meta property="og:description" content={metaDescription} />
+                <meta property="og:image" content={imageUrl} />
+                <meta property="og:url" content={pageUrl} />
+                <meta property="og:site_name" content="YourSite" />
+
+                {/* Twitter Cards */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={page?.title} />
+                <meta name="twitter:description" content={metaDescription} />
+                <meta name="twitter:image" content={imageUrl} />
+
+                {/* Canonical URL */}
+                <link rel="canonical" href={pageUrl} />
+            </Head>
             <PageLayout>
                 {/* Hero */}
                 <section className="mt-16 bg-secondary py-20 text-secondary-foreground">
@@ -123,4 +152,4 @@ const FinanceOptionsPage: React.FC<FinanceOptionsPageProps> = ({ page }) => {
     );
 };
 
-export default FinanceOptionsPage;
+export default DisclaimerPage;
