@@ -24,7 +24,6 @@ const Show: React.FC<PageProps> = ({ page, sections }) => {
     const renderSectionContent = (jsonItems) => {
         try {
             const items = jsonItems ? JSON.parse(jsonItems) : [];
-            console.log('ITEMS', items);
             return (
                 <div className={`${items[0].image || items[0].icon ? 'grid grid-cols-1 gap-12 md:grid-cols-3' : 'flex flex-col gap-4'}`}>
                     {items.map((item: any, idx: number) =>

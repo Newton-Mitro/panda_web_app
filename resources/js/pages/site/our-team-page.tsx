@@ -2,13 +2,13 @@ import { Head } from '@inertiajs/react';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 import PageLayout from '../../layouts/page-layout';
 import { Team } from '../../types/team';
+import TeamCard from './sections/team-card';
 
 interface OurTeamPageProps {
     teams: Team[];
 }
 
 const OurTeamPage: React.FC<OurTeamPageProps> = ({ teams }) => {
-    console.log(teams);
     const { ref, isVisible } = useScrollAnimation();
 
     return (
@@ -32,52 +32,7 @@ const OurTeamPage: React.FC<OurTeamPageProps> = ({ teams }) => {
                     >
                         <div className="mt-12 flex flex-col md:gap-36">
                             {teams.map((team, index) => (
-                                <div key={team.id ?? index} className="group flex cursor-pointer flex-col items-center md:relative md:flex-row">
-                                    {index % 2 === 0 ? (
-                                        <div
-                                            className={`group clear-both flex w-full ${index % 2 !== 0 ? 'flex-col-reverse' : 'flex-col'} items-center group-hover:cursor-pointer md:relative md:flex-row`}
-                                        >
-                                            <img
-                                                src={
-                                                    team?.media?.url ??
-                                                    'https://t3.ftcdn.net/jpg/01/06/12/68/360_F_106126874_6Yl8PyFmYgoOAx7DYoH6zs5a3MoFvQHr.jpg'
-                                                }
-                                                alt="Custom Shape"
-                                                style={{
-                                                    clipPath: 'polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%)',
-                                                }}
-                                                className={`borderobject-cover z-10 mt-6 mb-6 h-72 w-72 border-6 bg-card shadow-lg transition-transform duration-300 group-hover:scale-105 md:absolute md:h-96 md:w-96`}
-                                                // border-4 for thickness, border-blue-500 for color, adjust as needed
-                                            />
-                                            <div className="flex min-h-62 w-full flex-col justify-center rounded-2xl border-1 border-border bg-card p-6 md:ml-80 md:pl-20">
-                                                <div
-                                                    dangerouslySetInnerHTML={{ __html: team.bio ?? '' }}
-                                                    className="prose prose-sm text-muted-foreground [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500"
-                                                />
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div
-                                            className={`group clear-both flex w-full ${index % 2 !== 0 ? 'flex-col-reverse' : 'flex-col'} items-center group-hover:cursor-pointer md:relative md:flex-row`}
-                                        >
-                                            <div className="flex min-h-62 w-full flex-col justify-center rounded-2xl border-1 border-border bg-card p-6 md:mr-80 md:pr-20">
-                                                <div
-                                                    dangerouslySetInnerHTML={{ __html: team.bio ?? '' }}
-                                                    className="prose prose-sm text-muted-foreground [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500"
-                                                />
-                                            </div>
-                                            <img
-                                                src={team?.media?.url}
-                                                alt="Custom Shape"
-                                                style={{
-                                                    clipPath: 'polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%)',
-                                                }}
-                                                className={`borderobject-cover right-0 z-10 mt-6 mb-6 h-72 w-72 border-6 bg-card shadow-lg transition-transform duration-300 group-hover:scale-105 md:absolute md:h-96 md:w-96`}
-                                                // border-4 for thickness, border-blue-500 for color, adjust as needed
-                                            />
-                                        </div>
-                                    )}
-                                </div>
+                                <TeamCard key={index} member={team} index={index} />
                             ))}
                         </div>
                     </div>

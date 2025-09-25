@@ -53,7 +53,6 @@ const Index: React.FC<PageProps> = ({ mediaItems, filters }) => {
                         });
                     },
                     onError: (errors) => {
-                        console.log(errors);
                         Object.values(errors).forEach((fieldErrors: any) => {
                             if (Array.isArray(fieldErrors)) {
                                 fieldErrors.forEach((msg: string) => toast.error(msg));
@@ -80,7 +79,6 @@ const Index: React.FC<PageProps> = ({ mediaItems, filters }) => {
             preserveScroll: true,
             onSuccess: () => toast.success('Media uploaded successfully.'),
             onError: (errors) => {
-                console.log(errors);
                 Object.values(errors).forEach((fieldErrors: any) => {
                     if (Array.isArray(fieldErrors)) {
                         fieldErrors.forEach((msg: string) => toast.error(msg));

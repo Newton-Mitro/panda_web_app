@@ -9,7 +9,6 @@ interface ShowProjectProps {
 }
 
 export default function Show({ project }: ShowProjectProps) {
-    console.log('print', project);
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
         { title: 'Projects', href: route('projects.index') },

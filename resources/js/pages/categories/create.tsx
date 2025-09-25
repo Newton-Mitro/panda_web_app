@@ -61,8 +61,6 @@ export default function Create({ media, categories }: CreateProps) {
         { title: 'Create Category', href: '' },
     ];
 
-    console.log(parentCategories);
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create Category" />

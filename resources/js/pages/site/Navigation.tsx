@@ -43,6 +43,7 @@ const Navigation = () => {
                 { name: 'Courses', label: 'courses', href: '/courses' },
             ],
         },
+        { name: 'Contact', label: 'contact-us', href: '/contact-us' },
     ];
 
     const { props } = usePage<SharedData>();
@@ -55,9 +56,6 @@ const Navigation = () => {
     const appName = import.meta.env.VITE_APP_NAME || 'SmartPanda';
 
     const isActive = (menu: any) => {
-        console.log(menu);
-        console.log(url);
-
         return url === menu.href || url.startsWith(`/${menu.label}`);
     };
 

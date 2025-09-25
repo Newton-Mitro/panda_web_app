@@ -3,14 +3,12 @@ import Gallery from '../../components/gallery';
 import ServiceCardBorderIcon from '../../components/service-card-border-icon';
 import PageLayout from '../../layouts/page-layout';
 import { Page } from '../../types/page';
-import ResponsiveImageSection from '../pages/responsive-image-section';
 
 interface OurStoryPageProps {
     page: Page;
 }
 
 const OurStoryPage: React.FC<OurStoryPageProps> = ({ page }) => {
-    console.log(page);
     const pageUrl = window.location.href;
     const imageUrl = '';
     const metaTitle = page?.meta_title || 'YourSite';
@@ -20,7 +18,6 @@ const OurStoryPage: React.FC<OurStoryPageProps> = ({ page }) => {
     const renderSectionContent = (jsonItems) => {
         try {
             const items = jsonItems ? JSON.parse(jsonItems) : [];
-            console.log('ITEMS', items);
             return (
                 <div className={`${items[0].image || items[0].icon ? 'grid grid-cols-1 gap-12 md:grid-cols-3' : 'flex flex-col gap-4'}`}>
                     {items.map((item: any, idx: number) =>
@@ -108,14 +105,65 @@ const OurStoryPage: React.FC<OurStoryPageProps> = ({ page }) => {
                                             <div className="mx-auto mb-8 h-1 w-16 bg-foreground md:mx-0"></div>
                                         </div>
 
-                                        <ResponsiveImageSection
-                                            mediaUrl={section.media?.url}
-                                            mimeType={section.media?.file_type}
-                                            contentHtml={section.content || ''}
-                                            shape="octagon-left"
-                                        />
+                                        <div className="prose prose-sm max-w-none text-muted-foreground [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500">
+                                            <img
+                                                src={section?.media?.url}
+                                                alt="Custom Shape"
+                                                className="float-left mr-6 mb-4 h-[500px] w-[500px] bg-card object-cover transition-transform duration-300 hover:scale-105"
+                                                style={{
+                                                    clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)',
+                                                    shapeOutside: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)',
+                                                }}
+                                            />
 
-                                        <div className="py-6">{section.json_array && renderSectionContent(section.json_array)}</div>
+                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
+                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
+                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
+                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
+                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
+                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
+                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
+                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
+                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
+                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
+                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
+                                        </div>
+
+                                        <div className="flex flex-col items-center gap-16 md:flex-row">
+                                            <img
+                                                alt="Custom Shape"
+                                                src="http://localhost:8000/storage/uploads/images/7.jpg"
+                                                className="mt-6 mb-6 h-82 w-82 bg-card object-cover transition-transform duration-300 hover:scale-110 md:mr-6 md:h-[500px] md:w-[500px]"
+                                                style={{
+                                                    clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)',
+                                                    shapeOutside: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)',
+                                                }}
+                                            />
+
+                                            <div className="prose prose-sm max-w-none text-muted-foreground [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500">
+                                                Modi molestiae et nesciunt voluptas impedit. Quasi sunt et enim voluptas. Ullam esse eius quo porro
+                                                enim. Iure eaque est repellendus quam vero ut. Consectetur quia aut rerum hic occaecati.
+                                            </div>
+                                        </div>
+
+                                        <div className="flex flex-col items-center gap-16 md:flex-row-reverse">
+                                            <img
+                                                alt="Custom Shape"
+                                                src="http://localhost:8000/storage/uploads/images/7.jpg"
+                                                className="mt-6 mb-6 h-82 w-82 bg-card object-cover transition-transform duration-300 hover:scale-110 md:ml-6 md:h-[500px] md:w-[500px]"
+                                                style={{
+                                                    clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)',
+                                                    shapeOutside: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)',
+                                                }}
+                                            />
+
+                                            <div className="prose prose-sm max-w-none text-muted-foreground [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500">
+                                                Modi molestiae et nesciunt voluptas impedit. Quasi sunt et enim voluptas. Ullam esse eius quo porro
+                                                enim. Iure eaque est repellendus quam vero ut. Consectetur quia aut rerum hic occaecati.
+                                            </div>
+                                        </div>
+
+                                        <div className="clear-both py-6">{section.json_array && renderSectionContent(section.json_array)}</div>
 
                                         {/* Gallery */}
                                         {section?.gallery && section?.gallery.length > 0 && (

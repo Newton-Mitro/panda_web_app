@@ -8,7 +8,6 @@ interface GalleriesPageProps {
 }
 
 const GalleriesPage: React.FC<GalleriesPageProps> = ({ services }) => {
-    console.log(services);
     const { ref, isVisible } = useScrollAnimation();
 
     return (

@@ -34,8 +34,6 @@ interface PageForm {
 }
 
 const Edit: React.FC<EditProps> = ({ page, sections, media }) => {
-    console.log('PAGE', page);
-    console.log('SECTIONS', sections);
     const [pageForm, setPageForm] = useState<PageForm>({
         title: page.title || '',
         meta_title: page.meta_title || '',
@@ -76,8 +74,6 @@ const Edit: React.FC<EditProps> = ({ page, sections, media }) => {
                 },
                 onError: (err) => {
                     const newErrors: any = {};
-
-                    console.log(err);
 
                     // Page-level errors
                     if (err.title) newErrors.title = err.title;
