@@ -5,11 +5,7 @@ import { SharedData } from '../../types';
 
 const Navigation = () => {
     const navItems = [
-        {
-            name: 'Home',
-            label: 'home',
-            href: '/',
-        },
+        { name: 'Home', label: 'home', href: '/' },
         {
             name: 'About Us',
             label: 'about-us',
@@ -21,11 +17,7 @@ const Navigation = () => {
                 { name: 'Careers', label: 'careers', href: '/about-us/careers' },
             ],
         },
-        {
-            name: 'Services',
-            label: 'services',
-            href: '/services',
-        },
+        { name: 'Services', label: 'services', href: '/services' },
         // {
         //     name: 'Finance Options',
         //     label: 'finance-options',
@@ -36,35 +28,19 @@ const Navigation = () => {
         //         { name: 'Debt Model', label: 'debt-model', href: '/finance-options/debt-model' },
         //     ],
         // },
-        {
-            name: 'Projects',
-            label: 'projects',
-            href: '/projects',
-        },
-        {
-            name: 'Doctors',
-            label: 'doctors',
-            href: '/doctors',
-        },
-        {
-            name: 'Appointment',
-            label: 'appointment',
-            href: '/appointment',
-        },
-        {
-            name: 'Courses',
-            label: 'courses',
-            href: '/courses',
-        },
+        { name: 'Projects', label: 'projects', href: '/projects' },
+        { name: 'FAQ', label: 'faq', href: '/faq' },
+        { name: 'Notices', label: 'notices', href: '/notices' },
+        { name: 'Galleries', label: 'galleries', href: '/galleries' },
         {
             name: 'More',
             label: 'more',
             href: '#',
             children: [
                 { name: 'Articles', label: 'articles', href: '/articles' },
-                { name: 'FAQ', label: 'faq', href: '/faq' },
-                { name: 'Notices', label: 'notices', href: '/notices' },
-                { name: 'Galleries', label: 'galleries', href: '/galleries' },
+                { name: 'Doctors', label: 'doctors', href: '/doctors' },
+                { name: 'Appointment', label: 'appointment', href: '/appointment' },
+                { name: 'Courses', label: 'courses', href: '/courses' },
             ],
         },
     ];
