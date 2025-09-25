@@ -218,8 +218,7 @@ class WebPageController extends Controller
         $perPage = $request->input('perPage', 8);
         $notices = Notice::with('media', 'category')
             ->latest()
-            ->paginate($perPage)
-            ->withQueryString();
+            ->get();
         return Inertia::render('site/notices-page', [
             'notices' => $notices,
         ]);

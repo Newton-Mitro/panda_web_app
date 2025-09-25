@@ -27,8 +27,8 @@ function FooterTemplate() {
 
                     {/* Quick Links */}
                     <div className="flex flex-col items-center md:items-start">
-                        <h4 className="mb-3 text-sm font-semibold text-muted-foreground uppercase">Other Links</h4>
-                        <nav className="flex flex-col gap-2 text-sm md:flex-row">
+                        <h4 className="mb-4 text-sm font-semibold text-foreground uppercase">Other Links</h4>
+                        <nav className="flex flex-col items-center gap-2 text-sm text-muted-foreground md:flex-row">
                             <Link href="/terms-of-service" className="hover:underline">
                                 Terms of Service
                             </Link>
@@ -43,18 +43,18 @@ function FooterTemplate() {
 
                     {/* Social Media */}
                     <div className="flex flex-col items-center md:items-start">
-                        <h4 className="mb-3 text-sm font-semibold text-muted-foreground uppercase">Follow Us</h4>
-                        <div className="flex gap-4">
-                            <a href="#" className="rounded-full p-2 hover:bg-muted">
+                        <h4 className="mb-3 text-sm font-semibold text-foreground uppercase">Follow Us</h4>
+                        <div className="flex gap-4 text-muted-foreground">
+                            <a href="#" className="rounded-full p-2 hover:bg-muted hover:text-foreground">
                                 <FaFacebookF />
                             </a>
-                            <a href="#" className="rounded-full p-2 hover:bg-muted">
+                            <a href="#" className="rounded-full p-2 hover:bg-muted hover:text-foreground">
                                 <FaTwitter />
                             </a>
-                            <a href="#" className="rounded-full p-2 hover:bg-muted">
+                            <a href="#" className="rounded-full p-2 hover:bg-muted hover:text-foreground">
                                 <FaLinkedinIn />
                             </a>
-                            <a href="#" className="rounded-full p-2 hover:bg-muted">
+                            <a href="#" className="rounded-full p-2 hover:bg-muted hover:text-foreground">
                                 <FaInstagram />
                             </a>
                         </div>
