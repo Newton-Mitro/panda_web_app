@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('title');
             $table->string('slug')->unique();
             $table->longText('description')->nullable();
+            $table->text('excerpt')->nullable();
             $table->string('location')->nullable();
             $table->date('start_date');
             $table->date('end_date')->nullable();

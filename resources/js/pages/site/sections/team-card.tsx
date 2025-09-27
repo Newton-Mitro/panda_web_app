@@ -108,7 +108,6 @@ const TeamCardDiagonal: React.FC<TeamCardProps> = ({ member, index }) => {
         </div>
 
         // <div className="group relative h-[360px] w-[360px] rotate-45 transform overflow-hidden transition-all duration-500 hover:shadow">
-        //     {/* Image */}
         //     <img
         //         src={member.media?.url || 'https://via.placeholder.com/300'}
         //         alt={member.name}
@@ -122,7 +121,6 @@ const TeamCardDiagonal: React.FC<TeamCardProps> = ({ member, index }) => {
         //             <p className="text-sm text-gray-200">{member.designation}</p>
         //             {member.department && <p className="mt-1 text-xs text-gray-300">{member.department}</p>}
 
-        //             {/* Social Icons */}
         //             <div className="mt-3 flex justify-center space-x-2">
         //                 {socials.map((s, i) => (
         //                     <a
@@ -139,7 +137,6 @@ const TeamCardDiagonal: React.FC<TeamCardProps> = ({ member, index }) => {
         //         </div>
         //     </div>
 
-        //     {/* Optional border for diamond shape */}
         //     <div className="pointer-events-none absolute inset-0 -rotate-45 rounded-lg border-2 border-white/30"></div>
         // </div>
 

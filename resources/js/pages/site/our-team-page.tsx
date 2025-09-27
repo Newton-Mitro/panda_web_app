@@ -1,5 +1,4 @@
 import { Head } from '@inertiajs/react';
-import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 import PageLayout from '../../layouts/page-layout';
 import { Team } from '../../types/team';
 import TeamCard from './sections/team-card';
@@ -9,8 +8,6 @@ interface OurTeamPageProps {
 }
 
 const OurTeamPage: React.FC<OurTeamPageProps> = ({ teams }) => {
-    const { ref, isVisible } = useScrollAnimation();
-
     return (
         <>
             <Head title="Our Team" />
@@ -26,10 +23,8 @@ const OurTeamPage: React.FC<OurTeamPageProps> = ({ teams }) => {
                 </section>
 
                 {/* Services List */}
-                <section ref={ref} id="attribute" className="my-44">
-                    <div
-                        className={`mx-auto max-w-6xl px-4 transition-all duration-700 sm:px-6 md:px-6 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`}
-                    >
+                <section id="attribute" className="my-44">
+                    <div className={`mx-auto max-w-6xl px-4 transition-all duration-700 sm:px-6 md:px-6`}>
                         <div className="mt-12 flex flex-col md:gap-36">
                             {teams.map((team, index) => (
                                 <TeamCard key={index} member={team} index={index} />

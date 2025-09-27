@@ -19,6 +19,7 @@ return new class extends Migration {
                 'TEXT'
             ])->default('HTML');
             $table->longText('content')->nullable();
+            $table->text('excerpt')->nullable();
             $table->json('json_array')->nullable();
             $table->json('gallery')->nullable();
             $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();

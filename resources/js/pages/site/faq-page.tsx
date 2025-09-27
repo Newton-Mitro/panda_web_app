@@ -50,6 +50,7 @@ const FaqPage: React.FC<FaqPageProps> = ({ page }) => {
                 </div>
             );
         } catch (error) {
+            console.error('Error parsing JSON:', error);
             return <p className="text-sm text-red-500">Invalid JSON content</p>;
         }
     };

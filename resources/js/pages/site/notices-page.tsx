@@ -1,5 +1,4 @@
 import { Head } from '@inertiajs/react';
-import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 import PageLayout from '../../layouts/page-layout';
 import { Notice } from '../../types/notice';
 
@@ -8,8 +7,6 @@ interface NoticesPageProps {
 }
 
 const NoticesPage: React.FC<NoticesPageProps> = ({ notices }) => {
-    const { ref, isVisible } = useScrollAnimation();
-
     return (
         <>
             <Head title="Notices" />
@@ -25,39 +22,34 @@ const NoticesPage: React.FC<NoticesPageProps> = ({ notices }) => {
                 </section>
 
                 {/* Notices List */}
-                <section ref={ref} className="my-16">
-                    <div
-                        className={`mx-auto max-w-6xl px-4 transition-all duration-700 sm:px-6 md:px-6 ${
-                            isVisible ? 'animate-fade-in' : 'opacity-0'
-                        }`}
-                    >
-                        <div className="relative border-l-2 border-gray-300 dark:border-gray-600">
+                <section className="my-16">
+                    <div className="mx-auto max-w-6xl px-4 sm:px-6 md:px-6">
+                        <div className="relative">
+                            {/* Center line */}
+                            <div className="absolute top-0 left-1/2 h-full w-0.5 -translate-x-1/2 bg-gray-300 dark:bg-gray-600"></div>
+
                             {notices.map((notice, idx) => {
                                 const isLeft = idx % 2 === 0;
                                 return (
-                                    <div key={notice.id} className="mb-12 flex w-full items-center justify-between">
+                                    <div key={notice.id} className="relative mb-12 flex w-full">
                                         {/* Timeline dot */}
-                                        <div className="absolute left-[-6px] h-4 w-4 rounded-full border-2 bg-purple-600 dark:border-gray-900"></div>
+                                        <div className="absolute left-1/2 h-4 w-4 -translate-x-1/2 rounded-full border-2 bg-accent"></div>
 
                                         {/* Notice Card */}
                                         <div
-                                            className={`w-full max-w-md rounded-3xl border bg-card p-6 shadow-xl transition-transform duration-500 hover:-translate-y-2 hover:scale-[1.02] ${
-                                                isLeft
-                                                    ? 'ml-8 text-right md:ml-0 md:translate-x-[-100%]'
-                                                    : 'ml-8 text-left md:ml-0 md:translate-x-[0]'
-                                            }`}
+                                            className={`w-full max-w-md rounded-3xl border bg-card p-6 shadow-xl transition-transform duration-500 hover:-translate-y-2 hover:scale-[1.02] ${isLeft ? 'pr-10 text-right md:mr-auto' : 'pl-10 text-left md:ml-auto'}`}
                                         >
-                                            <h3 className="mb-2 text-xl font-bold text-gray-900">{notice.title}</h3>
-                                            <p className="mb-3 line-clamp-4 text-gray-600">{notice.content}</p>
+                                            <h3 className="mb-2 text-xl font-bold text-card-foreground">{notice.title}</h3>
+                                            <p className="mb-3 line-clamp-4 text-muted-foreground">{notice.content}</p>
                                             <div className="flex items-center justify-between text-xs text-gray-400">
                                                 <span>{new Date(notice.created_at).toLocaleDateString()}</span>
                                                 {notice.category && (
-                                                    <span className="rounded-full bg-purple-100 px-3 py-1 font-semibold text-purple-700">
+                                                    <span className="rounded-full bg-primary px-3 py-1 font-semibold text-primary-foreground">
                                                         {notice.category.name}
                                                     </span>
                                                 )}
                                             </div>
-                                            {notice.link && (
+                                            {/* {notice.link && (
                                                 <a
                                                     href={notice.link}
                                                     target="_blank"
@@ -66,7 +58,7 @@ const NoticesPage: React.FC<NoticesPageProps> = ({ notices }) => {
                                                 >
                                                     Read More
                                                 </a>
-                                            )}
+                                            )} */}
                                         </div>
                                     </div>
                                 );

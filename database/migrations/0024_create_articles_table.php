@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->string('title');
             $table->string('slug')->unique();
             $table->longText('content');
+            $table->text('excerpt')->nullable();
             $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();
             $table->enum('status', ['Draft', 'Published', 'Archived'])->default('Draft');
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();

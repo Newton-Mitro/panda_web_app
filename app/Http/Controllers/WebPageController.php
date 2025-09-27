@@ -11,7 +11,6 @@ use App\Infrastructure\Models\Gallery;
 use App\Infrastructure\Models\HeroSlider;
 use App\Infrastructure\Models\Notice;
 use App\Infrastructure\Models\Page;
-use App\Infrastructure\Models\PageSection;
 use App\Infrastructure\Models\Project;
 use App\Infrastructure\Models\Service;
 use App\Infrastructure\Models\Team;
@@ -227,10 +226,9 @@ class WebPageController extends Controller
     public function galleries(Request $request)
     {
         $perPage = $request->input('perPage', 8);
-        $galleries = Gallery::with('media', 'category')
+        $galleries = Gallery::with('media', 'mediaItems.media')
             ->latest()
-            ->paginate($perPage)
-            ->withQueryString();
+            ->get();
         return Inertia::render('site/galleries-page', [
             'galleries' => $galleries,
         ]);

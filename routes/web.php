@@ -58,6 +58,7 @@ Route::get('/projects', [WebPageController::class, 'projects'])->name('site.proj
 Route::get('/articles', [WebPageController::class, 'articles'])->name('site.articles');
 Route::get('/awards', [WebPageController::class, 'awards'])->name('site.awards');
 Route::get('/notices', [WebPageController::class, 'notices'])->name('site.notices');
+Route::get('/galleries', [WebPageController::class, 'galleries'])->name('site.galleries');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])

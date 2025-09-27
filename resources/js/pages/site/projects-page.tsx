@@ -1,6 +1,5 @@
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
-import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 import PageLayout from '../../layouts/page-layout';
 import { Project } from '../../types/project';
 
@@ -9,8 +8,6 @@ interface ProjectsPageProps {
 }
 
 const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects }) => {
-    const { ref, isVisible } = useScrollAnimation();
-
     // Extract unique categories
     const categories = Array.from(new Set(projects.map((p) => p.category?.name))).filter(Boolean) as string[];
     const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -60,12 +57,8 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects }) => {
                 </section>
 
                 {/* Projects List */}
-                <section ref={ref} className="my-44">
-                    <div
-                        className={`mx-auto max-w-6xl px-4 transition-all duration-700 sm:px-6 md:px-6 ${
-                            isVisible ? 'animate-fade-in' : 'opacity-0'
-                        }`}
-                    >
+                <section className="my-44">
+                    <div className={`mx-auto max-w-6xl px-4 transition-all duration-700 sm:px-6 md:px-6`}>
                         <div className="mt-12 flex flex-col md:gap-36">
                             {filteredProjects.map((project, index) => (
                                 <div key={project.id} className="group flex cursor-pointer flex-col items-center md:relative md:flex-row">

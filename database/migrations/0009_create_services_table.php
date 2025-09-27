@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('title');
             $table->string('slug')->unique();
             $table->longText('description')->nullable();
+            $table->text('excerpt')->nullable();
             $table->json('gallery')->nullable();
             $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();

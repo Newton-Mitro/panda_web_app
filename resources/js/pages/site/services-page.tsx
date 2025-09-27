@@ -1,6 +1,5 @@
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
-import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 import PageLayout from '../../layouts/page-layout';
 import { Service } from '../../types/service';
 import ServiceCard from './sections/service-card';
@@ -10,8 +9,6 @@ interface ServicePageProps {
 }
 
 const ServicePage: React.FC<ServicePageProps> = ({ services }) => {
-    const { ref, isVisible } = useScrollAnimation();
-
     // Extract unique categories from services
     const categories = Array.from(new Set(services.map((s) => s.category?.name))).filter(Boolean) as string[];
 
@@ -65,12 +62,8 @@ const ServicePage: React.FC<ServicePageProps> = ({ services }) => {
                 </section>
 
                 {/* Services List */}
-                <section ref={ref} className="my-44">
-                    <div
-                        className={`mx-auto max-w-6xl px-4 transition-all duration-700 sm:px-6 md:px-6 ${
-                            isVisible ? 'animate-fade-in' : 'opacity-0'
-                        }`}
-                    >
+                <section className="my-44">
+                    <div className={`mx-auto max-w-6xl px-4 transition-all duration-700 sm:px-6 md:px-6`}>
                         <div className="mt-12 flex flex-col md:gap-36">
                             {filteredServices.map((service, index) => (
                                 <ServiceCard key={service.id} service={service} index={index} />

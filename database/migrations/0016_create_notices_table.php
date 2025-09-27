@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('title');
             $table->string('slug')->unique();
             $table->longText('content')->nullable();
+            $table->text('excerpt')->nullable();
             $table->date('publish_date');
             $table->date('expiry_date')->nullable();
             $table->foreignId('media_id')->nullable()->constrained('media')->nullOnDelete();

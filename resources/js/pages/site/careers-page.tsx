@@ -1,6 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
 import { Briefcase, Clock, DollarSign, MapPin } from 'lucide-react';
-import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 import PageLayout from '../../layouts/page-layout';
 import { JobCircular } from '../../types/job_circular';
 
@@ -9,8 +8,6 @@ interface CareersPageProps {
 }
 
 const CareersPage: React.FC<CareersPageProps> = ({ jobCirculars }) => {
-    const { ref, isVisible } = useScrollAnimation();
-
     return (
         <>
             <Head title="Careers" />
@@ -24,18 +21,14 @@ const CareersPage: React.FC<CareersPageProps> = ({ jobCirculars }) => {
                 </section>
 
                 {/* Careers List */}
-                <section ref={ref} id="careers" className="my-24">
-                    <div
-                        className={`mx-auto max-w-6xl px-4 transition-all duration-700 sm:px-6 md:px-6 ${
-                            isVisible ? 'animate-fade-in' : 'opacity-0'
-                        }`}
-                    >
+                <section id="careers" className="my-24">
+                    <div className={`mx-auto max-w-6xl px-4 transition-all duration-700 sm:px-6 md:px-6`}>
                         {jobCirculars.length > 0 ? (
                             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                                 {jobCirculars.map((career) => (
                                     <div
                                         key={career.id}
-                                        className="group flex flex-col justify-between rounded-2xl border bg-card p-6 shadow-sm transition hover:shadow"
+                                        className="group flex flex-col justify-between rounded-2xl border bg-card p-6 transition hover:shadow"
                                     >
                                         {/* Job Title */}
                                         <div>
@@ -70,7 +63,7 @@ const CareersPage: React.FC<CareersPageProps> = ({ jobCirculars }) => {
                                         <div className="mt-6">
                                             <Link
                                                 href={route('careers.show', career.slug)}
-                                                className="inline-block rounded-lg bg-primary px-5 py-2 text-sm font-medium text-white shadow hover:bg-primary/90"
+                                                className="inline-block rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-white shadow hover:bg-primary/90"
                                             >
                                                 View Details
                                             </Link>
