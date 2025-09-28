@@ -7,6 +7,7 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/text-area';
 import PageLayout from '../../layouts/page-layout';
+import PageBanner from './components/page-banner';
 
 interface ContactPageProps {
     contacts: Contact[];
@@ -48,14 +49,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ contacts }) => {
             <Head title="Contact Us" />
             <PageLayout>
                 {/* Hero */}
-                <section className="mt-16 bg-secondary py-20 text-secondary-foreground">
-                    <div className="mx-auto max-w-4xl px-4 text-center">
-                        <h1 className="mb-4 text-4xl font-bold md:text-5xl">Contact Us</h1>
-                        <p className="text-lg opacity-90 md:text-xl">
-                            We’d love to hear from you—reach out for support, partnerships, or just to say hi!
-                        </p>
-                    </div>
-                </section>
+                <PageBanner title="Contact Us" subtitle="We’d love to hear from you—reach out for support, partnerships, or just to say hi!" />
 
                 {/* Contact Info & Form */}
                 <section className="mx-auto max-w-6xl px-6 py-16">

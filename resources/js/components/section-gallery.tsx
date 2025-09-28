@@ -1,11 +1,11 @@
 import { X } from 'lucide-react';
 import React, { useState } from 'react';
 
-interface GalleryProps {
+interface SectionGalleryProps {
     gallery: string[];
 }
 
-const Gallery: React.FC<GalleryProps> = ({ gallery }) => {
+const SectionGallery: React.FC<SectionGalleryProps> = ({ gallery }) => {
     const [currentIndex, setCurrentIndex] = useState<number | null>(null);
 
     const isImage = (url: string) => /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(url);
@@ -25,27 +25,42 @@ const Gallery: React.FC<GalleryProps> = ({ gallery }) => {
 
     return (
         <>
-            <div className="mt-2">
-                <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
-                    {gallery.map((url, idx) => (
-                        <div
-                            key={idx}
-                            className="cursor-pointer overflow-hidden rounded border dark:border-gray-700"
-                            onClick={() => setCurrentIndex(idx)}
-                        >
-                            {isImage(url) ? (
-                                <img src={url} alt={`gallery-${idx}`} className="h-72 w-full object-cover" />
-                            ) : isVideo(url) ? (
-                                <video src={url} className="h-72 w-full object-cover" muted playsInline />
-                            ) : (
-                                <div className="flex h-72 w-full items-center justify-center bg-gray-100 text-xs text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    File
-                                </div>
-                            )}
-                        </div>
-                    ))}
+            <section id="attribute" className="my-16">
+                <div className={`mx-auto max-w-6xl px-4 transition-all duration-700 sm:px-6 md:px-6`}>
+                    <div className="flex flex-wrap justify-evenly gap-6">
+                        {gallery.map((attachment, index) => (
+                            <div
+                                key={index}
+                                className="group relative h-80 w-80 overflow-hidden transition-all duration-500"
+                                onClick={() => setCurrentIndex(index)}
+                                style={{
+                                    clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)', // octagon example
+                                }}
+                            >
+                                {/* Image */}
+                                {isImage(attachment) ? (
+                                    <img
+                                        src={attachment}
+                                        className="absolute inset-0 h-full w-full bg-card object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                ) : isVideo(attachment) ? (
+                                    <video src={attachment} className="h-full w-full object-cover" muted playsInline />
+                                ) : (
+                                    <div className="flex h-full w-full items-center justify-center bg-card text-xs text-card-foreground">File</div>
+                                )}
+
+                                {/* Border Frame */}
+                                <div
+                                    className="pointer-events-none absolute inset-0 border-2 border-white/30"
+                                    style={{
+                                        clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)',
+                                    }}
+                                ></div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            </section>
 
             {/* Modal */}
             {currentIndex !== null && (
@@ -97,4 +112,4 @@ const Gallery: React.FC<GalleryProps> = ({ gallery }) => {
     );
 };
 
-export default Gallery;
+export default SectionGallery;

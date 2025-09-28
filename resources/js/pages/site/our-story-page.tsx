@@ -1,8 +1,11 @@
 import { Head } from '@inertiajs/react';
-import Gallery from '../../components/gallery';
-import ServiceCardBorderIcon from '../../components/service-card-border-icon';
+import SectionGallery from '../../components/section-gallery';
 import PageLayout from '../../layouts/page-layout';
 import { Page } from '../../types/page';
+import ImageWrappedContentSection from './components/image-wrapped-content-section';
+import PageBanner from './components/page-banner';
+import RenderSectionContent from './components/render-section-content';
+import SectionHeader from './components/section-header';
 
 interface OurStoryPageProps {
     page: Page;
@@ -14,46 +17,6 @@ const OurStoryPage: React.FC<OurStoryPageProps> = ({ page }) => {
     const metaTitle = page?.meta_title || 'YourSite';
     const metaDescription = page?.meta_description || 'YourSite';
     const metaKeywords = page?.meta_keywords || 'YourSite';
-
-    const renderSectionContent = (jsonItems) => {
-        try {
-            const items = jsonItems ? JSON.parse(jsonItems) : [];
-            return (
-                <div className={`${items[0].image || items[0].icon ? 'grid grid-cols-1 gap-12 md:grid-cols-3' : 'flex flex-col gap-4'}`}>
-                    {items.map((item: any, idx: number) =>
-                        item.img_icon || item.question ? (
-                            item.question ? (
-                                <div className="">
-                                    {item.question && <p className="font-semibold">{`${idx + 1}. ${item.question}`}</p>}
-                                    {item.answer && <p className="text-[var(--muted-foreground)]">{item.answer}</p>}
-                                </div>
-                            ) : (
-                                <div className="flex items-center gap-6">
-                                    <img src={item.img_icon} alt={item.text || `img-${idx}`} className="h-8 w-8 flex-shrink-0 object-cover" />
-                                    <div className="">
-                                        {item.title && <p className="font-semibold">{item.title}</p>}
-                                        {item.subtitle && <p className="text-[var(--muted-foreground)]">{item.subtitle.substring(0, 80)}</p>}
-                                    </div>
-                                </div>
-                            )
-                        ) : item.image ? (
-                            <div className="flex items-center gap-6 bg-card px-4 py-2">
-                                <img src={item.image} alt={item.text || `img-${idx}`} className="h-16 w-16 flex-shrink-0 object-cover" />
-                                <div className="">
-                                    {item.title && <p className="font-semibold">{item.title}</p>}
-                                    {item.subtitle && <p className="text-[var(--muted-foreground)]">{item.subtitle.substring(0, 80)}</p>}
-                                </div>
-                            </div>
-                        ) : (
-                            <ServiceCardBorderIcon key={idx} icon={item.icon} title={item.title} text={item.subtitle.substring(0, 80)} />
-                        ),
-                    )}
-                </div>
-            );
-        } catch {
-            return <p className="text-sm text-[var(--destructive)]">Invalid JSON content</p>;
-        }
-    };
 
     return (
         <>
@@ -83,14 +46,7 @@ const OurStoryPage: React.FC<OurStoryPageProps> = ({ page }) => {
             </Head>
             <PageLayout>
                 {/* Hero */}
-                <section className="mt-16 bg-secondary py-20 text-secondary-foreground">
-                    <div className="mx-auto max-w-4xl px-4 text-center">
-                        <h1 className="mb-4 text-4xl font-bold md:text-5xl">{page?.title}</h1>
-                        <p className="text-lg opacity-90 md:text-xl">
-                            We’d love to hear from you—reach out for support, partnerships, or just to say hi!
-                        </p>
-                    </div>
-                </section>
+                <PageBanner title={page.title} />
                 <div className="mx-auto my-16 w-full space-y-14 p-6 md:w-6xl">
                     {page.sections.length > 0 ? (
                         <div className="">
@@ -99,81 +55,21 @@ const OurStoryPage: React.FC<OurStoryPageProps> = ({ page }) => {
                                 .map((section, index) => (
                                     <div key={section.id || index} className="mb-30 w-full space-y-10 lg:w-6xl">
                                         {/* Section Heading */}
-                                        <div className="mb-6 flex flex-col items-center justify-center text-center">
-                                            {section.heading && <h2 className="mb-1 text-3xl font-semibold">{section.heading}</h2>}
-                                            {section.sub_heading && <h3 className="mb-2 text-sm text-gray-500">{section.sub_heading}</h3>}
-                                            <div className="mx-auto mb-8 h-1 w-16 bg-foreground md:mx-0"></div>
-                                        </div>
+                                        <SectionHeader heading={section?.heading} sub_heading={section?.sub_heading} />
 
-                                        <div className="prose prose-sm max-w-none text-muted-foreground [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500">
-                                            <img
-                                                src={section?.media?.url}
-                                                alt="Custom Shape"
-                                                className="float-left mr-6 mb-4 h-[500px] w-[500px] bg-card object-cover transition-transform duration-300 hover:scale-105"
-                                                style={{
-                                                    clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)',
-                                                    shapeOutside: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)',
-                                                }}
-                                            />
+                                        <ImageWrappedContentSection
+                                            mediaUrl={section.media?.url}
+                                            mimeType={section.media?.file_type}
+                                            contentHtml={section.content || ''}
+                                            shape="octagon-left"
+                                        />
 
-                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
-                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
-                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
-                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
-                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
-                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
-                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
-                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
-                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
-                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
-                                            <div dangerouslySetInnerHTML={{ __html: section.content || '' }} className="" />
-                                        </div>
-
-                                        <div className="flex flex-col items-center gap-16 md:flex-row">
-                                            <img
-                                                alt="Custom Shape"
-                                                src="http://localhost:8000/storage/uploads/images/7.jpg"
-                                                className="mt-6 mb-6 h-82 w-82 bg-card object-cover transition-transform duration-300 hover:scale-110 md:mr-6 md:h-[500px] md:w-[500px]"
-                                                style={{
-                                                    clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)',
-                                                    shapeOutside: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)',
-                                                }}
-                                            />
-
-                                            <div className="prose prose-sm max-w-none text-muted-foreground [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500">
-                                                Modi molestiae et nesciunt voluptas impedit. Quasi sunt et enim voluptas. Ullam esse eius quo porro
-                                                enim. Iure eaque est repellendus quam vero ut. Consectetur quia aut rerum hic occaecati.
-                                            </div>
-                                        </div>
-
-                                        <div className="flex flex-col items-center gap-16 md:flex-row-reverse">
-                                            <img
-                                                alt="Custom Shape"
-                                                src="http://localhost:8000/storage/uploads/images/7.jpg"
-                                                className="mt-6 mb-6 h-82 w-82 bg-card object-cover transition-transform duration-300 hover:scale-110 md:ml-6 md:h-[500px] md:w-[500px]"
-                                                style={{
-                                                    clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)',
-                                                    shapeOutside: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)',
-                                                }}
-                                            />
-
-                                            <div className="prose prose-sm max-w-none text-muted-foreground [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500">
-                                                Modi molestiae et nesciunt voluptas impedit. Quasi sunt et enim voluptas. Ullam esse eius quo porro
-                                                enim. Iure eaque est repellendus quam vero ut. Consectetur quia aut rerum hic occaecati.
-                                            </div>
-                                        </div>
-
-                                        <div className="clear-both py-6">{section.json_array && renderSectionContent(section.json_array)}</div>
+                                        <div className="py-6">{section.json_array && <RenderSectionContent jsonItems={section.json_array} />}</div>
 
                                         {/* Gallery */}
                                         {section?.gallery && section?.gallery.length > 0 && (
                                             <>
-                                                {/* Section Heading */}
-                                                {/* <div className="mb-6 flex flex-col items-center justify-center text-center">
-                                                <h2 className="mb-1 text-2xl font-semibold">Gallery</h2>
-                                                <h3 className="mb-2 text-sm text-gray-500">Browse the gallery</h3>
-                                            </div> */}
-                                                <Gallery gallery={JSON.parse(section.gallery)} />
+                                                <SectionGallery gallery={JSON.parse(section.gallery)} />
                                             </>
                                         )}
 

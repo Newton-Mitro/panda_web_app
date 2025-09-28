@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
-import Gallery from '../../components/gallery';
-import ServiceCardBorderIcon from '../../components/service-card-border-icon';
+import AppLogoIcon from '../../components/app-logo-icon';
+import SectionGallery from '../../components/section-gallery';
 import PageLayout from '../../layouts/page-layout';
 import { Article } from '../../types/article';
 import { Award } from '../../types/award';
@@ -12,8 +12,8 @@ import { Project } from '../../types/project';
 import { Service } from '../../types/service';
 import { Team } from '../../types/team';
 import { Testimonial } from '../../types/testimonial';
-import ResponsiveImageSection from '../pages/responsive-image-section';
-import HeroSection from './sections/HeroSection';
+import ImageWrappedContentSection from './components/image-wrapped-content-section';
+import RenderSectionContent from './components/render-section-content';
 
 interface HomePageProps {
     page: Page;
@@ -46,47 +46,6 @@ const HomePage: React.FC<HomePageProps> = ({ page, heroSlides, services, teams, 
     console.log('EVENTS', events);
     console.log('HERO SLIDES', heroSlides);
 
-    const renderSectionContent = (jsonItems) => {
-        try {
-            const items = jsonItems ? JSON.parse(jsonItems) : [];
-            console.log('ITEMS', items);
-            return (
-                <div className={`${items[0].image || items[0].icon ? 'grid grid-cols-1 gap-12 md:grid-cols-3' : 'flex flex-col gap-4'}`}>
-                    {items.map((item: any, idx: number) =>
-                        item.img_icon || item.question ? (
-                            item.question ? (
-                                <div className="">
-                                    {item.question && <p className="font-semibold">{`${idx + 1}. ${item.question}`}</p>}
-                                    {item.answer && <p className="text-[var(--muted-foreground)]">{item.answer}</p>}
-                                </div>
-                            ) : (
-                                <div className="flex items-center gap-6">
-                                    <img src={item.img_icon} alt={item.text || `img-${idx}`} className="h-8 w-8 flex-shrink-0 object-cover" />
-                                    <div className="">
-                                        {item.title && <p className="font-semibold">{item.title}</p>}
-                                        {item.subtitle && <p className="text-[var(--muted-foreground)]">{item.subtitle.substring(0, 80)}</p>}
-                                    </div>
-                                </div>
-                            )
-                        ) : item.image ? (
-                            <div className="flex items-center gap-6 bg-card px-4 py-2">
-                                <img src={item.image} alt={item.text || `img-${idx}`} className="h-16 w-16 flex-shrink-0 object-cover" />
-                                <div className="">
-                                    {item.title && <p className="font-semibold">{item.title}</p>}
-                                    {item.subtitle && <p className="text-[var(--muted-foreground)]">{item.subtitle.substring(0, 80)}</p>}
-                                </div>
-                            </div>
-                        ) : (
-                            <ServiceCardBorderIcon key={idx} icon={item.icon} title={item.title} text={item.subtitle.substring(0, 80)} />
-                        ),
-                    )}
-                </div>
-            );
-        } catch {
-            return <p className="text-sm text-[var(--destructive)]">Invalid JSON content</p>;
-        }
-    };
-
     return (
         <>
             <Head title={page.title}>
@@ -115,12 +74,44 @@ const HomePage: React.FC<HomePageProps> = ({ page, heroSlides, services, teams, 
             </Head>
             <PageLayout>
                 <main className="flex-grow">
-                    <HeroSection
-                        heroImage={page?.sections[0].media?.url}
-                        title={page?.sections[0].heading}
-                        subtitle={page?.sections[0].sub_heading}
-                        quote={page?.sections[0].content}
-                    />
+                    <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background">
+                        {/* Background Image */}
+                        <div className="absolute inset-0">
+                            <img
+                                src={page?.sections[0].media?.url}
+                                alt={`${page?.sections[0].heading} building`}
+                                className="h-full w-full object-cover opacity-80"
+                            />
+                        </div>
+
+                        {/* Overlay Gradient */}
+                        <div className="to-bulwark-accent/30 absolute inset-0 bg-gradient-to-br from-background via-background/70"></div>
+
+                        {/* Content */}
+                        <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
+                            <div className="mb-8">
+                                <h1 className="relative mb-2 inline-flex items-start text-4xl font-bold text-foreground md:text-8xl">
+                                    {page?.sections[0].heading}
+                                    <span className="ml-2 flex items-start rounded bg-foreground p-1">
+                                        <AppLogoIcon className="size-6 text-background md:size-8" />
+                                    </span>
+                                </h1>
+
+                                <h2 className="text-2xl font-light tracking-wider text-muted-foreground md:text-3xl">
+                                    {page?.sections[0].sub_heading}
+                                </h2>
+                            </div>
+
+                            {/* Quote */}
+                            <div className="mx-auto mb-12 max-w-2xl">
+                                <blockquote className="text-lg leading-relaxed text-muted-foreground italic md:text-xl">
+                                    {page?.sections[0].content}
+                                </blockquote>
+                                <cite className="mt-4 block text-sm text-muted-foreground">— Rabindranath Tagore</cite>
+                            </div>
+                        </div>
+                    </section>
+
                     <div className="mx-auto my-16 w-full space-y-14 p-6 md:w-6xl">
                         {page.sections.length > 0 ? (
                             <div className="">
@@ -137,24 +128,21 @@ const HomePage: React.FC<HomePageProps> = ({ page, heroSlides, services, teams, 
                                                         <div className="mx-auto mb-8 h-1 w-16 bg-foreground md:mx-0"></div>
                                                     </div>
 
-                                                    <ResponsiveImageSection
+                                                    <ImageWrappedContentSection
                                                         mediaUrl={section.media?.url}
                                                         mimeType={section.media?.file_type}
                                                         contentHtml={section.content || ''}
-                                                        shape="octagon-left"
+                                                        shape="octagon-right"
                                                     />
 
-                                                    <div className="py-6">{section.json_array && renderSectionContent(section.json_array)}</div>
+                                                    <div className="py-6">
+                                                        {section.json_array && <RenderSectionContent jsonItems={section.json_array} />}
+                                                    </div>
 
                                                     {/* Gallery */}
-                                                    {section?.gallery && section?.gallery.length > 0 && (
+                                                    {section?.gallery && (
                                                         <>
-                                                            {/* Section Heading */}
-                                                            {/* <div className="mb-6 flex flex-col items-center justify-center text-center">
-                                                <h2 className="mb-1 text-2xl font-semibold">Gallery</h2>
-                                                <h3 className="mb-2 text-sm text-gray-500">Browse the gallery</h3>
-                                            </div> */}
-                                                            <Gallery gallery={JSON.parse(section.gallery)} />
+                                                            <SectionGallery gallery={JSON.parse(section.gallery)} />
                                                         </>
                                                     )}
 

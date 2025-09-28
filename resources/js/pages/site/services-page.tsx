@@ -2,7 +2,7 @@ import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import PageLayout from '../../layouts/page-layout';
 import { Service } from '../../types/service';
-import ServiceCard from './sections/service-card';
+import ServiceCard from './components/service-card';
 
 interface ServicePageProps {
     services: Service[];

@@ -1,13 +1,16 @@
 import { Head } from '@inertiajs/react';
 
 import React from 'react';
-import Gallery from '../../components/gallery';
-import ServiceCardBorderIcon from '../../components/service-card-border-icon';
+import SectionGallery from '../../components/section-gallery';
+import IconCardItem from '../../components/service-card-border-icon';
 import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
 import { Page } from '../../types/page';
 import { PageSection } from '../../types/page_section';
-import ResponsiveImageSection from './responsive-image-section';
+import ImageCardItem from '../site/sections/image-card-item';
+import ImageIconItem from '../site/sections/image-icon-item';
+import ImageWrappedContentSection from '../site/sections/image-wrapped-content-section';
+import QuestionAnswerItem from '../site/sections/question-answer-item';
 
 interface PageProps {
     page: Page;
@@ -29,29 +32,14 @@ const Show: React.FC<PageProps> = ({ page, sections }) => {
                     {items.map((item: any, idx: number) =>
                         item.img_icon || item.question ? (
                             item.question ? (
-                                <div className="">
-                                    {item.question && <p className="font-semibold">{`${idx + 1}. ${item.question}`}</p>}
-                                    {item.answer && <p className="text-[var(--muted-foreground)]">{item.answer}</p>}
-                                </div>
+                                <QuestionAnswerItem key={idx} question={item.question} answer={item.answer} idx={idx} />
                             ) : (
-                                <div className="flex items-center gap-6">
-                                    <img src={item.img_icon} alt={item.text || `img-${idx}`} className="h-8 w-8 flex-shrink-0 object-cover" />
-                                    <div className="">
-                                        {item.title && <p className="font-semibold">{item.title}</p>}
-                                        {item.subtitle && <p className="text-[var(--muted-foreground)]">{item.subtitle.substring(0, 80)}</p>}
-                                    </div>
-                                </div>
+                                <ImageIconItem key={idx} img_icon={item.img_icon} title={item.title} subtitle={item.subtitle} />
                             )
                         ) : item.image ? (
-                            <div className="flex items-center gap-6 bg-card px-4 py-2">
-                                <img src={item.image} alt={item.text || `img-${idx}`} className="h-16 w-16 flex-shrink-0 object-cover" />
-                                <div className="">
-                                    {item.title && <p className="font-semibold">{item.title}</p>}
-                                    {item.subtitle && <p className="text-[var(--muted-foreground)]">{item.subtitle.substring(0, 80)}</p>}
-                                </div>
-                            </div>
+                            <ImageCardItem key={idx} image={item.image} title={item.title} subtitle={item.subtitle} text={item.text} />
                         ) : (
-                            <ServiceCardBorderIcon key={idx} icon={item.icon} title={item.title} text={item.subtitle.substring(0, 80)} />
+                            <IconCardItem key={idx} icon={item.icon} title={item.title} text={item.subtitle.substring(0, 80)} />
                         ),
                     )}
                 </div>
@@ -78,7 +66,7 @@ const Show: React.FC<PageProps> = ({ page, sections }) => {
                                         <div className="mx-auto mb-8 h-1 w-16 bg-foreground md:mx-0"></div>
                                     </div>
 
-                                    <ResponsiveImageSection
+                                    <ImageWrappedContentSection
                                         mediaUrl={section.media?.url}
                                         mimeType={section.media?.file_type}
                                         contentHtml={section.content || ''}
@@ -95,7 +83,7 @@ const Show: React.FC<PageProps> = ({ page, sections }) => {
                                                 <h2 className="mb-1 text-2xl font-semibold">Gallery</h2>
                                                 <h3 className="mb-2 text-sm text-gray-500">Browse the gallery</h3>
                                             </div> */}
-                                            <Gallery gallery={JSON.parse(section.gallery)} />
+                                            <SectionGallery gallery={JSON.parse(section.gallery)} />
                                         </>
                                     )}
 

@@ -16,7 +16,7 @@ const MediaPreview: React.FC<MediaPreviewProps> = ({
 }) => {
     const type = media.file_type.toLowerCase();
 
-    const containerClass = 'mt-4';
+    const containerClass = 'mt-4 border rounded';
     const borderBgClass = 'rounded-lg border bg-gray-50 dark:bg-gray-800 dark:border-gray-700';
     const textClass = 'text-sm text-gray-700 dark:text-gray-300 truncate';
 

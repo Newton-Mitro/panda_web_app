@@ -12,7 +12,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineEleme
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Dashboard', href: '/dashboard' }];
 
 export default function Dashboard() {
-    const { stats, monthlyVisitors, routeVisits, latestNotices, jobApplications, visitors, articles, media }: any = usePage().props;
+    const { stats, monthlyVisitors, routeVisits, latestNotices, jobApplications, visitors, articles, media, contactMessages }: any = usePage().props;
 
     // Prepare chart data
     const monthlyVisitorsData = {
@@ -186,21 +186,47 @@ export default function Dashboard() {
                 </div>
 
                 {/* 🔹 Graphs */}
-                <div className="grid gap-4 md:grid-cols-12">
-                    {/* Left chart: 40% → span 4 of 10 */}
-                    <div className="col-span-10 rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm md:col-span-6 dark:border-sidebar-border dark:bg-neutral-900">
-                        <h2 className="mb-3 text-lg font-semibold">Monthly Visitors</h2>
-                        <Line data={monthlyVisitorsData} />
-                    </div>
-
+                <div className="">
                     {/* Right chart: 60% → span 6 of 10 */}
-                    <div className="col-span-10 rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm md:col-span-6 dark:border-sidebar-border dark:bg-neutral-900">
+                    <div className="rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border dark:bg-neutral-900">
                         <h2 className="mb-3 text-lg font-semibold">Top Visited Pages</h2>
                         <Bar data={routeVisitedData} />
                     </div>
                 </div>
 
                 {/* 🔹 Recent Content */}
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    {/* Left chart: 40% → span 4 of 10 */}
+                    <div className="rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border dark:bg-neutral-900">
+                        <h2 className="mb-3 text-lg font-semibold">Monthly Visitors</h2>
+                        <Line data={monthlyVisitorsData} />
+                    </div>
+
+                    <div className="rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border dark:bg-neutral-900">
+                        <h2 className="mb-3 text-lg font-semibold">Recent Visitors</h2>
+                        <ul className="space-y-2 text-sm">
+                            {visitors.map((visitor: any) => (
+                                <li key={visitor.id} className="flex justify-between">
+                                    <span>{`${visitor.ip_address} | ${visitor.device} | ${visitor.os} | ${visitor.browser}`}</span>
+                                    <span className="text-gray-500">{new Date(visitor.created_at).toLocaleDateString()}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div className="rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border dark:bg-neutral-900">
+                        <h2 className="mb-3 text-lg font-semibold">Recent Contact Messages</h2>
+                        <ul className="space-y-2 text-sm">
+                            {contactMessages.map((message: any) => (
+                                <li key={message.id} className="flex justify-between">
+                                    <span>{message.subject || message.email}</span>
+                                    <span className="text-gray-500">{new Date(message.created_at).toLocaleDateString()}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                     <div className="rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border dark:bg-neutral-900">
                         <h2 className="mb-3 text-lg font-semibold">Recent Notices</h2>
@@ -215,18 +241,6 @@ export default function Dashboard() {
                     </div>
 
                     <div className="rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border dark:bg-neutral-900">
-                        <h2 className="mb-3 text-lg font-semibold">Recent Articles</h2>
-                        <ul className="space-y-2 text-sm">
-                            {articles.map((a: any) => (
-                                <li key={a.id} className="flex justify-between">
-                                    <span>{a.title}</span>
-                                    <span className="text-gray-500">{new Date(a.created_at).toLocaleDateString()}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div className="rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border dark:bg-neutral-900">
                         <h2 className="mb-3 text-lg font-semibold">Recent Media Uploads</h2>
                         <div className="grid grid-cols-3 gap-2">
                             {media.map((m: any) => (
@@ -234,20 +248,6 @@ export default function Dashboard() {
                                 // <img key={m.id} src={m.url} alt="" className="h-20 w-full rounded object-cover" />
                             ))}
                         </div>
-                    </div>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    <div className="rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border dark:bg-neutral-900">
-                        <h2 className="mb-3 text-lg font-semibold">Recent Visitors</h2>
-                        <ul className="space-y-2 text-sm">
-                            {visitors.map((visitor: any) => (
-                                <li key={visitor.id} className="flex justify-between">
-                                    <span>{visitor.ip_address}</span>
-                                    <span className="text-gray-500">{new Date(visitor.created_at).toLocaleDateString()}</span>
-                                </li>
-                            ))}
-                        </ul>
                     </div>
 
                     <div className="rounded-xl border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border dark:bg-neutral-900">

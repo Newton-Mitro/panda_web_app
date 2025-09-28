@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import PageLayout from '../../layouts/page-layout';
 import { Page } from '../../types/page';
+import PageBanner from './components/page-banner';
 
 interface FaqPageProps {
     page: Page;
@@ -69,12 +70,7 @@ const FaqPage: React.FC<FaqPageProps> = ({ page }) => {
             </Head>
 
             <PageLayout>
-                <section className="mt-16 bg-secondary py-20 text-secondary-foreground">
-                    <div className="mx-auto max-w-4xl px-4 text-center">
-                        <h1 className="mb-4 text-4xl font-bold md:text-5xl">{page?.title}</h1>
-                        <p className="text-lg opacity-90 md:text-xl">We’ve got answers for you!</p>
-                    </div>
-                </section>
+                <PageBanner title={page?.title} subtitle="We’ve got answers for you!" />
 
                 <div className="mx-auto my-16 w-full space-y-14 p-6 md:w-6xl">
                     {page.sections.length > 0 ? (

@@ -1,12 +1,12 @@
 import React from 'react';
 
-interface ServiceCardBorderIconProps {
+interface IconCardProps {
     icon?: string; // FontAwesome icon class or SVG string
     title?: string;
     text?: string;
 }
 
-const ServiceCardBorderIcon: React.FC<ServiceCardBorderIconProps> = ({ icon, title, text }) => {
+const IconCardItem: React.FC<IconCardProps> = ({ icon, title, text }) => {
     return (
         <div className="group relative flex flex-col items-center justify-start rounded-xl border-1 border-border bg-card px-5 pt-10 pb-2 text-foreground transition-transform duration-300 group-hover:border-primary hover:-translate-y-1 hover:cursor-pointer hover:shadow md:h-full">
             {/* Icon Circle */}
@@ -27,4 +27,4 @@ const ServiceCardBorderIcon: React.FC<ServiceCardBorderIconProps> = ({ icon, tit
     );
 };
 
-export default ServiceCardBorderIcon;
+export default IconCardItem;

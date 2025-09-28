@@ -1,7 +1,7 @@
 import { Head } from '@inertiajs/react';
 import PageLayout from '../../layouts/page-layout';
 import { Team } from '../../types/team';
-import TeamCard from './sections/team-card';
+import TeamCard from './components/team-card-item';
 
 interface OurTeamPageProps {
     teams: Team[];

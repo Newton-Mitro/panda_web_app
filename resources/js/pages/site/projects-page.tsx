@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import PageLayout from '../../layouts/page-layout';
 import { Project } from '../../types/project';
+import PageBanner from './components/page-banner';
 
 interface ProjectsPageProps {
     projects: Project[];
@@ -20,12 +21,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects }) => {
             <Head title="Projects" />
             <PageLayout>
                 {/* Hero */}
-                <section className="mt-16 bg-secondary py-20 text-secondary-foreground">
-                    <div className="mx-auto max-w-4xl px-4 text-center">
-                        <h1 className="mb-4 text-4xl font-bold md:text-5xl">Projects</h1>
-                        <p className="text-lg opacity-90 md:text-xl">Explore our projects and choose a category to filter them.</p>
-                    </div>
-                </section>
+                <PageBanner title="Projects" subtitle="Discover our projects and explore the possibilities." />
 
                 {/* Category Filter */}
                 <section className="mx-auto my-12 max-w-6xl px-4 text-center">

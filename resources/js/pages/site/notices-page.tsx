@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react';
 import PageLayout from '../../layouts/page-layout';
 import { Notice } from '../../types/notice';
+import PageBanner from './components/page-banner';
 
 interface NoticesPageProps {
     notices: Notice[];
@@ -12,14 +13,7 @@ const NoticesPage: React.FC<NoticesPageProps> = ({ notices }) => {
             <Head title="Notices" />
             <PageLayout>
                 {/* Hero Section */}
-                <section className="mt-16 bg-secondary py-20 text-secondary-foreground">
-                    <div className="mx-auto max-w-4xl px-4 text-center">
-                        <h1 className="mb-4 text-4xl font-bold md:text-5xl">Notices</h1>
-                        <p className="text-lg opacity-90 md:text-xl">
-                            We’d love to hear from you—reach out for support, partnerships, or just to say hi!
-                        </p>
-                    </div>
-                </section>
+                <PageBanner title="Notices" subtitle="We’d love to hear from you—reach out for support, partnerships, or just to say hi!" />
 
                 {/* Notices List */}
                 <section className="my-16">

@@ -109,6 +109,11 @@ class DashboardController extends Controller
         // ------------------------
         $articles = Article::latest()->take(6)->get();
 
+        // ------------------------
+        // Recent Contact Messages
+        // ------------------------
+        $contactMessages = ContactMessage::latest()->take(6)->get();
+
         return Inertia::render('dashboard', [
             'stats' => $stats,
             'monthlyVisitors' => $monthlyVisitors,
@@ -118,6 +123,7 @@ class DashboardController extends Controller
             'visitors' => $visitors,
             'media' => $media,
             'articles' => $articles,
+            'contactMessages' => $contactMessages
         ]);
     }
 }

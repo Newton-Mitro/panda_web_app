@@ -2,12 +2,12 @@ import React from 'react';
 import { FaFacebookF, FaGithub, FaInstagram, FaLinkedinIn, FaTwitter, FaWhatsapp, FaYoutube } from 'react-icons/fa';
 import { Team } from '../../../types/team';
 
-interface TeamCardProps {
+interface TeamCardItemProps {
     member: Team;
     index: number;
 }
 
-const TeamCardDiagonal: React.FC<TeamCardProps> = ({ member, index }) => {
+const TeamCardItem: React.FC<TeamCardItemProps> = ({ member, index }) => {
     const socials = [
         { icon: <FaFacebookF />, link: member.facebook_links },
         { icon: <FaTwitter />, link: member.twitter_links },
@@ -202,4 +202,4 @@ const TeamCardDiagonal: React.FC<TeamCardProps> = ({ member, index }) => {
     );
 };
 
-export default TeamCardDiagonal;
+export default TeamCardItem;
