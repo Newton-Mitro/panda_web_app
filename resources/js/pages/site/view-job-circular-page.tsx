@@ -14,7 +14,14 @@ const ViewJobCircularPage: React.FC<ViewJobCircularPageProps> = ({ job }) => {
             <Head title="Careers" />
             <PageLayout>
                 {/* Hero Section */}
-                <PageBanner title="Careers" subtitle="Discover exciting opportunities and build your career with us." />
+                <PageBanner
+                    title="Careers"
+                    subtitle="Discover exciting opportunities and build your career with us."
+                    breadcrumbs={[
+                        { label: 'Careers', href: route('site.careers') },
+                        { label: job.title, href: '' },
+                    ]}
+                />
 
                 {/* Careers List */}
                 <div className="mx-auto max-w-6xl px-6 py-12">

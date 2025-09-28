@@ -6,11 +6,11 @@ import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
 import { Page } from '../../types/page';
 import { PageSection } from '../../types/page_section';
+import ImageCardItem from '../site/components/image-card-item';
+import ImageIconItem from '../site/components/image-icon-item';
+import ImageWrappedContentSection from '../site/components/image-wrapped-content-section';
+import QuestionAnswerItem from '../site/components/question-answer-item';
 import SectionGallery from '../site/components/section-gallery';
-import ImageCardItem from '../site/sections/image-card-item';
-import ImageIconItem from '../site/sections/image-icon-item';
-import ImageWrappedContentSection from '../site/sections/image-wrapped-content-section';
-import QuestionAnswerItem from '../site/sections/question-answer-item';
 
 interface PageProps {
     page: Page;

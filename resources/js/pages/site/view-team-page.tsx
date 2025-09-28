@@ -25,7 +25,14 @@ const ViewTeamPage: React.FC<ViewTeamPageProps> = ({ team }) => {
             <Head title="Team Member" />
             <PageLayout>
                 {/* Hero Section */}
-                <PageBanner title="Team Member" subtitle="We are a team of dedicated professionals who are passionate about what we do." />
+                <PageBanner
+                    title="Team Member"
+                    subtitle="We are a team of dedicated professionals who are passionate about what we do."
+                    breadcrumbs={[
+                        { label: 'Our Team', href: route('site.teams') },
+                        { label: team.name, href: '' },
+                    ]}
+                />
 
                 {/* Services List */}
                 <div className="mx-auto max-w-6xl px-4 py-16">
