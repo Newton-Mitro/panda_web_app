@@ -13,7 +13,7 @@ const Navigation = () => {
             children: [
                 { name: 'Our Story', label: 'our-story', href: '/about-us/our-story' },
                 { name: 'Mission & Vision', label: 'mission-vision', href: '/about-us/mission-vision' },
-                { name: 'Our Team', label: 'team', href: '/about-us/team' },
+                { name: 'Our Team', label: 'teams', href: '/about-us/teams' },
                 { name: 'Careers', label: 'careers', href: '/about-us/careers' },
             ],
         },

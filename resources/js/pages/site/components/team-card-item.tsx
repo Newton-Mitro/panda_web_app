@@ -1,3 +1,4 @@
+import { Link } from '@inertiajs/react';
 import React from 'react';
 import { FaFacebookF, FaGithub, FaInstagram, FaLinkedinIn, FaTwitter, FaWhatsapp, FaYoutube } from 'react-icons/fa';
 import { Team } from '../../../types/team';
@@ -35,13 +36,15 @@ const TeamCardItem: React.FC<TeamCardItemProps> = ({ member, index }) => {
                     />
                     <div className="flex min-h-62 w-full flex-col justify-center rounded-2xl border-1 border-border bg-card p-6 md:ml-72 md:pl-32">
                         <div className="">
-                            <h3 className="text-xl font-bold text-foreground">{member.name}</h3>
-                            <p className="text-sm font-semibold text-primary">{member.designation}</p>
-                            {member.department && <p className="mt-1 text-xs text-muted-foreground">{member.department}</p>}
+                            <Link href={route('site.teams.show', member.id)} className="">
+                                <h3 className="text-xl font-bold text-foreground">{member.name}</h3>
+                                <p className="text-sm font-semibold text-primary">{member.designation}</p>
+                                {member.department && <p className="mt-1 text-xs text-muted-foreground">{member.department}</p>}
 
-                            <div className="prose prose-sm mt-3 text-muted-foreground [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500">
-                                {member.bio || 'No bio available.'}
-                            </div>
+                                <div className="prose prose-sm mt-3 text-muted-foreground [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500">
+                                    {member.bio || 'No bio available.'}
+                                </div>
+                            </Link>
 
                             {/* Socials */}
                             {socials.length > 0 && (
@@ -68,13 +71,15 @@ const TeamCardItem: React.FC<TeamCardItemProps> = ({ member, index }) => {
                 >
                     <div className="flex min-h-62 w-full flex-col justify-center rounded-2xl border-1 border-border bg-card p-6 md:mr-72 md:pr-32">
                         <div className="flex flex-col items-end justify-center text-right">
-                            <h3 className="text-xl font-bold text-foreground">{member.name}</h3>
-                            <p className="text-sm font-semibold text-primary">{member.designation}</p>
-                            {member.department && <p className="mt-1 text-xs text-muted-foreground">{member.department}</p>}
+                            <Link href={route('site.teams.show', member.id)} className="">
+                                <h3 className="text-xl font-bold text-foreground">{member.name}</h3>
+                                <p className="text-sm font-semibold text-primary">{member.designation}</p>
+                                {member.department && <p className="mt-1 text-xs text-muted-foreground">{member.department}</p>}
 
-                            <div className="prose prose-sm mt-3 text-muted-foreground [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500">
-                                {member.bio || 'No bio available.'}
-                            </div>
+                                <div className="prose prose-sm mt-3 text-muted-foreground [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500">
+                                    {member.bio || 'No bio available.'}
+                                </div>
+                            </Link>
 
                             {/* Socials */}
                             {socials.length > 0 && (

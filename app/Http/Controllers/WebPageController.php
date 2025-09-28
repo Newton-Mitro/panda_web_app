@@ -141,10 +141,21 @@ class WebPageController extends Controller
         $teams = Team::with('media', 'category')
             ->latest()
             ->get();
-        return Inertia::render('site/our-team-page', [
+        return Inertia::render('site/our-teams-page', [
             'teams' => $teams,
         ]);
     }
+
+    public function showTeam(Team $team, Request $request)
+    {
+        // Load relationships on the existing $team instance
+        $team->load('media', 'category');
+
+        return Inertia::render('site/view-team-page', [
+            'team' => $team,
+        ]);
+    }
+
 
     public function services(Request $request)
     {
@@ -209,6 +220,14 @@ class WebPageController extends Controller
             ->get();
         return Inertia::render('site/careers-page', [
             'jobCirculars' => $jobCirculars,
+        ]);
+    }
+
+    public function showJobCircular(Career $career, Request $request)
+    {
+
+        return Inertia::render('site/view-job-circular-page', [
+            'job' => $career,
         ]);
     }
 
