@@ -1,6 +1,4 @@
 import { Head } from '@inertiajs/react';
-import AppLogoIcon from '../../components/app-logo-icon';
-import SectionGallery from '../../components/section-gallery';
 import PageLayout from '../../layouts/page-layout';
 import { Article } from '../../types/article';
 import { Award } from '../../types/award';
@@ -14,6 +12,7 @@ import { Team } from '../../types/team';
 import { Testimonial } from '../../types/testimonial';
 import ImageWrappedContentSection from './components/image-wrapped-content-section';
 import RenderSectionContent from './components/render-section-content';
+import SectionGallery from './components/section-gallery';
 
 interface HomePageProps {
     page: Page;
@@ -92,9 +91,6 @@ const HomePage: React.FC<HomePageProps> = ({ page, heroSlides, services, teams, 
                             <div className="mb-8">
                                 <h1 className="relative mb-2 inline-flex items-start text-4xl font-bold text-foreground md:text-8xl">
                                     {page?.sections[0].heading}
-                                    <span className="ml-2 flex items-start rounded bg-foreground p-1">
-                                        <AppLogoIcon className="size-6 text-background md:size-8" />
-                                    </span>
                                 </h1>
 
                                 <h2 className="text-2xl font-light tracking-wider text-muted-foreground md:text-3xl">
@@ -107,7 +103,7 @@ const HomePage: React.FC<HomePageProps> = ({ page, heroSlides, services, teams, 
                                 <blockquote className="text-lg leading-relaxed text-muted-foreground italic md:text-xl">
                                     {page?.sections[0].content}
                                 </blockquote>
-                                <cite className="mt-4 block text-sm text-muted-foreground">— Rabindranath Tagore</cite>
+                                {/* <cite className="mt-4 block text-sm text-muted-foreground">— Rabindranath Tagore</cite> */}
                             </div>
                         </div>
                     </section>

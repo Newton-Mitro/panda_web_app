@@ -23,7 +23,7 @@ class CustomPageSeeder extends Seeder
         $pages = [
             'Home' => [
                 'sections' => [
-                    ['heading' => 'Welcome to Our Company', 'sub_heading' => 'Building the future, one step at a time.'],
+                    ['heading' => 'Welcome to Skyline', 'sub_heading' => 'Building the future, one step at a time.'],
                     ['heading' => 'Our Services', 'sub_heading' => 'We deliver excellence in every solution.'],
                     ['heading' => 'Client Testimonials', 'sub_heading' => 'Hear from our valued clients.'],
                 ],

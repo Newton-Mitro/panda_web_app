@@ -1,10 +1,10 @@
 import { Head } from '@inertiajs/react';
-import SectionGallery from '../../components/section-gallery';
 import PageLayout from '../../layouts/page-layout';
 import { Page } from '../../types/page';
 import ImageWrappedContentSection from './components/image-wrapped-content-section';
 import PageBanner from './components/page-banner';
 import RenderSectionContent from './components/render-section-content';
+import SectionGallery from './components/section-gallery';
 import SectionHeader from './components/section-header';
 
 interface FinanceOptionsPageProps {

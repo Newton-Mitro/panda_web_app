@@ -13,7 +13,7 @@ const NoticesPage: React.FC<NoticesPageProps> = ({ notices }) => {
             <Head title="Notices" />
             <PageLayout>
                 {/* Hero Section */}
-                <PageBanner title="Notices" subtitle="We’d love to hear from you—reach out for support, partnerships, or just to say hi!" />
+                <PageBanner title="Notices" subtitle="Keep up to date with our latest notices" />
 
                 {/* Notices List */}
                 <section className="my-16">

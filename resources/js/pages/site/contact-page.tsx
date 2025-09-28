@@ -49,7 +49,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ contacts }) => {
             <Head title="Contact Us" />
             <PageLayout>
                 {/* Hero */}
-                <PageBanner title="Contact Us" subtitle="We’d love to hear from you—reach out for support, partnerships, or just to say hi!" />
+                <PageBanner title="Contact Us" subtitle="Got an idea or a question? We’d love to hear from you." />
 
                 {/* Contact Info & Form */}
                 <section className="mx-auto max-w-6xl px-6 py-16">

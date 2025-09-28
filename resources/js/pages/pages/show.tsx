@@ -1,12 +1,12 @@
 import { Head } from '@inertiajs/react';
 
 import React from 'react';
-import SectionGallery from '../../components/section-gallery';
 import IconCardItem from '../../components/service-card-border-icon';
 import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
 import { Page } from '../../types/page';
 import { PageSection } from '../../types/page_section';
+import SectionGallery from '../site/components/section-gallery';
 import ImageCardItem from '../site/sections/image-card-item';
 import ImageIconItem from '../site/sections/image-icon-item';
 import ImageWrappedContentSection from '../site/sections/image-wrapped-content-section';

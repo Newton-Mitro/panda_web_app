@@ -1,10 +1,10 @@
 import { Head } from '@inertiajs/react';
-import SectionGallery from '../../components/section-gallery';
 import PageLayout from '../../layouts/page-layout';
 import { Page } from '../../types/page';
 import ImageWrappedContentSection from './components/image-wrapped-content-section';
 import PageBanner from './components/page-banner';
 import RenderSectionContent from './components/render-section-content';
+import SectionGallery from './components/section-gallery';
 import SectionHeader from './components/section-header';
 
 interface MissionVisionPageProps {
@@ -46,7 +46,7 @@ const MissionVisionPage: React.FC<MissionVisionPageProps> = ({ page }) => {
             </Head>
             <PageLayout>
                 {/* Hero */}
-                <PageBanner title={page?.title} />
+                <PageBanner title={page?.title} subtitle="Guided by values, united by purpose, and committed to lasting impact." />
                 <div className="mx-auto my-16 w-full space-y-14 p-6 md:w-6xl">
                     {page.sections.length > 0 ? (
                         <div className="">

@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import PageLayout from '../../layouts/page-layout';
 import { Service } from '../../types/service';
+import PageBanner from './components/page-banner';
 import ServiceCard from './components/service-card';
 
 interface ServicePageProps {
@@ -22,12 +23,7 @@ const ServicePage: React.FC<ServicePageProps> = ({ services }) => {
             <Head title="Services" />
             <PageLayout>
                 {/* Hero Section */}
-                <section className="mt-16 bg-secondary py-20 text-secondary-foreground">
-                    <div className="mx-auto max-w-4xl px-4 text-center">
-                        <h1 className="mb-4 text-4xl font-bold md:text-5xl">Services</h1>
-                        <p className="text-lg opacity-90 md:text-xl">Explore our services and choose a category to filter them.</p>
-                    </div>
-                </section>
+                <PageBanner title="Services" subtitle="We provide a wide range of services to meet your needs." />
 
                 {/* Category Filter */}
                 <section className="mx-auto my-12 max-w-6xl px-4 text-center">
