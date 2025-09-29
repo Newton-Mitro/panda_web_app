@@ -14,9 +14,9 @@ class ContactFactory extends Factory
         return [
             'title' => $this->faker->company(),
             'address' => $this->faker->address(),
-            'phone' => $this->faker->optional()->phoneNumber(),
-            'email' => $this->faker->optional()->companyEmail(),
-            'opening_hours' => $this->faker->optional()->randomElement([
+            'phone' => $this->faker->phoneNumber(),
+            'email' => $this->faker->companyEmail(),
+            'opening_hours' => $this->faker->randomElement([
                 'Mon-Fri: 9 AM - 6 PM',
                 'Mon-Sat: 10 AM - 8 PM',
                 '24/7 Service',

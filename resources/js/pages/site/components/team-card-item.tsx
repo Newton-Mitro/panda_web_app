@@ -55,7 +55,7 @@ const TeamCardItem: React.FC<TeamCardItemProps> = ({ member, index }) => {
                                             href={s.link as string}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="rounded-full bg-primary p-2 text-white transition-colors hover:bg-primary/80"
+                                            className="rounded-full bg-muted/50 p-2 text-muted-foreground transition-colors hover:bg-accent"
                                         >
                                             {s.icon}
                                         </a>
@@ -90,7 +90,7 @@ const TeamCardItem: React.FC<TeamCardItemProps> = ({ member, index }) => {
                                             href={s.link as string}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="rounded-full bg-primary p-2 text-white transition-colors hover:bg-primary/80"
+                                            className="rounded-full bg-muted/50 p-2 text-muted-foreground transition-colors hover:bg-accent"
                                         >
                                             {s.icon}
                                         </a>

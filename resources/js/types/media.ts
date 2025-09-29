@@ -5,7 +5,7 @@ export interface Media {
     file_type: string;
     alt_text?: string | null;
     uploaded_by?: number | null;
+    url: string;
     created_at: string;
     updated_at: string;
-    url: string;
 }

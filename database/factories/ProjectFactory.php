@@ -24,7 +24,7 @@ class ProjectFactory extends Factory
             'source_code_link' => $this->faker->url(),
             'live_site_link' => $this->faker->url(),
             'start_date' => $this->faker->dateTimeBetween('-2 years', '-6 months')->format('Y-m-d'),
-            'end_date' => optional($this->faker->optional()->dateTimeBetween('-6 months', 'now'))->format('Y-m-d'),
+            'end_date' => $this->faker->dateTimeBetween('-6 months', 'now')->format('Y-m-d'),
             'gallery' => null,
             'category_id' => null,
 

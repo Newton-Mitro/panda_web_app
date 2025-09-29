@@ -21,7 +21,7 @@ export default function Show({ partner }: ShowProps) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={partner.name} />
             <div className="space-y-6 p-6">
-                <HeadingSmall title={partner.name} description={`Status: ${partner.status}`} />
+                <HeadingSmall title={partner.name} />
 
                 {partner.website && (
                     <p className="text-sm text-gray-500">
@@ -34,7 +34,7 @@ export default function Show({ partner }: ShowProps) {
 
                 {partner.media &&
                     (isImage ? (
-                        <img src={partner.media.url} alt={partner.name} className="h-32 w-32 rounded-lg object-cover" />
+                        <img src={partner.media.url} alt={partner.name} className="h-32 w-32 rounded-full object-cover" />
                     ) : (
                         <a href={partner.media.url} target="_blank" className="text-blue-600 hover:underline">
                             View File

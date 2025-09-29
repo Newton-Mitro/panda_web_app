@@ -26,13 +26,13 @@ export default function Show({ leader }: ShowProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={leader.name} />
-            <div className="w-full space-y-6 p-6 md:w-4xl">
+            <div className="w-full space-y-6 p-6 md:w-6xl">
                 <HeadingSmall title={leader.name} description={`Designation: ${leader.designation}`} />
 
                 {/* Main card: left info + right content */}
                 <div className="flex flex-col gap-6 rounded-xl md:flex-row">
                     {/* Left: Image + basic info */}
-                    <div className="flex flex-shrink-0 flex-col items-center space-y-4 md:w-80 md:items-start">
+                    <div className="flex flex-shrink-0 flex-col items-center space-y-4 md:w-96 md:items-start">
                         <div className="mx-auto w-full max-w-md space-y-4 rounded-lg bg-gray-50 p-6 dark:bg-gray-800">
                             {/* Profile Image */}
                             {leader.media && (
@@ -70,13 +70,13 @@ export default function Show({ leader }: ShowProps) {
                     {/* Right: Bio & Message */}
                     <div className="flex-1 space-y-4 text-gray-700 dark:text-gray-300">
                         {leader.bio && (
-                            <div className="prose dark:prose-invert rounded-lg bg-gray-50 p-4 shadow-sm dark:bg-gray-800">
+                            <div className="prose rounded-lg bg-gray-50 p-4 shadow-sm dark:bg-gray-800 dark:prose-invert">
                                 <strong>Bio:</strong>
                                 <div dangerouslySetInnerHTML={{ __html: leader.bio }} />
                             </div>
                         )}
                         {leader.message && (
-                            <div className="prose dark:prose-invert rounded-lg bg-gray-50 p-4 shadow-sm dark:bg-gray-800">
+                            <div className="prose rounded-lg bg-gray-50 p-4 shadow-sm dark:bg-gray-800 dark:prose-invert">
                                 <strong>Message:</strong>
                                 <div dangerouslySetInnerHTML={{ __html: leader.message }} />
                             </div>

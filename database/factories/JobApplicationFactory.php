@@ -34,7 +34,7 @@ class JobApplicationFactory extends Factory
             'status' => $this->faker->randomElement($statuses),
             'applied_via' => $this->faker->randomElement(['LinkedIn', 'Referral', 'Website']),
             'ip_address' => $this->faker->ipv4(),
-            'notes' => $this->faker->optional()->paragraph(),
+            'notes' => $this->faker->paragraph(),
         ];
     }
 }

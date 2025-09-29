@@ -13,9 +13,9 @@ class HeroSliderFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(4),
-            'subtitle' => $this->faker->optional()->sentence(6),
-            'button_text' => $this->faker->optional()->word(),
-            'button_link' => $this->faker->optional()->url(),
+            'subtitle' => $this->faker->sentence(6),
+            'button_text' => $this->faker->word(),
+            'button_link' => $this->faker->url(),
             'media_id' => null,
             'sort_order' => $this->faker->numberBetween(0, 10),
             'status' => $this->faker->randomElement(['Active', 'Inactive']),

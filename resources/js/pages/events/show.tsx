@@ -1,6 +1,6 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import HeadingSmall from '../../components/heading-small';
-import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
 import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
 import { Event } from '../../types/event';
@@ -19,63 +19,47 @@ export default function Show({ event }: ShowProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={event.title} />
+            <div className="space-y-6 p-6 md:w-6xl">
+                {/* Heading */}
+                <HeadingSmall
+                    title={event.title}
+                    description={`Event dates: ${new Date(event.start_date).toLocaleDateString()}${
+                        event.end_date ? ` → ${new Date(event.end_date).toLocaleDateString()}` : ''
+                    }`}
+                />
 
-            <div className="space-y-8 p-6">
-                <div className="flex items-center justify-between">
-                    <HeadingSmall title={event.title} description="Event details" />
-                    <Button asChild variant="outline">
-                        <Link href={route('events.edit', event.id)}>Edit Event</Link>
-                    </Button>
+                {/* Status */}
+                <div className="flex flex-wrap items-center gap-4">
+                    <Badge variant={event.status === 'Active' ? 'default' : 'secondary'} className="rounded-xl">
+                        {event.status}
+                    </Badge>
                 </div>
 
-                <div className="space-y-6 rounded-lg border bg-white p-6 dark:bg-gray-900">
-                    <div>
-                        <h3 className="text-sm text-gray-500">Slug</h3>
-                        <p className="text-lg font-medium">{event.slug}</p>
+                {/* Media */}
+                {event.media && (
+                    <div className="my-4">
+                        <img src={event.media.url} alt={event.title} className="max-h-96 w-full rounded object-cover shadow-md" />
                     </div>
+                )}
 
-                    <div className="grid gap-6 md:grid-cols-2">
-                        <div>
-                            <h3 className="text-sm text-gray-500">Location</h3>
-                            <p className="text-lg">{event.location || '—'}</p>
-                        </div>
-                        <div>
-                            <h3 className="text-sm text-gray-500">Dates</h3>
-                            <p className="text-lg">
-                                {event.start_date} → {event.end_date || 'N/A'}
-                            </p>
-                        </div>
+                {/* Location */}
+                {event.location && (
+                    <div className="text-gray-700 dark:text-gray-300">
+                        <h3 className="text-sm text-gray-500">Location</h3>
+                        <p className="text-lg font-medium">{event.location}</p>
                     </div>
+                )}
 
-                    <div>
-                        <h3 className="text-sm text-gray-500">Status</h3>
-                        <p>
-                            <span
-                                className={`rounded-full px-2 py-1 text-xs ${
-                                    event.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                                }`}
-                            >
-                                {event.status}
-                            </span>
-                        </p>
-                    </div>
+                {/* Description */}
+                <div
+                    className="prose prose-sm max-w-none dark:prose-invert [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500"
+                    dangerouslySetInnerHTML={{ __html: event.description || '' }}
+                />
 
-                    {event.media && (
-                        <div>
-                            <h3 className="text-sm text-gray-500">Event Banner</h3>
-                            <img src={event.media.url} alt={event.title} className="mt-2 max-w-md rounded-lg border" />
-                        </div>
-                    )}
-
-                    <div>
-                        <h3 className="text-sm text-gray-500">Description</h3>
-                        <div
-                            className="prose dark:prose-invert max-w-none"
-                            dangerouslySetInnerHTML={{
-                                __html: event.description || '',
-                            }}
-                        />
-                    </div>
+                {/* Footer info */}
+                <div className="mt-4 text-sm text-gray-500">
+                    <p>Created at: {new Date(event.created_at).toLocaleDateString()}</p>
+                    <p>Last updated: {new Date(event.updated_at).toLocaleDateString()}</p>
                 </div>
             </div>
         </AppLayout>

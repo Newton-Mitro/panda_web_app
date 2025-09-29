@@ -18,17 +18,28 @@ export default function Show({ award }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={award.title} />
-            <div className="w-full space-y-6 p-6 md:w-4xl">
-                <HeadingSmall title={award.title} description={award.year?.toString()} />
+            <div className="space-y-6 p-6 md:w-6xl">
+                {/* Heading */}
+                <HeadingSmall title={award.title} description={`Year: ${award.year}`} />
 
-                {award.media && <img src={award.media.url} alt={award.title} className="mb-4 rounded object-cover md:h-64 md:w-64" />}
+                {/* Media */}
+                {award.media?.url && (
+                    <div className="my-4">
+                        <img src={award.media.url} alt={award.title} className="max-h-96 rounded object-cover shadow-md" />
+                    </div>
+                )}
 
-                <div>
-                    <div className="mb-1 text-sm text-gray-500 dark:text-gray-400">Year</div>
-                    <div className="font-medium">{award.year}</div>
+                {/* Description */}
+                <div
+                    className="prose prose-sm max-w-none dark:prose-invert [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500"
+                    dangerouslySetInnerHTML={{ __html: award.description || '' }}
+                />
+
+                {/* Footer info */}
+                <div className="mt-4 text-sm text-gray-500">
+                    <p>Created at: {new Date(award.created_at).toLocaleDateString()}</p>
+                    <p>Last updated: {new Date(award.updated_at).toLocaleDateString()}</p>
                 </div>
-
-                <div className="prose mt-2" dangerouslySetInnerHTML={{ __html: award.description || '-' }} />
             </div>
         </AppLayout>
     );

@@ -10,6 +10,7 @@ export interface Category {
     parent_id?: number | null;
     created_at: string;
     updated_at: string;
+
     // Relationships
     media?: Media | null;
     parent?: Category | null;

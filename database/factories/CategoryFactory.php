@@ -34,7 +34,7 @@ class CategoryFactory extends Factory
             'category_of' => $this->faker->randomElement($categoryTypes),
             'name' => $name,
             'slug' => $slug,
-            'description' => $this->faker->optional()->sentence(),
+            'description' => $this->faker->paragraphs(5, true),
             'media_id' => null,
         ];
     }

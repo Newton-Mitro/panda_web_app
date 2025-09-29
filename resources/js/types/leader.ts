@@ -26,5 +26,4 @@ export interface Leader {
 
     created_at: string; // ISO timestamp
     updated_at: string; // ISO timestamp
-    deleted_at?: string | null; // include if using soft deletes in future
 }

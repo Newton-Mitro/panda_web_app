@@ -14,9 +14,9 @@ class ContactMessageFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            'phone' => $this->faker->optional()->phoneNumber(),
-            'subject' => $this->faker->optional()->sentence(6),
-            'message' => $this->faker->paragraphs(3, true),
+            'phone' => $this->faker->phoneNumber(),
+            'subject' => $this->faker->sentence(6),
+            'message' => $this->faker->paragraphs(6, true),
         ];
     }
 }

@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react';
 import React from 'react';
 import HeadingSmall from '../../components/heading-small';
+import { Badge } from '../../components/ui/badge';
 import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
 import { Testimonial } from '../../types/testimonial';
@@ -19,34 +20,44 @@ const Show: React.FC<ShowProps> = ({ testimonial }) => {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Testimonial - ${testimonial.author_name}`} />
-            <div className="p-6">
-                <HeadingSmall title={testimonial.author_name} description={`Testimonial details`} />
+            <div className="space-y-6 p-6 md:w-6xl">
+                {/* Heading */}
+                <HeadingSmall
+                    title={testimonial.author_name}
+                    description={`${testimonial.author_designation || ''} ${testimonial.company ? `| ${testimonial.company}` : ''}`}
+                />
 
-                <div className="mt-6 space-y-4 rounded-md border p-4 dark:border-gray-700">
-                    <p>
-                        <strong>Designation:</strong> {testimonial.author_designation || '-'}
-                    </p>
-                    <p>
-                        <strong>Company:</strong> {testimonial.company || '-'}
-                    </p>
-                    <p>
-                        <strong>Rating:</strong> {testimonial.rating ? `${testimonial.rating} ⭐` : '-'}
-                    </p>
-                    <p>
-                        <strong>Status:</strong> {testimonial.status}
-                    </p>
-                    <div>
-                        <strong>Message:</strong>
-                        <div className="prose dark:prose-invert mt-2" dangerouslySetInnerHTML={{ __html: testimonial.message }} />
+                {/* Status Badge */}
+                <div className="flex flex-wrap items-center gap-4">
+                    <Badge variant={testimonial.status === 'Active' ? 'default' : 'secondary'} className="rounded-xl">
+                        {testimonial.status}
+                    </Badge>
+                </div>
+
+                {/* Media */}
+                {testimonial.media?.url && (
+                    <div className="my-4">
+                        <img src={testimonial.media.url} alt={testimonial.author_name} className="max-h-64 rounded object-cover" />
                     </div>
-                    {testimonial.media && (
-                        <div>
-                            <strong>Media:</strong>
-                            <div className="mt-2">
-                                <img src={testimonial.media.url} alt="Testimonial media" className="max-h-48 rounded-md" />
-                            </div>
-                        </div>
-                    )}
+                )}
+
+                {/* Message */}
+                <div
+                    className="prose prose-sm mt-2 max-w-none dark:prose-invert [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500"
+                    dangerouslySetInnerHTML={{ __html: testimonial.message }}
+                />
+
+                {/* Rating */}
+                {testimonial.rating !== null && (
+                    <p className="mt-4 text-gray-700 dark:text-gray-300">
+                        Rating: <span className="font-medium">{testimonial.rating} / 5</span>
+                    </p>
+                )}
+
+                {/* Footer info */}
+                <div className="mt-4 text-sm text-gray-500">
+                    <p>Created at: {new Date(testimonial.created_at).toLocaleDateString()}</p>
+                    <p>Last updated: {new Date(testimonial.updated_at).toLocaleDateString()}</p>
                 </div>
             </div>
         </AppLayout>

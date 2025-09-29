@@ -17,9 +17,9 @@ class PageSectionFactory extends Factory
         return [
             'page_id' => null, // assign in seeder
             'heading' => $faker->sentence(3),
-            'sub_heading' => $faker->sentence(6),
-            'button_text' => $faker->optional()->word(),
-            'button_link' => $faker->optional()->url(),
+            'sub_heading' => $faker->sentence(10),
+            'button_text' => $faker->word(),
+            'button_link' => $faker->url(),
             'content' => null,
             'json_array' => null,
             'gallery' => null,

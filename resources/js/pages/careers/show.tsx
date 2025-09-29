@@ -21,7 +21,7 @@ export default function Show({ career }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={career.title} />
-            <div className="space-y-6 p-6">
+            <div className="w-6xl space-y-6 p-6">
                 <HeadingSmall title={career.title} description={`Location: ${career.location || '-'} | Salary: ${career.salary_range || '-'}`} />
 
                 <div className="space-y-4">

@@ -1,5 +1,8 @@
 import { Head, Link } from '@inertiajs/react';
+import { CalendarIcon, TagIcon, UserIcon } from 'lucide-react';
 import HeadingSmall from '../../components/heading-small';
+import { Badge } from '../../components/ui/badge';
+import { Separator } from '../../components/ui/separator';
 import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
 import { Article } from '../../types/article';
@@ -22,44 +25,41 @@ export default function Show({ article }: ShowProps) {
                 <HeadingSmall title={article.title} description="Article details" />
 
                 {/* Meta */}
-                <div className="rounded-lg border bg-white p-6 dark:bg-gray-900">
-                    <div className="mb-4 flex flex-col gap-2 text-sm text-gray-600 md:flex-row md:items-center md:justify-between dark:text-gray-400">
-                        <div className="flex gap-4">
-                            <span>
-                                <strong>Category:</strong> {article.category?.name || '-'}
-                            </span>
-                            <span>
-                                <strong>Status:</strong>{' '}
-                                <span
-                                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                                        article.status === 'published'
-                                            ? 'bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-200'
-                                            : article.status === 'draft'
-                                              ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-800 dark:text-yellow-200'
-                                              : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200'
-                                    }`}
-                                >
-                                    {article.status}
+                <section className="max-w-3xl">
+                    <div className="">
+                        {article.media?.url && <img src={article.media.url} alt={article.title} className="h-64 object-cover" />}
+                        <div className="space-y-4 py-6">
+                            {/* Category */}
+                            {article.category && (
+                                <Badge variant="secondary" className="flex items-center gap-1">
+                                    <TagIcon size={14} />
+                                    {article.category.name}
+                                </Badge>
+                            )}
+
+                            {/* Title */}
+                            <h1 className="text-3xl font-bold text-foreground">{article.title}</h1>
+
+                            {/* Meta info */}
+                            <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                                <span className="flex items-center gap-1">
+                                    <UserIcon size={14} /> User #{article.user_id}
                                 </span>
-                            </span>
+                                {article.published_at && (
+                                    <span className="flex items-center gap-1">
+                                        <CalendarIcon size={14} /> {new Date(article.published_at).toLocaleDateString()}
+                                    </span>
+                                )}
+                                <span>Status: {article.status}</span>
+                            </div>
+
+                            <Separator />
+
+                            {/* Content */}
+                            <article className="prose prose-sm max-w-none dark:prose-invert" dangerouslySetInnerHTML={{ __html: article.content }} />
                         </div>
-                        {article.published_at && (
-                            <span>
-                                <strong>Published at:</strong> {new Date(article.published_at).toLocaleString()}
-                            </span>
-                        )}
                     </div>
-
-                    {/* Media */}
-                    {article.media && (
-                        <div className="mb-4">
-                            <img src={article.media.url} alt={article.title} className="max-h-96 w-full rounded-md object-cover shadow" />
-                        </div>
-                    )}
-
-                    {/* Content */}
-                    <div className="prose dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: article.content }} />
-                </div>
+                </section>
 
                 {/* Actions */}
                 <div className="flex gap-3">

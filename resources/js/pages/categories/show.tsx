@@ -19,7 +19,7 @@ export default function Show({ category }: ShowProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Category: ${category.name}`} />
-            <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6 md:w-4xl">
+            <div className="h-[calc(100vh-100px)] space-y-8 overflow-auto p-6 md:w-6xl">
                 <HeadingSmall title={category.name} description="Category details" />
 
                 <div className="space-y-6">

@@ -12,6 +12,7 @@ export interface Service {
     status?: string | null;
     created_at: string;
     updated_at: string;
+
     media?: any; // relation for media
     icon_media?: any; // relation for icon_media
     category?: Category | null;

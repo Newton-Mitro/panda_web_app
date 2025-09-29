@@ -33,5 +33,4 @@ export interface Student {
 
     created_at: string; // timestamp (ISO format)
     updated_at: string; // timestamp (ISO format)
-    deleted_at?: string | null; // if you’re using soft deletes
 }

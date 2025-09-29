@@ -14,7 +14,7 @@ class PartnerFactory extends Factory
     {
         return [
             'name' => $this->faker->company(),
-            'website' => $this->faker->optional()->url(),
+            'website' => $this->faker->url(),
             'media_id' => null,
         ];
     }

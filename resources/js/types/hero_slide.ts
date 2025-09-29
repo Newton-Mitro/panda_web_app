@@ -10,4 +10,6 @@ export interface HeroSlide {
     media?: Media | null;
     sort_order: number;
     status: 'Active' | 'Inactive';
+    created_at: string;
+    updated_at: string;
 }

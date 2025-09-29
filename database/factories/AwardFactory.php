@@ -16,7 +16,7 @@ class AwardFactory extends Factory
             'title' => $this->faker->sentence(3),
             'organization' => $this->faker->company(),
             'year' => $this->faker->year(),
-            'description' => $this->faker->optional()->paragraph(4),
+            'description' => $this->faker->paragraphs(5, true),
             'media_id' => null,
         ];
     }

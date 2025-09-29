@@ -14,7 +14,7 @@ class GalleryFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(3),
-            'description' => $this->faker->optional()->paragraph(4),
+            'description' => $this->faker->paragraph(4),
             'media_id' => null,
         ];
     }

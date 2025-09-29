@@ -13,4 +13,7 @@ export interface Project {
     media_id?: number;
     category_id: number;
     status: string;
+
+    created_at: string;
+    updated_at: string;
 }

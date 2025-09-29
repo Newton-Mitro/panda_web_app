@@ -1,3 +1,4 @@
+import { User } from '.';
 import { Category } from './category';
 import { Media } from './media';
 
@@ -15,7 +16,7 @@ export interface Article {
     updated_at: string;
 
     // Relations
-    // user?: User;
+    user?: User;
     category?: Category;
     media?: Media;
 }

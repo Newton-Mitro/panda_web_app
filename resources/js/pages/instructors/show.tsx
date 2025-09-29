@@ -21,7 +21,7 @@ export default function Show({ instructor }: ShowProps) {
                 <div className="flex flex-col gap-6 rounded-xl md:flex-row">
                     {/* Left: Image + basic info */}
                     <div className="flex flex-shrink-0 flex-col items-center space-y-4 md:w-80 md:items-start">
-                        <div className="mx-auto w-full max-w-md space-y-4 rounded-lg bg-gray-50 p-6 dark:bg-gray-800">
+                        <div className="mx-auto w-full max-w-md space-y-4 rounded-lg bg-card p-6">
                             {/* Profile Image */}
                             {instructor.media && (
                                 <img src={instructor.media.url} alt={instructor.name} className="mx-auto mb-4 h-48 w-48 rounded-full object-cover" />
@@ -38,7 +38,7 @@ export default function Show({ instructor }: ShowProps) {
 
                     {/* Right: Bio & other details */}
                     <div className="flex-1 space-y-4 text-gray-700 dark:text-gray-300">
-                        <div className="prose dark:prose-invert rounded-lg bg-gray-50 p-4 shadow-sm dark:bg-gray-800">
+                        <div className="prose rounded-lg bg-card p-4 shadow-sm dark:prose-invert">
                             <strong>Information:</strong>
                             {instructor.email && <div>Email: {instructor.email}</div>}
                             {instructor.phone && <div>Phone: {instructor.phone}</div>}
@@ -50,7 +50,7 @@ export default function Show({ instructor }: ShowProps) {
                             <div>Status: {instructor.status}</div>
                         </div>
                         {instructor.bio && (
-                            <div className="prose dark:prose-invert rounded-lg bg-gray-50 p-4 shadow-sm dark:bg-gray-800">
+                            <div className="prose rounded-lg bg-card p-4 shadow-sm dark:prose-invert">
                                 <strong>Bio:</strong>
                                 <div dangerouslySetInnerHTML={{ __html: instructor.bio }} />
                             </div>

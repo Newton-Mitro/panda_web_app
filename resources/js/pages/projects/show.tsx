@@ -1,5 +1,6 @@
 import { Head } from '@inertiajs/react';
 import HeadingSmall from '../../components/heading-small';
+import { Badge } from '../../components/ui/badge';
 import AppLayout from '../../layouts/app-layout';
 import { BreadcrumbItem } from '../../types';
 import { Project } from '../../types/project';
@@ -18,84 +19,100 @@ export default function Show({ project }: ShowProjectProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={project.title || ''} />
-            <div className="w-full space-y-6 p-6 md:w-4xl">
-                <HeadingSmall title={project.title || ''} description="View project details" />
+            <div className="w-full space-y-6 p-6 md:w-6xl">
+                {/* Heading */}
+                <HeadingSmall title={project.title} description={project.slug} />
 
-                {/* Project Details */}
-                <div className="grid gap-6">
-                    {/* Title & Slug */}
-                    <div className="grid gap-4 md:grid-cols-2">
-                        <div className="grid gap-2">
-                            <label className="font-medium text-gray-700">Title</label>
-                            <p>{project.title}</p>
+                {/* Top section: main image + summary info */}
+                <div className="space-y-4">
+                    {project.media?.url && (
+                        <img
+                            src={project.media.url}
+                            alt={project.title}
+                            style={{
+                                clipPath: 'polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%)',
+                            }}
+                            className="float-left mt-2 mr-6 mb-4 h-72 w-72 border-6 bg-card object-cover transition-transform duration-300 hover:scale-105 md:h-96 md:w-96"
+                        />
+                    )}
+
+                    {/* Project info */}
+                    <div className="space-y-3 text-gray-700 dark:text-gray-300">
+                        <div>
+                            <div className="mb-1 text-sm text-gray-500 dark:text-gray-400">Category</div>
+                            <div className="font-medium">{project.category?.name || '-'}</div>
                         </div>
 
-                        <div className="grid gap-2">
-                            <label className="font-medium text-gray-700">Slug</label>
-                            <p>{project.slug}</p>
+                        <div>
+                            <div className="mb-1 text-sm text-gray-500 dark:text-gray-400">Status</div>
+                            <div>
+                                <Badge variant={project.status === 'Active' ? 'default' : 'secondary'} className="rounded-xl">
+                                    {project.status}
+                                </Badge>
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Category */}
-                    <div className="grid gap-2">
-                        <label className="font-medium text-gray-700">Category</label>
-                        <p>{project.category?.name || '-'}</p>
+                        <div>
+                            <div className="mb-1 text-sm text-gray-500 dark:text-gray-400">Start Date</div>
+                            <div className="font-medium">{project.start_date || '-'}</div>
+                        </div>
+
+                        <div>
+                            <div className="mb-1 text-sm text-gray-500 dark:text-gray-400">End Date</div>
+                            <div className="font-medium">{project.end_date || '-'}</div>
+                        </div>
                     </div>
 
                     {/* Description */}
-                    <div className="grid gap-2">
-                        <label className="font-medium text-gray-700">Description</label>
-                        <div className="prose" dangerouslySetInnerHTML={{ __html: project.description || '-' }} />
-                    </div>
+                    <div
+                        className="prose prose-sm mt-4 max-w-none text-muted-foreground [&_h1,h2,h3,h4,h5,h6]:text-foreground [&_table]:border [&_table]:border-gray-500 [&_td]:border [&_td]:border-gray-500 [&_th]:border [&_th]:border-gray-500"
+                        dangerouslySetInnerHTML={{ __html: project.description || '-' }}
+                    />
+                </div>
 
-                    {/* Source Code Link */}
-                    <div className="grid gap-2">
-                        <label className="font-medium text-gray-700">Source Code Link</label>
-                        <a href={project.source_code_link} target="_blank" className="text-blue-500 hover:underline">
-                            {project.source_code_link || '-'}
+                {/* Links */}
+                <div className="mt-4 flex flex-wrap gap-4">
+                    {project.source_code_link && (
+                        <a
+                            href={project.source_code_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary/90"
+                        >
+                            View Source
                         </a>
-                    </div>
-
-                    {/* Live Site Link */}
-                    <div className="grid gap-2">
-                        <label className="font-medium text-gray-700">Live Site Link</label>
-                        <a href={project.live_site_link} target="_blank" className="text-blue-500 hover:underline">
-                            {project.live_site_link || '-'}
-                        </a>
-                    </div>
-
-                    {/* Start Date */}
-                    <div className="grid gap-2">
-                        <label className="font-medium text-gray-700">Start Date</label>
-                        <p>{project.start_date || '-'}</p>
-                    </div>
-
-                    {/* End Date */}
-                    <div className="grid gap-2">
-                        <label className="font-medium text-gray-700">End Date</label>
-                        <p>{project.end_date || '-'}</p>
-                    </div>
-
-                    {/* Gallery */}
-                    {project.gallery && project.gallery.length > 0 && (
-                        <div className="grid gap-2">
-                            <label className="font-medium text-gray-700">Gallery</label>
-                            <div className="flex flex-wrap gap-2">
-                                {project.gallery.map((url, idx) => (
-                                    <img key={idx} src={url} alt={`Gallery ${idx}`} className="h-24 rounded object-cover" />
-                                ))}
-                            </div>
-                        </div>
                     )}
-
-                    {/* Media */}
-                    {project.media && (
-                        <div className="grid gap-2">
-                            <label className="font-medium text-gray-700">Media</label>
-                            <img src={project.media.url} alt={project.title} className="h-48 w-48 rounded object-cover" />
-                        </div>
+                    {project.live_site_link && (
+                        <a
+                            href={project.live_site_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded-lg bg-secondary px-4 py-2 text-secondary-foreground hover:bg-secondary/80"
+                        >
+                            Live Demo
+                        </a>
                     )}
                 </div>
+
+                {/* Gallery */}
+                {project.gallery && project.gallery.length > 0 && (
+                    <div className="clear-both mt-6">
+                        <h3 className="mb-4 font-semibold">Gallery</h3>
+                        <div className="flex flex-wrap gap-4">
+                            {project.gallery.map((url, idx) => (
+                                <img
+                                    key={idx}
+                                    src={url}
+                                    alt={`Gallery ${idx + 1}`}
+                                    className="h-40 w-40 rounded object-cover"
+                                    style={{
+                                        clipPath: 'polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%)',
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </AppLayout>
     );

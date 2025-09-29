@@ -76,7 +76,7 @@ class CareerFactory extends Factory
             ]),
 
             // Application Workflow
-            'deadline' => ($date = $this->faker->optional()->dateTimeBetween('now', '+6 months'))
+            'deadline' => ($date = $this->faker->dateTimeBetween('now', '+6 months'))
                 ? $date->format('Y-m-d')
                 : null,
             'status' => $this->faker->randomElement(['open', 'closed', 'draft']),
